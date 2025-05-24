@@ -20,6 +20,8 @@ class _SweetTreatState extends State<SweetTreat> {
     return Scaffold(
       body: pages[currentIndex],
       bottomNavigationBar: NavigationBar(
+        backgroundColor: const Color.fromARGB(255, 241, 181, 212),
+
         selectedIndex: currentIndex,
         onDestinationSelected: (index) {
           setState(() {

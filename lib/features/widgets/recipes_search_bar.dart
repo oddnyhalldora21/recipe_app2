@@ -7,14 +7,14 @@ class RecipesSearchBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return SearchAnchor.bar(
-      barHintText: "what are you craving?",
+      barHintText: "what are we craving?",
       barElevation: WidgetStatePropertyAll(0.2),
       barSide: WidgetStatePropertyAll(
         BorderSide(color: Color.fromARGB(255, 67, 47, 21)),
       ),
       viewBackgroundColor: theme.colorScheme.surfaceContainerLowest,
-      barBackgroundColor: WidgetStatePropertyAll(
-        theme.colorScheme.surfaceContainerLow,
+      barBackgroundColor: WidgetStateProperty.all(
+        const Color.fromARGB(255, 255, 237, 207),
       ),
       suggestionsBuilder: (context, controller) {
         return [];

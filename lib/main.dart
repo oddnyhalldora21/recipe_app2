@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color.fromARGB(255, 244, 164, 205),
+          seedColor: const Color.fromARGB(255, 67, 47, 21),
         ),
         scaffoldBackgroundColor: const Color.fromARGB(255, 241, 181, 212),
         textTheme: GoogleFonts.latoTextTheme().copyWith(
@@ -25,6 +25,11 @@ class MyApp extends StatelessWidget {
             fontSize: 19,
             fontWeight: FontWeight.w500,
             color: const Color.fromARGB(255, 67, 47, 21),
+          ),
+        ),
+        cardTheme: CardTheme(
+          shape: ContinuousRectangleBorder(
+            borderRadius: BorderRadius.circular(30),
           ),
         ),
       ),
