@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
 import 'package:recipe_app/features/favorites/favorites_page.dart';
-import 'package:recipe_app/features/recipes/pages/recipe_page.dart';
+import 'package:recipe_app/features/recipes_pages/recipe_mein_page.dart';
 
 class SweetTreat extends StatefulWidget {
   const SweetTreat({super.key});

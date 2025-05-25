@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:recipe_app/features/widgets/recipes_categories.dart';
 import 'package:recipe_app/features/widgets/recipes_search_bar.dart';
-import 'package:recipe_app/features/widgets/recipes_categories.dart';
 
 class RecipePage extends StatelessWidget {
   const RecipePage({super.key});
