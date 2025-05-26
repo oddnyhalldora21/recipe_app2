@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 class RecipeCategoryList {
   final String id;
   final String name;
@@ -17,6 +15,12 @@ class RecipeCategoryList {
       name: 'Chocolate',
       imageUrl:
           'https://images.unsplash.com/photo-1511381939415-e44015466834?w=400&h=400&fit=crop',
+    ),
+    RecipeCategoryList(
+      id: '8',
+      name: 'Puff Pastry',
+      imageUrl:
+          'https://images.unsplash.com/photo-1623334044303-241021148842?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Y3JvaXNzYW50fGVufDB8fDB8fHww',
     ),
     RecipeCategoryList(
       id: '2',

@@ -14,7 +14,7 @@ class RecipesSearchBar extends StatelessWidget {
       ),
       viewBackgroundColor: theme.colorScheme.surfaceContainerLowest,
       barBackgroundColor: WidgetStateProperty.all(
-        const Color.fromARGB(255, 255, 237, 207),
+        const Color.fromARGB(255, 241, 181, 212),
       ),
       suggestionsBuilder: (context, controller) {
         return [];

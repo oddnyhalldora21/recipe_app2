@@ -6,8 +6,8 @@ class SugarFreeRecipes {
       id: '61',
       name: 'Sugar-Free Chocolate Chip Cookies',
       imageUrl:
-          'https://images.unsplash.com/photo-1499636136210-6f4ee915583e?w=400',
-      cookingTime: '25 minutes',
+          'https://media.istockphoto.com/id/1709722487/photo/homemade-chocolate-chip-cookies.webp?a=1&b=1&s=612x612&w=0&k=20&c=uXCdWJNjRx25YThGfUEIg7lUW2gm2LrWOvpRo1xj5Yk=',
+      cookingTime: '25 min',
       category: 'sugar-free',
       ingredients: [
         '2 1/4 cups almond flour',
@@ -28,8 +28,8 @@ class SugarFreeRecipes {
         'Gradually fold in flour mixture until just combined.',
         'Stir in sugar-free chocolate chips.',
         'Drop rounded tablespoons onto prepared baking sheets.',
-        'Bake 10-12 minutes until edges are lightly golden.',
-        'Cool on baking sheet for 5 minutes before removing.',
+        'Bake 10-12 min until edges are lightly golden.',
+        'Cool on baking sheet for 5 min before removing.',
       ],
     ),
 
@@ -37,8 +37,8 @@ class SugarFreeRecipes {
       id: '62',
       name: 'Sugar-Free Brownies',
       imageUrl:
-          'https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=400',
-      cookingTime: '35 minutes',
+          'https://images.unsplash.com/photo-1515037893149-de7f840978e2?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8YnJvd25pZXN8ZW58MHx8MHx8fDA%3D',
+      cookingTime: '35 min',
       category: 'sugar-free',
       ingredients: [
         '1/2 cup almond flour',
@@ -58,7 +58,7 @@ class SugarFreeRecipes {
         'Pour wet ingredients into dry ingredients, mix until smooth.',
         'Fold in chocolate chips and walnuts if using.',
         'Pour batter into prepared pan and smooth top.',
-        'Bake 20-25 minutes until toothpick has few moist crumbs.',
+        'Bake 20-25 min until toothpick has few moist crumbs.',
         'Cool completely before cutting into squares.',
         'Store covered for up to 5 days.',
       ],
@@ -68,8 +68,8 @@ class SugarFreeRecipes {
       id: '63',
       name: 'Sugar-Free Banana Muffins',
       imageUrl:
-          'https://images.unsplash.com/photo-1587668178277-295251f900ce?w=400',
-      cookingTime: '30 minutes',
+          'https://images.unsplash.com/photo-1616177337300-c8d69da312e8?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8YmFuYW5hJTIwbXVmZmlufGVufDB8fDB8fHww',
+      cookingTime: '30 min',
       category: 'sugar-free',
       ingredients: [
         '2 cups almond flour',
@@ -91,17 +91,17 @@ class SugarFreeRecipes {
         'Pour wet ingredients into dry ingredients, mix until just combined.',
         'Fold in walnuts if using.',
         'Fill muffin cases 3/4 full.',
-        'Bake 18-22 minutes until toothpick comes out clean.',
-        'Cool in pan for 5 minutes before removing.',
+        'Bake 18-22 min until toothpick comes out clean.',
+        'Cool in pan for 5 min before removing.',
       ],
     ),
 
     Recipe(
       id: '64',
-      name: 'Sugar-Free Chocolate Mousse',
+      name: 'Cinnamon Mousse',
       imageUrl:
-          'https://images.unsplash.com/photo-1541599468348-e96984315921?w=400',
-      cookingTime: '15 minutes + 2 hours chilling',
+          'https://plus.unsplash.com/premium_photo-1669880504277-1c79daa58c12?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTN8fG1vdXNzZXxlbnwwfHwwfHx8MA%3D%3D',
+      cookingTime: '15 min + 2 h ',
       category: 'sugar-free',
       ingredients: [
         '2 ripe avocados',
@@ -120,9 +120,9 @@ class SugarFreeRecipes {
         'Blend until smooth and creamy, scraping sides as needed.',
         'Taste and adjust sweetness if needed.',
         'Divide among serving glasses.',
-        'Chill for at least 2 hours until set.',
+        'Chill for at least 2 h until set.',
         'Garnish with berries and whipped cream before serving.',
-        'Best consumed within 24 hours.',
+        'Best consumed within 24 h.',
       ],
     ),
 
@@ -130,8 +130,8 @@ class SugarFreeRecipes {
       id: '65',
       name: 'Sugar-Free Lemon Bars',
       imageUrl:
-          'https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=400',
-      cookingTime: '45 minutes',
+          'https://media.istockphoto.com/id/505142371/photo/luscious-bliss-lemon-bars.webp?a=1&b=1&s=612x612&w=0&k=20&c=Gcd-KZwaK5rgq700xk-2eNGDyCW5ysCeUoUxmvyorLQ=',
+      cookingTime: '45 min',
       category: 'sugar-free',
       ingredients: [
         'Crust: 1 1/2 cups almond flour',
@@ -148,10 +148,10 @@ class SugarFreeRecipes {
         'Preheat oven to 160°C. Line 20cm square pan with parchment.',
         'Mix almond flour, erythritol, and salt for crust.',
         'Stir in melted coconut oil until mixture holds together.',
-        'Press into prepared pan and bake 15 minutes until golden.',
+        'Press into prepared pan and bake 15 min until golden.',
         'Whisk eggs and erythritol until smooth.',
         'Add lemon juice, zest, and almond flour.',
-        'Pour over hot crust and bake 20-25 minutes until set.',
+        'Pour over hot crust and bake 20-25 min until set.',
         'Cool completely before cutting into bars.',
         'Dust with additional erythritol if desired.',
       ],
@@ -161,8 +161,8 @@ class SugarFreeRecipes {
       id: '66',
       name: 'Sugar-Free Peanut Butter Cookies',
       imageUrl:
-          'https://images.unsplash.com/photo-1590736969955-71cc94901144?w=400',
-      cookingTime: '15 minutes',
+          'https://media.istockphoto.com/id/609044534/photo/sea-salt-peanut-butter-cookies-with-milk.webp?a=1&b=1&s=612x612&w=0&k=20&c=U_A01fyy7WiqmhtONHCnt8Qzlx7jmd583AuN7uJ_6vc=',
+      cookingTime: '15 min',
       category: 'sugar-free',
       ingredients: [
         '1 cup natural peanut butter (no sugar added)',
@@ -180,8 +180,8 @@ class SugarFreeRecipes {
         'Roll dough into 24 walnut-sized balls.',
         'Place on prepared baking sheets.',
         'Flatten with fork in crisscross pattern.',
-        'Bake 10-12 minutes until edges are lightly golden.',
-        'Cool on baking sheet for 5 minutes before removing.',
+        'Bake 10-12 min until edges are lightly golden.',
+        'Cool on baking sheet for 5 min before removing.',
       ],
     ),
 
@@ -189,8 +189,8 @@ class SugarFreeRecipes {
       id: '67',
       name: 'Sugar-Free Chia Pudding',
       imageUrl:
-          'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400',
-      cookingTime: '10 minutes + 4 hours chilling',
+          'https://media.istockphoto.com/id/1138253386/photo/chia-pudding-in-glass-jar-with-almond-milk-and-mango-on-white-background.webp?a=1&b=1&s=612x612&w=0&k=20&c=uQndBPZxjXtatZZ3VsDFZWp3B9Xmq2bl0x5fZtcaGFA=',
+      cookingTime: '10 min + 4 h ',
       category: 'sugar-free',
       ingredients: [
         '1/4 cup chia seeds',
@@ -204,8 +204,8 @@ class SugarFreeRecipes {
       ],
       instructions: [
         'Whisk chia seeds, almond milk, maple syrup, vanilla, and salt.',
-        'Let sit for 5 minutes, then whisk again to prevent clumping.',
-        'Cover and refrigerate for at least 4 hours or overnight.',
+        'Let sit for 5 min, then whisk again to prevent clumping.',
+        'Cover and refrigerate for at least 4 h or overnight.',
         'Stir well before serving.',
         'Divide between serving glasses.',
         'Top with fresh berries, nuts, and coconut flakes.',
@@ -218,8 +218,8 @@ class SugarFreeRecipes {
       id: '68',
       name: 'Sugar-Free Apple Crisp',
       imageUrl:
-          'https://images.unsplash.com/photo-1568471173238-85490a02cdd8?w=400',
-      cookingTime: '40 minutes',
+          'https://media.istockphoto.com/id/175227596/photo/close-up-of-apple-crisps-in-a-white-bowl-and-a-single-spoon.webp?a=1&b=1&s=612x612&w=0&k=20&c=-s1ZAAwvezOAOuCiXBr7lTCUnJtVxBSKzxUaQC4Uivk=',
+      cookingTime: '40 min',
       category: 'sugar-free',
       ingredients: [
         'Filling: 6 large apples, peeled and sliced',
@@ -240,8 +240,8 @@ class SugarFreeRecipes {
         'Mix almond flour, chopped almonds, erythritol, and cinnamon.',
         'Cut in cold coconut oil until mixture resembles coarse crumbs.',
         'Sprinkle topping evenly over apples.',
-        'Bake 30-35 minutes until topping is golden and apples are tender.',
-        'Cool for 10 minutes before serving.',
+        'Bake 30-35 min until topping is golden and apples are tender.',
+        'Cool for 10 min before serving.',
         'Serve warm if desired.',
       ],
     ),
@@ -250,8 +250,8 @@ class SugarFreeRecipes {
       id: '69',
       name: 'Sugar-Free Chocolate Cake',
       imageUrl:
-          'https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=400',
-      cookingTime: '40 minutes',
+          'https://plus.unsplash.com/premium_photo-1723867522131-af9733323bc1?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8Y2hvY29sYXRlJTIwZnJlbmNoJTIwY2FrZXxlbnwwfHwwfHx8MA%3D%3D',
+      cookingTime: '40 min',
       category: 'sugar-free',
       ingredients: [
         '1 3/4 cups almond flour',
@@ -272,8 +272,8 @@ class SugarFreeRecipes {
         'In another bowl, whisk eggs, almond milk, applesauce, melted coconut oil, and vanilla.',
         'Pour wet ingredients into dry ingredients, mix until smooth.',
         'Pour batter into prepared pan.',
-        'Bake 30-35 minutes until toothpick comes out clean.',
-        'Cool in pan for 10 minutes.',
+        'Bake 30-35 min until toothpick comes out clean.',
+        'Cool in pan for 10 min.',
         'Turn out onto wire rack to cool completely.',
         'Frost with sugar-free frosting if desired.',
       ],
@@ -283,8 +283,8 @@ class SugarFreeRecipes {
       id: '70',
       name: 'Sugar-Free Energy Bites',
       imageUrl:
-          'https://images.unsplash.com/photo-1564355808561-86f5eac0addd?w=400',
-      cookingTime: '15 minutes',
+          'https://media.istockphoto.com/id/636970604/photo/energy-granola-bites.webp?a=1&b=1&s=612x612&w=0&k=20&c=QRJoaB9vx3zr60jnIavQ0z2jwLKuicmaVb0dpwHUtGE=',
+      cookingTime: '15 min',
       category: 'sugar-free',
       ingredients: [
         '1 cup old-fashioned oats',
@@ -300,11 +300,11 @@ class SugarFreeRecipes {
         'Mix all ingredients in a large bowl until well combined.',
         'If mixture is too dry, add 1-2 tbsp water.',
         'If mixture is too wet, add more oats.',
-        'Cover and refrigerate for 30 minutes.',
+        'Cover and refrigerate for 30 min.',
         'Roll mixture into 20 walnut-sized balls.',
         'Store in refrigerator for up to 1 week.',
         'Can be frozen for up to 3 months.',
-        'Let thaw for 5 minutes if frozen before eating.',
+        'Let thaw for 5 min if frozen before eating.',
         'Perfect grab-and-go healthy treat.',
       ],
     ),

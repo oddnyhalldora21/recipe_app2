@@ -6,8 +6,8 @@ class FrozenTreatsRecipes {
       id: '21',
       name: 'Classic Vanilla Ice Cream',
       imageUrl:
-          'https://images.unsplash.com/photo-1497034825429-c343d7c6a68f?w=400',
-      cookingTime: '30 minutes + 4 hours freezing',
+          'https://images.unsplash.com/photo-1549395156-e0c1fe6fc7a5?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8dmFuaWxsYSUyMGljZWNyZWFtfGVufDB8fDB8fHww',
+      cookingTime: '30 min + 4 h ',
       category: 'frozen',
       ingredients: [
         '2 cups heavy cream',
@@ -26,7 +26,7 @@ class FrozenTreatsRecipes {
         'Remove from heat, stir in vanilla and salt.',
         'Strain through fine-mesh sieve and cool completely.',
         'Churn in ice cream maker according to manufacturer instructions.',
-        'Transfer to container and freeze for at least 4 hours.',
+        'Transfer to container and freeze for at least 4 h.',
       ],
     ),
 
@@ -34,8 +34,8 @@ class FrozenTreatsRecipes {
       id: '22',
       name: 'Strawberry Popsicles',
       imageUrl:
-          'https://images.unsplash.com/photo-1551024506-0bccd828d307?w=400',
-      cookingTime: '15 minutes + 6 hours freezing',
+          'https://media.istockphoto.com/id/685817724/photo/strawberry-and-raspberry-popsicles.webp?a=1&b=1&s=612x612&w=0&k=20&c=_nHXeDcxu4yM1A-9DpdxSGxYp0nNGl2EkZhPD8qqeOY=',
+      cookingTime: '15 min + 6 h ',
       category: 'frozen',
       ingredients: [
         '500g fresh strawberries, hulled',
@@ -50,7 +50,7 @@ class FrozenTreatsRecipes {
         'Taste and adjust sweetness if needed.',
         'Pour mixture into popsicle molds, leaving 1cm space at top.',
         'Insert popsicle sticks.',
-        'Freeze for at least 6 hours or overnight.',
+        'Freeze for at least 6 h or overnight.',
         'To remove, run warm water over outside of molds.',
         'Store in freezer for up to 3 months.',
       ],
@@ -58,31 +58,30 @@ class FrozenTreatsRecipes {
 
     Recipe(
       id: '23',
-      name: 'Chocolate Gelato',
+      name: 'Strawberry Gelato',
       imageUrl:
-          'https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=400',
-      cookingTime: '45 minutes + 4 hours freezing',
+          'https://images.unsplash.com/photo-1621096229451-38ce90f1035c?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fGdlbGF0b3xlbnwwfHwwfHx8MA%3D%3D',
+      cookingTime: '45 min + 4 h ',
       category: 'frozen',
       ingredients: [
         '2 cups whole milk',
         '1/2 cup heavy cream',
         '3/4 cup granulated sugar',
         '5 large egg yolks',
-        '1/3 cup unsweetened cocoa powder',
-        '200g dark chocolate, finely chopped',
+        '200g strawberries, hulled and chopped',
         '1 tsp vanilla extract',
         'Pinch of salt',
       ],
       instructions: [
         'Heat milk and cream in a saucepan until steaming.',
-        'Whisk egg yolks, sugar, and cocoa powder until smooth.',
+        'Whisk egg yolks, sugar until smooth.',
         'Slowly add hot milk mixture to egg mixture, whisking constantly.',
         'Return to saucepan and cook over medium-low heat, stirring constantly.',
         'Cook until mixture coats spoon and reaches 170°F.',
-        'Remove from heat, add chopped chocolate, stir until melted.',
+        'Remove from heat, add chopped strawberries, stir until melted.',
         'Add vanilla and salt, strain through fine-mesh sieve.',
         'Cool completely, then churn in ice cream maker.',
-        'Freeze for at least 4 hours before serving.',
+        'Freeze for at least 4 h before serving.',
       ],
     ),
 
@@ -90,8 +89,8 @@ class FrozenTreatsRecipes {
       id: '24',
       name: 'Mango Sorbet',
       imageUrl:
-          'https://images.unsplash.com/photo-1488477181946-6428a0291777?w=400',
-      cookingTime: '20 minutes + 4 hours freezing',
+          'https://media.istockphoto.com/id/1325470251/photo/yellow-ice-cream-sorbet-in-blue-ceramic-bowl-closeup.webp?a=1&b=1&s=612x612&w=0&k=20&c=kEo9iJ601zTwhXJpFAJ-uiRA3zQ0L6AQVn4DPn18VpA=',
+      cookingTime: '20 min + 4 h ',
       category: 'frozen',
       ingredients: [
         '4 large ripe mangoes, peeled and chopped',
@@ -109,8 +108,8 @@ class FrozenTreatsRecipes {
         'Blend until well combined.',
         'Strain mixture through fine-mesh sieve if desired.',
         'Churn in ice cream maker according to manufacturer instructions.',
-        'Transfer to container and freeze for at least 4 hours.',
-        'Let soften 5-10 minutes before serving.',
+        'Transfer to container and freeze for at least 4 h.',
+        'Let soften 5-10 min before serving.',
       ],
     ),
 
@@ -118,8 +117,8 @@ class FrozenTreatsRecipes {
       id: '25',
       name: 'Ice Cream Sandwiches',
       imageUrl:
-          'https://images.unsplash.com/photo-1567206563064-6f60f40a2b57?w=400',
-      cookingTime: '45 minutes + 2 hours freezing',
+          'https://media.istockphoto.com/id/481742880/photo/chocolate-chip-ice-cream-cookie-sandwiches.webp?a=1&b=1&s=612x612&w=0&k=20&c=enX7zwbLJnoaTu_zpHpHB-9kgMhzbXqvzjFIKe2MQ2E=',
+      cookingTime: '45 min + 2 h ',
       category: 'frozen',
       ingredients: [
         'Cookies: 2 1/4 cups plain flour',
@@ -140,10 +139,10 @@ class FrozenTreatsRecipes {
         'Beat in eggs and vanilla.',
         'Gradually mix in flour mixture, then chocolate chips.',
         'Drop large spoonfuls onto baking sheets, flatten slightly.',
-        'Bake 10-12 minutes until golden. Cool completely.',
+        'Bake 10-12 min until golden. Cool completely.',
         'Spread softened ice cream on flat side of one cookie.',
         'Top with another cookie, press gently.',
-        'Wrap in plastic and freeze for 2 hours before serving.',
+        'Wrap in plastic and freeze for 2 h before serving.',
       ],
     ),
 
@@ -151,8 +150,8 @@ class FrozenTreatsRecipes {
       id: '26',
       name: 'Frozen Yogurt Bark',
       imageUrl:
-          'https://images.unsplash.com/photo-1481391319762-47dff72954d9?w=400',
-      cookingTime: '10 minutes + 3 hours freezing',
+          'https://media.istockphoto.com/id/1046941224/photo/frozen-yogurt-bark.webp?a=1&b=1&s=612x612&w=0&k=20&c=gDwiz_llLXxhrDyDM8X7p2eWVerdCx55K14Sk2fwLlY=',
+      cookingTime: '10 min + 3 h ',
       category: 'frozen',
       ingredients: [
         '2 cups Greek yogurt',
@@ -169,10 +168,10 @@ class FrozenTreatsRecipes {
         'Spread mixture evenly on prepared baking sheet to 1cm thickness.',
         'Sprinkle berries, nuts, chocolate chips, and chia seeds over yogurt.',
         'Gently press toppings into yogurt.',
-        'Freeze for at least 3 hours until completely solid.',
+        'Freeze for at least 3 h until completely solid.',
         'Break into pieces with your hands or knife.',
         'Store in freezer in airtight container for up to 1 month.',
-        'Let sit 2-3 minutes before eating if very hard.',
+        'Let sit 2-3 min before eating if very hard.',
       ],
     ),
 
@@ -180,8 +179,8 @@ class FrozenTreatsRecipes {
       id: '27',
       name: 'Banana Nice Cream',
       imageUrl:
-          'https://images.unsplash.com/photo-1576618148400-f54bed99fcfd?w=400',
-      cookingTime: '10 minutes',
+          'https://media.istockphoto.com/id/921640438/photo/nicecream.webp?a=1&b=1&s=612x612&w=0&k=20&c=Q35gRJbd-f9jSla2xfwQGBC2hQeSTq1ODPlz5BfLZzY=',
+      cookingTime: '10 min',
       category: 'frozen',
       ingredients: [
         '4 ripe bananas, sliced and frozen',
@@ -192,14 +191,14 @@ class FrozenTreatsRecipes {
         'Toppings: chocolate chips, nuts, berries',
       ],
       instructions: [
-        'Freeze banana slices for at least 2 hours.',
+        'Freeze banana slices for at least 2 h.',
         'Add frozen bananas to food processor.',
         'Process until bananas break down into crumbs.',
         'Add milk, peanut butter, vanilla, and sweetener if using.',
         'Continue processing until smooth and creamy.',
         'Scrape down sides as needed.',
         'Serve immediately for soft-serve consistency.',
-        'Or freeze for 1-2 hours for firmer ice cream.',
+        'Or freeze for 1-2 h for firmer ice cream.',
         'Top with desired toppings before serving.',
       ],
     ),
@@ -208,8 +207,8 @@ class FrozenTreatsRecipes {
       id: '28',
       name: 'Coconut Popsicles',
       imageUrl:
-          'https://images.unsplash.com/photo-1551024506-0bccd828d307?w=400',
-      cookingTime: '15 minutes + 6 hours freezing',
+          'https://images.unsplash.com/photo-1677513633342-97a36e53a8ae?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Y29jb251dCUyMHBvcHNpY2xlc3xlbnwwfHwwfHx8MA%3D%3D',
+      cookingTime: '15 min + 6 h ',
       category: 'frozen',
       ingredients: [
         '1 can (400ml) coconut milk',
@@ -226,10 +225,10 @@ class FrozenTreatsRecipes {
         'Add lime juice and zest if making lime coconut version.',
         'Pour mixture into popsicle molds.',
         'Insert popsicle sticks.',
-        'Freeze for at least 6 hours or overnight.',
+        'Freeze for at least 6 h or overnight.',
         'To remove, run warm water over molds briefly.',
         'Store in freezer for up to 2 months.',
-        'Let sit 1-2 minutes before eating if very hard.',
+        'Let sit 1-2 min before eating if very hard.',
       ],
     ),
 
@@ -237,8 +236,8 @@ class FrozenTreatsRecipes {
       id: '29',
       name: 'Chocolate Fudge Pops',
       imageUrl:
-          'https://images.unsplash.com/photo-1590736969955-71cc94901144?w=400',
-      cookingTime: '20 minutes + 6 hours freezing',
+          'https://images.unsplash.com/photo-1591887311330-7de219f362d5?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Y2hvY29sYXRlJTIwcG9wc2ljbGVzfGVufDB8fDB8fHww',
+      cookingTime: '20 min + 6 h ',
       category: 'frozen',
       ingredients: [
         '2 cups whole milk',
@@ -257,7 +256,7 @@ class FrozenTreatsRecipes {
         'Stir in vanilla and salt.',
         'Cool mixture to room temperature.',
         'Pour into popsicle molds, leaving space at top.',
-        'Insert sticks and freeze for at least 6 hours.',
+        'Insert sticks and freeze for at least 6 h.',
         'Run warm water over molds to remove popsicles.',
         'Store in freezer for up to 3 months.',
       ],
@@ -267,8 +266,8 @@ class FrozenTreatsRecipes {
       id: '30',
       name: 'Affogato Ice Cream',
       imageUrl:
-          'https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=400',
-      cookingTime: '5 minutes',
+          'https://images.unsplash.com/photo-1696522692156-7340b681c3bb?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8YWZmb2dhdG98ZW58MHx8MHx8fDA%3D',
+      cookingTime: '5 min',
       category: 'frozen',
       ingredients: [
         '4 scoops vanilla ice cream',
@@ -286,7 +285,7 @@ class FrozenTreatsRecipes {
         'Garnish with amaretti cookies and chocolate shavings.',
         'Serve immediately with small spoons.',
         'Enjoy the contrast of hot and cold.',
-        'Best consumed within 2-3 minutes of assembly.',
+        'Best consumed within 2-3 min of assembly.',
       ],
     ),
   ];

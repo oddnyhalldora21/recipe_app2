@@ -7,7 +7,7 @@ class ChocolateRecipes {
       name: 'Classic Fudgy Brownies',
       imageUrl:
           'https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=400',
-      cookingTime: '45 minutes',
+      cookingTime: '45 min',
       category: 'chocolate',
       ingredients: [
         '200g dark chocolate, chopped',
@@ -27,7 +27,7 @@ class ChocolateRecipes {
         'Beat in eggs one at a time, then add vanilla.',
         'Sift flour and cocoa powder, fold into mixture with salt.',
         'Add chocolate chips if using.',
-        'Pour into prepared tin and bake for 25-30 minutes.',
+        'Pour into prepared tin and bake for 25-30 min.',
         'Cool completely before cutting into squares.',
       ],
     ),
@@ -37,7 +37,7 @@ class ChocolateRecipes {
       name: 'Decadent Chocolate Cake',
       imageUrl:
           'https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=400',
-      cookingTime: '1 hour 15 minutes',
+      cookingTime: '1 h 15 min',
       category: 'chocolate',
       ingredients: [
         '200g plain flour',
@@ -57,7 +57,7 @@ class ChocolateRecipes {
         'Whisk eggs, buttermilk, oil, and vanilla in another bowl.',
         'Combine wet and dry ingredients.',
         'Gradually add hot coffee, mixing until smooth.',
-        'Divide between tins and bake for 30-35 minutes.',
+        'Divide between tins and bake for 30-35 min.',
         'Cool completely before frosting.',
         'Frost with your favorite chocolate buttercream.',
       ],
@@ -67,8 +67,8 @@ class ChocolateRecipes {
       id: '3',
       name: 'Chocolate Cake Pops',
       imageUrl:
-          'https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=400',
-      cookingTime: '2 hours (including chilling)',
+          'https://plus.unsplash.com/premium_photo-1667031518595-9cb4b0d504ef?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8Y2hvY29sYXRlJTIwYmFya3xlbnwwfHwwfHx8MA%3D%3D',
+      cookingTime: '2 h',
       category: 'chocolate',
       ingredients: [
         '1 box chocolate cake mix (plus ingredients called for)',
@@ -82,7 +82,7 @@ class ChocolateRecipes {
         'Crumble cake into fine crumbs.',
         'Mix crumbs with frosting until well combined.',
         'Roll mixture into 48 balls, place on baking sheet.',
-        'Chill for 2 hours.',
+        'Chill for 2 h.',
         'Melt chocolate coating according to package directions.',
         'Dip stick 1cm into chocolate, then insert into cake ball.',
         'Dip entire cake pop into chocolate, tap off excess.',
@@ -94,8 +94,8 @@ class ChocolateRecipes {
       id: '4',
       name: 'Silky Chocolate Mousse',
       imageUrl:
-          'https://images.unsplash.com/photo-1541599468348-e96984315921?w=400',
-      cookingTime: '30 minutes + 4 hours chilling',
+          'https://bakewithzoha.com/wp-content/uploads/2024/10/chocolate-mousse-featured.jpg',
+      cookingTime: '30 min + 4 h ',
       category: 'chocolate',
       ingredients: [
         '200g dark chocolate (70%), chopped',
@@ -114,7 +114,7 @@ class ChocolateRecipes {
         'Beat until stiff peaks form.',
         'Fold 1/3 of whites into chocolate mixture.',
         'Fold in whipped cream, then remaining whites.',
-        'Spoon into glasses, chill for 4 hours before serving.',
+        'Spoon into glasses, chill for 4 h before serving.',
       ],
     ),
 
@@ -123,7 +123,7 @@ class ChocolateRecipes {
       name: 'Chocolate Lava Cakes',
       imageUrl:
           'https://images.unsplash.com/photo-1606890737304-57a1ca8a5b62?w=400',
-      cookingTime: '25 minutes',
+      cookingTime: '25 min',
       category: 'chocolate',
       ingredients: [
         '100g dark chocolate, chopped',
@@ -141,7 +141,7 @@ class ChocolateRecipes {
         'Whisk eggs, egg yolks, and sugar until thick and pale.',
         'Stir in melted chocolate mixture and flour.',
         'Divide between ramekins.',
-        'Bake for 12-14 minutes until edges are firm but center jiggles.',
+        'Bake for 12-14 min until edges are firm but center jiggles.',
         'Let stand 1 minute, then run knife around edges.',
         'Invert onto plates and serve immediately with ice cream.',
       ],
@@ -151,8 +151,8 @@ class ChocolateRecipes {
       id: '6',
       name: 'Chocolate Truffles',
       imageUrl:
-          'https://images.unsplash.com/photo-1549012419-cec214fd2636?w=400',
-      cookingTime: '45 minutes + 2 hours chilling',
+          'https://whatjessicabakednext.com/wp-content/uploads/2023/01/Choc-Truffles-WJBN.jpg',
+      cookingTime: '45 min + 2 h ',
       category: 'chocolate',
       ingredients: [
         '400g dark chocolate, finely chopped',
@@ -166,10 +166,10 @@ class ChocolateRecipes {
       instructions: [
         'Place chocolate in a large bowl.',
         'Heat cream in a saucepan until just simmering.',
-        'Pour hot cream over chocolate, let sit 2 minutes.',
+        'Pour hot cream over chocolate, let sit 2 min.',
         'Stir from center outward until smooth.',
         'Stir in butter and alcohol if using.',
-        'Cover and chill for 2 hours until firm.',
+        'Cover and chill for 2 h until firm.',
         'Using a spoon, scoop mixture and roll into balls.',
         'Roll in cocoa powder, nuts, or coconut.',
         'Store in refrigerator for up to 1 week.',
@@ -181,7 +181,7 @@ class ChocolateRecipes {
       name: 'Chocolate Chip Cookies',
       imageUrl:
           'https://images.unsplash.com/photo-1499636136210-6f4ee915583e?w=400',
-      cookingTime: '25 minutes',
+      cookingTime: '25 min',
       category: 'chocolate',
       ingredients: [
         '225g plain flour',
@@ -202,8 +202,8 @@ class ChocolateRecipes {
         'Gradually mix in flour mixture.',
         'Stir in chocolate chips.',
         'Drop rounded tablespoons onto ungreased baking sheets.',
-        'Bake 9-11 minutes until golden brown.',
-        'Cool on baking sheet for 2 minutes before removing.',
+        'Bake 9-11 min until golden brown.',
+        'Cool on baking sheet for 2 min before removing.',
       ],
     ),
 
@@ -211,8 +211,8 @@ class ChocolateRecipes {
       id: '8',
       name: 'Chocolate Fudge',
       imageUrl:
-          'https://images.unsplash.com/photo-1590736969955-71cc94901144?w=400',
-      cookingTime: '20 minutes + 2 hours setting',
+          'https://media.istockphoto.com/id/1185416324/photo/homemade-raw-milk-free-sugar-free-vegan-chocolate-brownies-or-fudge.webp?a=1&b=1&s=612x612&w=0&k=20&c=aWzJkgAAXtoWvaJdrzf_X5LsLMkpZhCY5iK9AJ6IbXM=',
+      cookingTime: '20 min + 2 h ',
       category: 'chocolate',
       ingredients: [
         '400g dark chocolate, chopped',
@@ -225,10 +225,10 @@ class ChocolateRecipes {
       instructions: [
         'Line a 20cm square tin with parchment paper.',
         'Melt chocolate, condensed milk, and butter in double boiler.',
-        'Stir constantly until smooth and thick (about 10 minutes).',
+        'Stir constantly until smooth and thick (about 10 min).',
         'Remove from heat, stir in vanilla, salt, and nuts if using.',
         'Pour into prepared tin and smooth top.',
-        'Refrigerate for 2 hours until set.',
+        'Refrigerate for 2 h until set.',
         'Cut into squares and serve.',
         'Store covered in refrigerator for up to 1 week.',
       ],
@@ -238,8 +238,8 @@ class ChocolateRecipes {
       id: '9',
       name: 'Chocolate Cupcakes',
       imageUrl:
-          'https://images.unsplash.com/photo-1587668178277-295251f900ce?w=400',
-      cookingTime: '35 minutes',
+          'https://www.lifeloveandsugar.com/wp-content/uploads/2023/06/Chocolate-Cupcakes-Recipe3.jpg',
+      cookingTime: '35 min',
       category: 'chocolate',
       ingredients: [
         '175g plain flour',
@@ -260,7 +260,7 @@ class ChocolateRecipes {
         'Combine wet and dry ingredients.',
         'Gradually stir in hot water until smooth.',
         'Fill cases 2/3 full.',
-        'Bake 18-20 minutes until toothpick comes out clean.',
+        'Bake 18-20 min until toothpick comes out clean.',
         'Cool completely before frosting with chocolate buttercream.',
       ],
     ),
@@ -269,8 +269,8 @@ class ChocolateRecipes {
       id: '10',
       name: 'Chocolate Bark',
       imageUrl:
-          'https://images.unsplash.com/photo-1481391319762-47dff72954d9?w=400',
-      cookingTime: '15 minutes + 1 hour setting',
+          'https://images.unsplash.com/photo-1679143121492-820c69266ab8?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fGNob2NvbGF0ZSUyMGJhcmt8ZW58MHx8MHx8fDA%3D',
+      cookingTime: '15 min + 1 h ',
       category: 'chocolate',
       ingredients: [
         '500g dark chocolate, chopped',
@@ -288,7 +288,7 @@ class ChocolateRecipes {
         'Gently press toppings into chocolate.',
         'Drizzle with melted white chocolate.',
         'Sprinkle with sea salt.',
-        'Refrigerate for 1 hour until set.',
+        'Refrigerate for 1 h until set.',
         'Break into pieces and store in airtight container.',
       ],
     ),

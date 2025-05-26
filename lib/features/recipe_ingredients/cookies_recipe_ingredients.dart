@@ -6,8 +6,8 @@ class CookieRecipes {
       id: '31',
       name: 'Classic Sugar Cookies',
       imageUrl:
-          'https://images.unsplash.com/photo-1499636136210-6f4ee915583e?w=400',
-      cookingTime: '25 minutes',
+          'https://images.unsplash.com/photo-1611846990591-3b4b49e5794b?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8c3VnYXIlMjBjb29raWVzfGVufDB8fDB8fHww',
+      cookingTime: '25 min',
       category: 'cookies',
       ingredients: [
         '2 3/4 cups plain flour',
@@ -28,8 +28,8 @@ class CookieRecipes {
         'Shape dough into walnut-sized balls.',
         'Roll balls in colored sugar.',
         'Place 5cm apart on ungreased baking sheets.',
-        'Bake 8-10 minutes until lightly golden.',
-        'Cool on baking sheet for 2 minutes before removing.',
+        'Bake 8-10 min until lightly golden.',
+        'Cool on baking sheet for 2 min before removing.',
       ],
     ),
 
@@ -37,8 +37,8 @@ class CookieRecipes {
       id: '32',
       name: 'Double Chocolate Chip Cookies',
       imageUrl:
-          'https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=400',
-      cookingTime: '30 minutes',
+          'https://plus.unsplash.com/premium_photo-1668862483214-30aa4f8e915f?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8Y2hvY29sYXRlJTIwY29va2llc3xlbnwwfHwwfHx8MA%3D%3D',
+      cookingTime: '30 min',
       category: 'cookies',
       ingredients: [
         '1 1/4 cups plain flour',
@@ -60,8 +60,8 @@ class CookieRecipes {
         'Gradually mix in flour mixture until just combined.',
         'Stir in white chocolate chips.',
         'Drop rounded tablespoons onto prepared baking sheets.',
-        'Bake 10-12 minutes until edges are set.',
-        'Cool on baking sheet for 5 minutes.',
+        'Bake 10-12 min until edges are set.',
+        'Cool on baking sheet for 5 min.',
         'Transfer to wire rack to cool completely.',
       ],
     ),
@@ -70,8 +70,8 @@ class CookieRecipes {
       id: '33',
       name: 'Snickerdoodles',
       imageUrl:
-          'https://images.unsplash.com/photo-1571115764595-644a1f56a55c?w=400',
-      cookingTime: '25 minutes',
+          'https://images.unsplash.com/photo-1703187839559-3ae0b51bd4f1?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8c25pY2tlcmRvb2RsZXN8ZW58MHx8MHx8fDA%3D',
+      cookingTime: '25 min',
       category: 'cookies',
       ingredients: [
         '2 3/4 cups plain flour',
@@ -94,7 +94,7 @@ class CookieRecipes {
         'Shape dough into walnut-sized balls.',
         'Roll each ball in cinnamon-sugar mixture.',
         'Place 5cm apart on ungreased baking sheets.',
-        'Bake 8-10 minutes until lightly golden but still soft.',
+        'Bake 8-10 min until lightly golden but still soft.',
       ],
     ),
 
@@ -102,8 +102,8 @@ class CookieRecipes {
       id: '34',
       name: 'Oatmeal Raisin Cookies',
       imageUrl:
-          'https://images.unsplash.com/photo-1564355808561-86f5eac0addd?w=400',
-      cookingTime: '30 minutes',
+          'https://plus.unsplash.com/premium_photo-1712352976996-5f75e3ba255a?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8b2F0bWVhbCUyMHJhaXNpbiUyMGNvb2tpZXN8ZW58MHx8MHx8fDA%3D',
+      cookingTime: '30 min',
       category: 'cookies',
       ingredients: [
         '1 cup plain flour',
@@ -126,8 +126,8 @@ class CookieRecipes {
         'Gradually mix in flour mixture.',
         'Stir in oats and raisins.',
         'Drop rounded tablespoons onto ungreased baking sheets.',
-        'Bake 12-15 minutes until golden brown.',
-        'Cool on baking sheet for 2 minutes.',
+        'Bake 12-15 min until golden brown.',
+        'Cool on baking sheet for 2 min.',
         'Remove to wire rack to cool completely.',
       ],
     ),
@@ -136,8 +136,8 @@ class CookieRecipes {
       id: '35',
       name: 'Peanut Butter Cookies',
       imageUrl:
-          'https://images.unsplash.com/photo-1590736969955-71cc94901144?w=400',
-      cookingTime: '20 minutes',
+          'https://plus.unsplash.com/premium_photo-1670938559598-135dfaabe8e5?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTd8fG9hdG1lYWwlMjByYWlzaW4lMjBjb29raWVzfGVufDB8fDB8fHww',
+      cookingTime: '20 min',
       category: 'cookies',
       ingredients: [
         '1 1/4 cups plain flour',
@@ -159,8 +159,8 @@ class CookieRecipes {
         'Roll dough into walnut-sized balls.',
         'Place on ungreased baking sheets.',
         'Flatten with fork in crisscross pattern.',
-        'Bake 10-12 minutes until lightly golden.',
-        'Cool on baking sheet for 2 minutes before removing.',
+        'Bake 10-12 min until lightly golden.',
+        'Cool on baking sheet for 2 min before removing.',
       ],
     ),
 
@@ -168,8 +168,8 @@ class CookieRecipes {
       id: '36',
       name: 'Gingerbread Cookies',
       imageUrl:
-          'https://images.unsplash.com/photo-1545558014-8692077e9b5c?w=400',
-      cookingTime: '45 minutes + chilling time',
+          'https://images.unsplash.com/photo-1610562275255-03b7fa0d4655?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8Z2luZ2VyYnJlYWQlMjBjb29raWVzfGVufDB8fDB8fHww',
+      cookingTime: '45 min ',
       category: 'cookies',
       ingredients: [
         '3 cups plain flour',
@@ -193,7 +193,7 @@ class CookieRecipes {
         'Preheat oven to 180°C.',
         'Roll dough to 6mm thickness on floured surface.',
         'Cut with cookie cutters, place on lined baking sheets.',
-        'Bake 8-10 minutes until edges are lightly browned.',
+        'Bake 8-10 min until edges are lightly browned.',
         'Cool completely before decorating with royal icing.',
       ],
     ),
@@ -202,8 +202,8 @@ class CookieRecipes {
       id: '37',
       name: 'Shortbread Cookies',
       imageUrl:
-          'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400',
-      cookingTime: '35 minutes',
+          'https://images.unsplash.com/photo-1691201327097-3d62e5c7b75f?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTZ8fHNob3J0YnJlYWQlMjBjb29raWVzfGVufDB8fDB8fHww',
+      cookingTime: '35 min',
       category: 'cookies',
       ingredients: [
         '2 cups plain flour',
@@ -221,7 +221,7 @@ class CookieRecipes {
         'Press dough into ungreased 23cm round pan.',
         'Score into 16 wedges with knife.',
         'Prick all over with fork.',
-        'Bake 25-30 minutes until lightly golden.',
+        'Bake 25-30 min until lightly golden.',
         'Cut along score lines while warm, cool in pan.',
       ],
     ),
@@ -231,7 +231,7 @@ class CookieRecipes {
       name: 'Lemon Crinkle Cookies',
       imageUrl:
           'https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=400',
-      cookingTime: '25 minutes',
+      cookingTime: '25 min',
       category: 'cookies',
       ingredients: [
         '2 1/4 cups plain flour',
@@ -251,11 +251,11 @@ class CookieRecipes {
         'Cream butter and granulated sugar until fluffy.',
         'Beat in egg, lemon zest, lemon juice, and vanilla.',
         'Gradually mix in flour mixture.',
-        'Chill dough for 30 minutes.',
+        'Chill dough for 30 min.',
         'Roll dough into walnut-sized balls.',
         'Roll each ball in powdered sugar.',
         'Place on prepared baking sheets.',
-        'Bake 10-12 minutes until edges are lightly golden.',
+        'Bake 10-12 min until edges are lightly golden.',
       ],
     ),
 
@@ -263,8 +263,8 @@ class CookieRecipes {
       id: '39',
       name: 'Thumbprint Cookies',
       imageUrl:
-          'https://images.unsplash.com/photo-1549012419-cec214fd2636?w=400',
-      cookingTime: '30 minutes',
+          'https://plus.unsplash.com/premium_photo-1671399556279-a681f8668992?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8dGh1bWJwcmludCUyMGNvb2tpZXN8ZW58MHx8MHx8fDA%3D',
+      cookingTime: '30 min',
       category: 'cookies',
       ingredients: [
         '2 cups plain flour',
@@ -288,7 +288,7 @@ class CookieRecipes {
         'Place on prepared baking sheets.',
         'Make indentation in center with thumb.',
         'Fill each indentation with 1/2 tsp jam.',
-        'Bake 15-18 minutes until lightly golden.',
+        'Bake 15-18 min until lightly golden.',
       ],
     ),
 
@@ -296,8 +296,8 @@ class CookieRecipes {
       id: '40',
       name: 'Chocolate Crinkle Cookies',
       imageUrl:
-          'https://images.unsplash.com/photo-1511381939415-e44015466834?w=400',
-      cookingTime: '25 minutes + chilling time',
+          'https://images.unsplash.com/photo-1595447966838-4539afd86068?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8Y2hvY29sYXRlJTIwY2hyaW5rbGUlMjBjb29raWVzfGVufDB8fDB8fHww',
+      cookingTime: '25 min ',
       category: 'cookies',
       ingredients: [
         '1 cup plain flour',
@@ -320,7 +320,7 @@ class CookieRecipes {
         'Roll chilled dough into walnut-sized balls.',
         'Roll each ball in powdered sugar until completely coated.',
         'Place on prepared baking sheets.',
-        'Bake 10-12 minutes until cookies are cracked and set.',
+        'Bake 10-12 min until cookies are cracked and set.',
       ],
     ),
   ];

@@ -39,11 +39,85 @@ class RecipesCategories extends StatelessWidget {
                       child: Hero(
                         tag: category.id,
                         child: Container(
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: NetworkImage(category.imageUrl),
-                              fit: BoxFit.cover,
-                            ),
+                          width: double.infinity,
+                          height: double.infinity,
+                          child: Image.network(
+                            category.imageUrl,
+                            fit: BoxFit.cover,
+                            loadingBuilder: (context, child, loadingProgress) {
+                              if (loadingProgress == null) return child;
+                              // Show pink background while loading
+                              return Container(
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                    colors: [
+                                      const Color.fromARGB(
+                                        255,
+                                        241,
+                                        181,
+                                        212,
+                                      ), // Light pink
+                                      const Color.fromARGB(
+                                        255,
+                                        248,
+                                        187,
+                                        208,
+                                      ), // Slightly lighter pink
+                                    ],
+                                  ),
+                                ),
+                                child: Center(
+                                  child: CircularProgressIndicator(
+                                    color: const Color.fromARGB(
+                                      255,
+                                      67,
+                                      47,
+                                      21,
+                                    ), // Chocolate brown
+                                    strokeWidth: 2,
+                                  ),
+                                ),
+                              );
+                            },
+                            errorBuilder: (context, error, stackTrace) {
+                              // Show pink background with icon if image fails to load
+                              return Container(
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                    colors: [
+                                      const Color.fromARGB(
+                                        255,
+                                        241,
+                                        181,
+                                        212,
+                                      ), // Light pink
+                                      const Color.fromARGB(
+                                        255,
+                                        248,
+                                        187,
+                                        208,
+                                      ), // Slightly lighter pink
+                                    ],
+                                  ),
+                                ),
+                                child: Center(
+                                  child: Icon(
+                                    Icons.cake,
+                                    size: 30,
+                                    color: const Color.fromARGB(
+                                      255,
+                                      67,
+                                      47,
+                                      21,
+                                    ), // Chocolate brown
+                                  ),
+                                ),
+                              );
+                            },
                           ),
                         ),
                       ),
