@@ -1,4 +1,3 @@
-// File: lib/features/widgets/cooking_time_card.dart
 import 'package:flutter/material.dart';
 
 class CookingTimeCard extends StatelessWidget {

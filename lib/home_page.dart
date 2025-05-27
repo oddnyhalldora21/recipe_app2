@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:recipe_app/features/profile_page/my_profile_page.dart';
 import 'package:recipe_app/features/widgets/all_recipes.dart';
 import 'package:recipe_app/features/widgets/recipes_categories.dart';
 import 'package:recipe_app/features/widgets/recipes_search_bar.dart';
-import 'package:recipe_app/features/widgets/surprise_me.dart'; // Your SurpriseMe widget
+import 'package:recipe_app/features/widgets/surprise_me.dart';
 import 'package:recipe_app/features/recipes_pages/all_recipes_page.dart';
-import 'package:recipe_app/features/widgets/all_recipes.dart';
 
 class RecipePage extends StatefulWidget {
   const RecipePage({super.key});
@@ -38,6 +38,23 @@ class _RecipePageState extends State<RecipePage> {
       ), // background color
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 241, 181, 212),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 6),
+            child: IconButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const ProfilePage()),
+                );
+              },
+              icon: Icon(
+                Icons.person_outline,
+                color: const Color.fromARGB(255, 67, 47, 21),
+              ),
+            ),
+          ),
+        ],
         centerTitle: false,
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

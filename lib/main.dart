@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:recipe_app/sweet_treat_app.dart';
+import 'package:recipe_app/bottom_navigation_bar.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 void main() {

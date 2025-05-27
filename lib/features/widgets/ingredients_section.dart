@@ -1,4 +1,3 @@
-// File: lib/features/widgets/ingredients_section.dart
 import 'package:flutter/material.dart';
 
 class IngredientsSection extends StatelessWidget {

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:recipe_app/features/recipes_pages/recipe_category_list_home_page.dart';
-import 'package:recipe_app/features/recipes_pages/recipe_category_page.dart';
 import 'package:recipe_app/features/recipe_ingredients/recipes_index.dart';
 import 'dart:math';
 import 'package:recipe_app/features/recipes_pages/recipe_details.dart';

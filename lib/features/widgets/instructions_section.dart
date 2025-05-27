@@ -1,4 +1,3 @@
-// File: lib/features/widgets/instructions_section.dart
 import 'package:flutter/material.dart';
 
 class InstructionsSection extends StatelessWidget {
