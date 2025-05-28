@@ -102,11 +102,16 @@ class UserRecipesGrid extends StatelessWidget {
                   clipBehavior: Clip.antiAlias,
                   child: Container(
                     width: double.infinity,
+                    height: double.infinity,
                     child: Image.network(
                       recipe.imageUrl,
                       fit: BoxFit.cover,
+                      width: double.infinity,
+                      height: double.infinity,
                       errorBuilder: (context, error, stackTrace) {
                         return Container(
+                          width: double.infinity,
+                          height: double.infinity,
                           decoration: const BoxDecoration(
                             gradient: LinearGradient(
                               begin: Alignment.topLeft,
