@@ -49,7 +49,6 @@ class _AddRecipeBottomSheetState extends ConsumerState<AddRecipeBottomSheet> {
       _isLoading = true;
     });
 
-    // Create ingredient list from text input
     final ingredientsList =
         _ingredientsController.text
             .split('\n')
@@ -57,7 +56,6 @@ class _AddRecipeBottomSheetState extends ConsumerState<AddRecipeBottomSheet> {
             .map((ingredient) => ingredient.trim())
             .toList();
 
-    // Create instruction list from text input
     final instructionsList =
         _instructionsController.text
             .split('\n')
@@ -65,33 +63,27 @@ class _AddRecipeBottomSheetState extends ConsumerState<AddRecipeBottomSheet> {
             .map((instruction) => instruction.trim())
             .toList();
 
-    // Create the new recipe
     final newRecipe = Recipe(
-      id:
-          DateTime.now().millisecondsSinceEpoch
-              .toString(), // Simple ID generation
+      id: DateTime.now().millisecondsSinceEpoch.toString(),
       name: _nameController.text.trim(),
       imageUrl:
           _imageUrlController.text.trim().isEmpty
               ? 'https://via.placeholder.com/300x200/F1B5D4/432F15?text=My+Recipe'
               : _imageUrlController.text.trim(),
       cookingTime: _cookingTimeController.text.trim(),
-      category: 'My Recipes', // Default category for user recipes
+      category: 'My Recipes',
       ingredients: ingredientsList,
       instructions: instructionsList,
     );
 
-    // Add to user recipes
     ref.read(userRecipesProvider.notifier).addRecipe(newRecipe);
 
     setState(() {
       _isLoading = false;
     });
 
-    // Close the bottom sheet
     Navigator.of(context).pop();
 
-    // Show success message
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('Recipe "${newRecipe.name}" added successfully!'),
@@ -114,7 +106,6 @@ class _AddRecipeBottomSheetState extends ConsumerState<AddRecipeBottomSheet> {
       ),
       child: Column(
         children: [
-          // Handle bar
           Container(
             margin: const EdgeInsets.only(top: 12),
             width: 40,
@@ -125,7 +116,6 @@ class _AddRecipeBottomSheetState extends ConsumerState<AddRecipeBottomSheet> {
             ),
           ),
 
-          // Header
           Padding(
             padding: const EdgeInsets.all(20),
             child: Row(
@@ -150,7 +140,6 @@ class _AddRecipeBottomSheetState extends ConsumerState<AddRecipeBottomSheet> {
             ),
           ),
 
-          // Form
           Expanded(
             child: SingleChildScrollView(
               padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -241,7 +230,6 @@ class _AddRecipeBottomSheetState extends ConsumerState<AddRecipeBottomSheet> {
             ),
           ),
 
-          // Save Button
           Container(
             padding: const EdgeInsets.all(20),
             child: SizedBox(

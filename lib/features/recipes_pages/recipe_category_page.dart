@@ -9,7 +9,6 @@ class RecipeCategoryPage extends ConsumerWidget {
 
   final RecipeCategoryList recipeCategoryList;
 
-  // ADD THIS FUNCTION - This gets recipes based on category name
   List<Recipe> getRecipesByCategory(String categoryName) {
     switch (categoryName.toLowerCase()) {
       case 'chocolate':
@@ -35,7 +34,6 @@ class RecipeCategoryPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // ADD THIS LINE - Get the actual recipes for this category
     final recipes = getRecipesByCategory(recipeCategoryList.name);
 
     return Scaffold(
@@ -72,10 +70,9 @@ class RecipeCategoryPage extends ConsumerWidget {
             mainAxisSpacing: 20,
             childAspectRatio: 0.75,
           ),
-          // CHANGE THIS - Use actual recipe count instead of hardcoded 10
+
           itemCount: recipes.length > 10 ? 10 : recipes.length,
           itemBuilder: (context, index) {
-            // ADD THIS LINE - Get the actual recipe at this index
             final recipe = recipes[index];
 
             return GestureDetector(
@@ -90,7 +87,6 @@ class RecipeCategoryPage extends ConsumerWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // CHANGE THIS - Replace gradient container with real image
                   Expanded(
                     child: Card(
                       elevation: 6,
@@ -101,11 +97,11 @@ class RecipeCategoryPage extends ConsumerWidget {
                       child: Container(
                         width: double.infinity,
                         child: Image.network(
-                          recipe.imageUrl, // REAL recipe image URL
+                          recipe.imageUrl,
                           fit: BoxFit.cover,
                           loadingBuilder: (context, child, loadingProgress) {
                             if (loadingProgress == null) return child;
-                            // Show loading spinner while image loads
+
                             return Container(
                               color: const Color.fromARGB(255, 241, 181, 212),
                               child: Center(
@@ -116,7 +112,6 @@ class RecipeCategoryPage extends ConsumerWidget {
                             );
                           },
                           errorBuilder: (context, error, stackTrace) {
-                            // Show fallback if image fails to load
                             return Container(
                               decoration: BoxDecoration(
                                 gradient: LinearGradient(
@@ -144,14 +139,12 @@ class RecipeCategoryPage extends ConsumerWidget {
 
                   SizedBox(height: 8),
 
-                  // CHANGE THIS - Use real recipe data
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      // REAL recipe name
                       Expanded(
                         child: Text(
-                          recipe.name, // Like "Classic Fudgy Brownies"
+                          recipe.name,
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
@@ -162,7 +155,6 @@ class RecipeCategoryPage extends ConsumerWidget {
                         ),
                       ),
 
-                      // REAL cooking time
                       Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -173,7 +165,7 @@ class RecipeCategoryPage extends ConsumerWidget {
                           ),
                           SizedBox(width: 4),
                           Text(
-                            recipe.cookingTime, // Like "45 min"
+                            recipe.cookingTime,
                             style: TextStyle(
                               fontSize: 12,
                               color: const Color.fromARGB(255, 67, 47, 21),

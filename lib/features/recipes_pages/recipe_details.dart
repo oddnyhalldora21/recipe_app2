@@ -20,7 +20,6 @@ class RecipeDetailsPage extends ConsumerWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // Recipe Image with cute frame
             ImageFrame(imageUrl: recipe.imageUrl),
 
             // Cooking time card
@@ -32,7 +31,7 @@ class RecipeDetailsPage extends ConsumerWidget {
             // Instructions section
             InstructionsSection(instructions: recipe.instructions),
 
-            const SizedBox(height: 40), // Extra space at bottom
+            const SizedBox(height: 40),
           ],
         ),
       ),
@@ -84,9 +83,9 @@ class RecipeDetailsPage extends ConsumerWidget {
                           ) // Darker brown when favorited
                           : const Color.fromARGB(
                             255,
-                            67,
-                            47,
-                            21,
+                            255,
+                            237,
+                            214,
                           ), // Regular brown when not favorited
                 ),
               ),

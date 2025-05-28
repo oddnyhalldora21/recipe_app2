@@ -3,15 +3,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:recipe_app/features/recipe_ingredients/recipes_index.dart';
 import 'dart:math';
 import 'package:recipe_app/features/recipes_pages/recipe_details.dart';
+import 'package:recipe_app/features/recipe_ingredients/class_recipes.dart';
 
 class AllRecipes extends ConsumerWidget {
   const AllRecipes({super.key});
 
-  // Function to get random recipes from all categories
   List<Recipe> getRandomRecipes(int count) {
     List<Recipe> allRecipes = [];
 
-    // Combine all recipes from different categories
     allRecipes.addAll(ChocolateRecipes.getAllChocolateRecipes());
     allRecipes.addAll(PuffPastryRecipes.getAllPuffPastryRecipes());
     allRecipes.addAll(VeganRecipes.getAllVeganRecipes());
@@ -21,7 +20,6 @@ class AllRecipes extends ConsumerWidget {
     allRecipes.addAll(NoBakeRecipes.getAllNoBakeRecipes());
     allRecipes.addAll(SugarFreeRecipes.getAllSugarFreeRecipes());
 
-    // Shuffle the list and take the first 'count' items
     allRecipes.shuffle(Random());
     return allRecipes.take(count).toList();
   }
@@ -29,7 +27,7 @@ class AllRecipes extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final randomRecipes = getRandomRecipes(10); // Get 6 random recipes
+    final randomRecipes = getRandomRecipes(10);
 
     return Padding(
       padding: const EdgeInsets.only(top: 10, bottom: 20),
@@ -125,12 +123,7 @@ class AllRecipes extends ConsumerWidget {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: theme.textTheme.bodyLarge?.copyWith(
-                        color: const Color.fromARGB(
-                          255,
-                          67,
-                          47,
-                          21,
-                        ), // Chocolate brown
+                        color: const Color.fromARGB(255, 67, 47, 21),
                         fontWeight: FontWeight.w500,
                       ),
                     ),

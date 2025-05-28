@@ -1,10 +1,7 @@
-// File: lib/features/favorites/favorites_saves.dart
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:convert';
 import 'package:recipe_app/features/recipe_ingredients/recipes_index.dart';
 
-// Simple favorites provider using SharedPreferences
 class FavoritesSaves extends StateNotifier<List<Recipe>> {
   FavoritesSaves() : super([]) {
     loadFavorites();
@@ -12,13 +9,11 @@ class FavoritesSaves extends StateNotifier<List<Recipe>> {
 
   static const String _favoritesKey = 'favorite_recipes';
 
-  // Load favorites from storage
   Future<void> loadFavorites() async {
     try {
       final prefs = await SharedPreferences.getInstance();
       final favoriteIds = prefs.getStringList(_favoritesKey) ?? [];
 
-      // Get all recipes from all categories
       List<Recipe> allRecipes = [];
       allRecipes.addAll(ChocolateRecipes.getAllChocolateRecipes());
       allRecipes.addAll(VeganRecipes.getAllVeganRecipes());
@@ -28,7 +23,6 @@ class FavoritesSaves extends StateNotifier<List<Recipe>> {
       allRecipes.addAll(PuffPastryRecipes.getAllPuffPastryRecipes());
       allRecipes.addAll(GlutenFreeRecipes.getAllGlutenFreeRecipes());
 
-      // Filter recipes that are in favorites
       final favoriteRecipes =
           allRecipes
               .where((recipe) => favoriteIds.contains(recipe.id))
@@ -41,7 +35,6 @@ class FavoritesSaves extends StateNotifier<List<Recipe>> {
     }
   }
 
-  // Add recipe to favorites
   Future<void> addToFavorites(Recipe recipe) async {
     try {
       final prefs = await SharedPreferences.getInstance();
@@ -57,7 +50,6 @@ class FavoritesSaves extends StateNotifier<List<Recipe>> {
     }
   }
 
-  // Remove recipe from favorites
   Future<void> removeFromFavorites(String recipeId) async {
     try {
       final prefs = await SharedPreferences.getInstance();
@@ -71,12 +63,10 @@ class FavoritesSaves extends StateNotifier<List<Recipe>> {
     }
   }
 
-  // Check if recipe is favorited
   bool isFavorited(String recipeId) {
     return state.any((recipe) => recipe.id == recipeId);
   }
 
-  // Toggle favorite status
   Future<void> toggleFavorite(Recipe recipe) async {
     if (isFavorited(recipe.id)) {
       await removeFromFavorites(recipe.id);
@@ -86,7 +76,6 @@ class FavoritesSaves extends StateNotifier<List<Recipe>> {
   }
 }
 
-// Provider for the favorites
 final favoritesProvider = StateNotifierProvider<FavoritesSaves, List<Recipe>>((
   ref,
 ) {

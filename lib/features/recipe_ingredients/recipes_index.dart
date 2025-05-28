@@ -7,4 +7,3 @@ export 'nobake_recipe_ingredients.dart';
 export 'nosugar_recipe_ingredients.dart';
 export 'vegan_recipe_ingredients.dart';
 export 'puff_pastry_recipe_ingredients.dart';
-export 'class_recipes.dart';
