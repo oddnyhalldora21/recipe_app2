@@ -5,9 +5,9 @@ class DummyUserRecipes {
     return [
       Recipe(
         id: 'dummy_1',
-        name: 'Classic Fluffy Pancakes',
+        name: 'Classic Pancakes',
         imageUrl:
-            'https://media.istockphoto.com/id/172204271/photo/european-style-pancakes-on-a-plate.webp?a=1&b=1&s=612x612&w=0&k=20&c=nswRC8CGSPh3ukvNHrTqgchykcAzLCBJ6mpfs3E7Pzg=',
+            'https://images.unsplash.com/photo-1605491126280-66fb78876012?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fHJvbGxlZCUyMHBhbmNha2VzfGVufDB8fDB8fHww',
         cookingTime: '20 mins',
         category: 'My Recipes',
         ingredients: [
@@ -39,7 +39,7 @@ class DummyUserRecipes {
         id: 'dummy_2',
         name: 'Blueberry Muffins',
         imageUrl:
-            'https://media.istockphoto.com/id/1333361724/photo/open-blueberry-cupcake.webp?a=1&b=1&s=612x612&w=0&k=20&c=8Uy61t3RemLU4Xfhbj9pg8Yx3Prx12J0Yu_tsQhDKJQ=',
+            'https://images.unsplash.com/photo-1722251172860-39856cdd3bcd?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fGJsdWJlcnJ5JTIwbXVmZmluc3xlbnwwfHwwfHx8MA%3D%3D',
         cookingTime: '35 mins',
         category: 'My Recipes',
         ingredients: [

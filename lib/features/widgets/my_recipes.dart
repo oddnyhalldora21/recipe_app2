@@ -12,7 +12,6 @@ class MyRecipesWidget extends ConsumerWidget {
     final theme = Theme.of(context);
     final myRecipes = ref.watch(userRecipesProvider);
 
-    // Show empty state if no recipes
     if (myRecipes.isEmpty) {
       return Padding(
         padding: const EdgeInsets.only(top: 10, bottom: 20),
@@ -66,157 +65,146 @@ class MyRecipesWidget extends ConsumerWidget {
           scrollDirection: Axis.horizontal,
           itemBuilder: (context, index) {
             final recipe = myRecipes[index];
-            return GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => RecipeDetailsPage(recipe: recipe),
-                  ),
-                );
-              },
-              child: SizedBox(
-                width: 150,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: Stack(
-                        children: [
-                          Hero(
-                            tag: 'my_recipe_${recipe.id}',
-                            child: Card(
-                              margin: const EdgeInsets.only(bottom: 4),
-                              elevation: 4,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              clipBehavior: Clip.antiAlias,
-                              child: Container(
-                                width: double.infinity,
-                                child: Image.network(
-                                  recipe.imageUrl,
-                                  fit: BoxFit.cover,
-                                  loadingBuilder: (
-                                    context,
-                                    child,
-                                    loadingProgress,
-                                  ) {
-                                    if (loadingProgress == null) return child;
-                                    return Container(
-                                      color: const Color.fromARGB(
-                                        255,
-                                        241,
-                                        181,
-                                        212,
-                                      ),
-                                      child: const Center(
-                                        child: CircularProgressIndicator(
-                                          color: Color.fromARGB(
-                                            255,
-                                            67,
-                                            47,
-                                            21,
-                                          ),
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                  errorBuilder: (context, error, stackTrace) {
-                                    return Container(
-                                      decoration: const BoxDecoration(
-                                        gradient: LinearGradient(
-                                          begin: Alignment.topLeft,
-                                          end: Alignment.bottomRight,
-                                          colors: [
-                                            Color.fromARGB(255, 241, 181, 212),
-                                            Color.fromARGB(255, 248, 187, 208),
-                                          ],
-                                        ),
-                                      ),
-                                      child: const Center(
-                                        child: Icon(
-                                          Icons.cake,
-                                          size: 40,
-                                          color: Color.fromARGB(
-                                            255,
-                                            67,
-                                            47,
-                                            21,
-                                          ),
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                ),
-                              ),
-                            ),
-                          ),
-                          // "MINE" badge
-                          Positioned(
-                            top: 8,
-                            left: 8,
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 6,
-                                vertical: 2,
-                              ),
-                              decoration: BoxDecoration(
-                                color: const Color.fromARGB(
-                                  255,
-                                  67,
-                                  47,
-                                  21,
-                                ).withOpacity(0.9),
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: const Text(
-                                'MINE',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 8,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Text(
-                      recipe.name,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: theme.textTheme.bodyLarge?.copyWith(
-                        color: const Color.fromARGB(255, 67, 47, 21),
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    // Cooking time
-                    Row(
-                      children: [
-                        const Icon(
-                          Icons.timer,
-                          size: 12,
-                          color: Color.fromARGB(255, 67, 47, 21),
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          recipe.cookingTime,
-                          style: const TextStyle(
-                            fontSize: 11,
-                            color: Color.fromARGB(255, 67, 47, 21),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            );
+            return _buildRecipeCard(context, recipe, theme);
           },
           separatorBuilder: (context, index) => const SizedBox(width: 14),
           itemCount: myRecipes.length,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildRecipeCard(
+    BuildContext context,
+    Recipe recipe,
+    ThemeData theme,
+  ) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => RecipeDetailsPage(recipe: recipe),
+          ),
+        );
+      },
+      child: SizedBox(
+        width: 150,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: Stack(
+                children: [
+                  Hero(
+                    tag: 'my_recipe_${recipe.id}',
+                    child: Card(
+                      margin: const EdgeInsets.only(bottom: 4),
+                      elevation: 4,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      clipBehavior: Clip.antiAlias,
+                      child: Container(
+                        width: double.infinity,
+                        child: Image.network(
+                          recipe.imageUrl,
+                          fit: BoxFit.cover,
+                          loadingBuilder: (context, child, loadingProgress) {
+                            if (loadingProgress == null) return child;
+                            return Container(
+                              color: const Color.fromARGB(255, 241, 181, 212),
+                              child: const Center(
+                                child: CircularProgressIndicator(
+                                  color: Color.fromARGB(255, 67, 47, 21),
+                                ),
+                              ),
+                            );
+                          },
+                          errorBuilder: (context, error, stackTrace) {
+                            return Container(
+                              decoration: const BoxDecoration(
+                                gradient: LinearGradient(
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                  colors: [
+                                    Color.fromARGB(255, 241, 181, 212),
+                                    Color.fromARGB(255, 248, 187, 208),
+                                  ],
+                                ),
+                              ),
+                              child: const Center(
+                                child: Icon(
+                                  Icons.cake,
+                                  size: 40,
+                                  color: Color.fromARGB(255, 67, 47, 21),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                  ),
+                  // "MINE" badge
+                  Positioned(
+                    top: 8,
+                    left: 8,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 6,
+                        vertical: 2,
+                      ),
+                      decoration: BoxDecoration(
+                        color: const Color.fromARGB(
+                          255,
+                          67,
+                          47,
+                          21,
+                        ).withOpacity(0.9),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: const Text(
+                        'MINE',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 8,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Text(
+              recipe.name,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: theme.textTheme.bodyLarge?.copyWith(
+                color: const Color.fromARGB(255, 67, 47, 21),
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            // Cooking time
+            Row(
+              children: [
+                const Icon(
+                  Icons.timer,
+                  size: 12,
+                  color: Color.fromARGB(255, 67, 47, 21),
+                ),
+                const SizedBox(width: 4),
+                Text(
+                  recipe.cookingTime,
+                  style: const TextStyle(
+                    fontSize: 11,
+                    color: Color.fromARGB(255, 67, 47, 21),
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );
