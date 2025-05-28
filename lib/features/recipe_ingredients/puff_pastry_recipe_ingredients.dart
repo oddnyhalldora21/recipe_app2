@@ -6,7 +6,7 @@ class PuffPastryRecipes {
       id: '71',
       name: 'Classic Apple Turnovers',
       imageUrl:
-          'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8YXBwbGUlMjB0dXJub3ZlcnN8ZW58MHx8MHx8fDA%3D',
+          'https://media.istockphoto.com/id/1150422211/photo/apple-strudel-pastry.webp?a=1&b=1&s=612x612&w=0&k=20&c=-nUN-j2BbU1W-SkVvKjV6Uuxk35RXYOq4RgVClaOBok=',
       cookingTime: '35 min',
       category: 'puff-pastry',
       ingredients: [
@@ -37,7 +37,7 @@ class PuffPastryRecipes {
       id: '72',
       name: 'Chocolate Croissants',
       imageUrl:
-          'https://images.unsplash.com/photo-1555507036-ab794f4afe5c?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8Y2hvY29sYXRlJTIwY3JvaXNzYW50fGVufDB8fDB8fHww',
+          'https://media.istockphoto.com/id/180824921/photo/fresh-chocolate-croissants-on-a-plate.webp?a=1&b=1&s=612x612&w=0&k=20&c=44Uw6NL-hYLCt5pNhVqmFTmlwnnDbUcQC8mfE8WDks8=',
       cookingTime: '25 min',
       category: 'puff-pastry',
       ingredients: [
@@ -64,7 +64,7 @@ class PuffPastryRecipes {
       id: '73',
       name: 'Berry Puff Pastry Tart',
       imageUrl:
-          'https://images.unsplash.com/photo-1464305795204-6f5bbfc7fb81?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8YmVycnklMjB0YXJ0fGVufDB8fDB8fHww',
+          'https://media.istockphoto.com/id/1395084907/photo/rustic-apple-blueberry-and-raspberry-custard-danishes-on-slate-platter.webp?a=1&b=1&s=612x612&w=0&k=20&c=uOYM7kq_U543uBKyAa4rHYwlFDM9q-AP8Si5KD591dc=',
       cookingTime: '40 min',
       category: 'puff-pastry',
       ingredients: [
@@ -94,7 +94,7 @@ class PuffPastryRecipes {
       id: '74',
       name: 'Cinnamon Sugar Palmiers',
       imageUrl:
-          'https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8cGFsbWllcnN8ZW58MHx8MHx8fDA%3D',
+          'https://media.istockphoto.com/id/2000284595/photo/palmier-short-for-feuille-de-palmier-palm-tree-leaf-french-hearts-cookies-palmiers-are-made.webp?a=1&b=1&s=612x612&w=0&k=20&c=coKQRC5niLBFfUrjQsIDZBEoV51Ozt2ItqbkAbL_YqQ=',
       cookingTime: '30 min',
       category: 'puff-pastry',
       ingredients: [
@@ -120,7 +120,7 @@ class PuffPastryRecipes {
       id: '75',
       name: 'Cream Cheese Danish',
       imageUrl:
-          'https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8ZGFuaXNoJTIwcGFzdHJ5fGVufDB8fDB8fHww',
+          'https://media.istockphoto.com/id/1495083338/photo/top-view-of-two-delicious-cream-cheese-danishes-with-one-half-eaten-on-a-gray-mottled-tabletop.webp?a=1&b=1&s=612x612&w=0&k=20&c=pK1aYJknR1PjvqElipsrxMGCTk3EARcKsrJl9fd_XM8=',
       cookingTime: '35 min',
       category: 'puff-pastry',
       ingredients: [
@@ -150,7 +150,7 @@ class PuffPastryRecipes {
       id: '76',
       name: 'Nutella Puff Pastry Twists',
       imageUrl:
-          'https://images.unsplash.com/photo-1549054537-ac5cf4ec35d7?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fG51dGVsbGElMjBwYXN0cnl8ZW58MHx8MHx8fDA%3D',
+          'https://media.istockphoto.com/id/1491313830/photo/sweden-kanelbullar.webp?a=1&b=1&s=612x612&w=0&k=20&c=pzqfbz4n9bZGqZrND17HnAh_BL71aQMjPXugKKizv1I=',
       cookingTime: '25 min',
       category: 'puff-pastry',
       ingredients: [
@@ -177,7 +177,7 @@ class PuffPastryRecipes {
       id: '77',
       name: 'Pear and Almond Galette',
       imageUrl:
-          'https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8cGVhciUyMGdhbGV0dGV8ZW58MHx8MHx8fDA%3D',
+          'https://media.istockphoto.com/id/1158606974/photo/pear-tart.webp?a=1&b=1&s=612x612&w=0&k=20&c=M7ks-Ofg41GdHulYdoRDbS3Dz7aB9R9F8u4oRAss4F8=',
       cookingTime: '45 min',
       category: 'puff-pastry',
       ingredients: [
@@ -207,7 +207,7 @@ class PuffPastryRecipes {
       id: '78',
       name: 'Strawberry Napoleon',
       imageUrl:
-          'https://images.unsplash.com/photo-1486627701670-66cc2348c4d2?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8c3RyYXdiZXJyeSUyMG5hcG9sZW9ufGVufDB8fDB8fHww',
+          'https://media.istockphoto.com/id/165769769/photo/strawberry-mille-feuille-dessert-with-coffee-and-milk.webp?a=1&b=1&s=612x612&w=0&k=20&c=IlfK_D1QElMb9eWNWo0g8CdHnCFqQ8clQbVqerM4EII=',
       cookingTime: '50 min + 2 h ',
       category: 'puff-pastry',
       ingredients: [
@@ -236,7 +236,7 @@ class PuffPastryRecipes {
       id: '79',
       name: 'Banana Cream Puffs',
       imageUrl:
-          'https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8Y3JlYW0lMjBwdWZmc3xlbnwwfHwwfHx8MA%3D%3D',
+          'https://media.istockphoto.com/id/1138250670/photo/homemade-pastry-eclair.webp?a=1&b=1&s=612x612&w=0&k=20&c=8CuA2DImROsj9g5yZnjqsiV54Id9f36TtzsSQ0HZKjE=',
       cookingTime: '40 min',
       category: 'puff-pastry',
       ingredients: [
@@ -265,7 +265,7 @@ class PuffPastryRecipes {
       id: '80',
       name: 'Caramel Apple Strudel',
       imageUrl:
-          'https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fGFwcGxlJTIwc3RydWRlbHxlbnwwfHwwfHx8MA%3D%3D',
+          'https://media.istockphoto.com/id/137881018/photo/close-up-of-a-slice-of-apple-strudel-cake.webp?a=1&b=1&s=612x612&w=0&k=20&c=hX41F4wim9R5i0oMiv8QxfvM9RhMrC7NYhdkm-WnbVI=',
       cookingTime: '50 min',
       category: 'puff-pastry',
       ingredients: [

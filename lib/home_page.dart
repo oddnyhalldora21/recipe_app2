@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:recipe_app/features/profile_page/my_profile_page.dart';
+import 'package:recipe_app/features/recipes_pages/recipe_details.dart';
 import 'package:recipe_app/features/widgets/all_recipes.dart';
+import 'package:recipe_app/features/widgets/my_recipes.dart';
 import 'package:recipe_app/features/widgets/recipes_categories.dart';
 import 'package:recipe_app/features/widgets/recipes_search_bar.dart';
 import 'package:recipe_app/features/widgets/surprise_me.dart';
@@ -79,7 +81,17 @@ class _RecipePageState extends State<RecipePage> {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          RecipesSearchBar(),
+          RecipesSearchBar(
+            onRecipeSelected: (recipe) {
+              // Simple direct navigation - no complex callback logic
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => RecipeDetailsPage(recipe: recipe),
+                ),
+              );
+            },
+          ),
           SizedBox(height: 20),
 
           Text(
@@ -142,7 +154,14 @@ class _RecipePageState extends State<RecipePage> {
                   ),
                 ),
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const ProfilePage(),
+                      ),
+                    );
+                  },
                   child: Text(
                     "see all",
                     style: TextStyle(
@@ -153,6 +172,7 @@ class _RecipePageState extends State<RecipePage> {
               ],
             ),
           ),
+          MyRecipesWidget(),
 
           Padding(
             padding: const EdgeInsets.only(top: 20),

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:recipe_app/features/recipe_ingredients/recipes_index.dart';
 import 'package:recipe_app/features/user_recipes_provider.dart';
 import 'package:recipe_app/features/profile_page/recipe_bottom_sheet.dart';
+import 'package:recipe_app/features/recipes_pages/recipe_details.dart';
 
 class ProfilePage extends ConsumerWidget {
   const ProfilePage({super.key, this.onRecipeSelected});
@@ -46,6 +47,8 @@ class ProfilePage extends ConsumerWidget {
 
             // User Recipes Grid
             _buildRecipesGrid(userRecipes),
+
+            const SizedBox(height: 40),
           ],
         ),
       ),
@@ -95,17 +98,6 @@ class ProfilePage extends ConsumerWidget {
         ),
 
         const SizedBox(height: 8),
-
-        // Optional subtitle
-        const Text(
-          'Sweet Treat Creator',
-          style: TextStyle(
-            fontSize: 16,
-            color: Color.fromARGB(255, 67, 47, 21),
-            fontStyle: FontStyle.italic,
-          ),
-          textAlign: TextAlign.center,
-        ),
       ],
     );
   }
@@ -224,15 +216,20 @@ class ProfilePage extends ConsumerWidget {
       itemCount: userRecipes.length > 6 ? 6 : userRecipes.length,
       itemBuilder: (context, index) {
         final recipe = userRecipes[index];
-        return _buildUserRecipeCard(recipe);
+        return _buildUserRecipeCard(recipe, context);
       },
     );
   }
 
-  Widget _buildUserRecipeCard(Recipe recipe) {
+  Widget _buildUserRecipeCard(Recipe recipe, BuildContext context) {
     return GestureDetector(
       onTap: () {
-        onRecipeSelected?.call(recipe);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => RecipeDetailsPage(recipe: recipe),
+          ),
+        );
       },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
