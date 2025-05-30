@@ -186,24 +186,6 @@ class MyRecipesWidget extends ConsumerWidget {
                 fontWeight: FontWeight.w500,
               ),
             ),
-            // Cooking time
-            Row(
-              children: [
-                const Icon(
-                  Icons.timer,
-                  size: 12,
-                  color: Color.fromARGB(255, 67, 47, 21),
-                ),
-                const SizedBox(width: 4),
-                Text(
-                  recipe.cookingTime,
-                  style: const TextStyle(
-                    fontSize: 11,
-                    color: Color.fromARGB(255, 67, 47, 21),
-                  ),
-                ),
-              ],
-            ),
           ],
         ),
       ),
