@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:recipe_app/features/recipes_pages/recipe_category_list_home_page.dart';
 import 'package:recipe_app/features/recipes_pages/recipe_category_page.dart';
 import 'package:recipe_app/shared/app_theme.dart';
+import 'package:recipe_app/shared/fade_page_route.dart';
 
 class RecipesCategories extends StatelessWidget {
   const RecipesCategories({super.key});
@@ -20,11 +21,7 @@ class RecipesCategories extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                  builder:
-                      (context) =>
-                          RecipeCategoryPage(recipeCategoryList: category),
-                ),
+                fadeRoute(RecipeCategoryPage(recipeCategoryList: category)),
               );
             },
             child: SizedBox(

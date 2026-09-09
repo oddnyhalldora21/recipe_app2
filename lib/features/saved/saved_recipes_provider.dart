@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:recipe_app/features/all_recipes_page/all_recipes_widgets/recipe_service.dart';
 import 'package:recipe_app/features/recipe_ingredients/recipes_index.dart';
 
 /// A user-created named collection (e.g. "Make Later", "Cookies").
@@ -99,17 +100,17 @@ class SavedRecipesNotifier extends StateNotifier<SavedRecipesState> {
   }
 
   /// Saves [recipe] to "All Saved" (no collection), moving it there if it
-  /// was previously filed under a collection.
-  Future<void> saveToAllSaved(Recipe recipe) => _saveTo(recipe, null);
+  /// was previously filed under a collection. Returns whether it succeeded.
+  Future<bool> saveToAllSaved(Recipe recipe) => _saveTo(recipe, null);
 
   /// Saves [recipe] into [collectionId], moving it there if already saved
-  /// elsewhere.
-  Future<void> saveToCollection(Recipe recipe, String collectionId) =>
+  /// elsewhere. Returns whether it succeeded.
+  Future<bool> saveToCollection(Recipe recipe, String collectionId) =>
       _saveTo(recipe, collectionId);
 
-  Future<void> _saveTo(Recipe recipe, String? collectionId) async {
+  Future<bool> _saveTo(Recipe recipe, String? collectionId) async {
     final userId = _client.auth.currentUser?.id;
-    if (userId == null) return;
+    if (userId == null) return false;
 
     final previous = Map<String, String?>.from(state.locationByRecipeId);
     state = state.copyWith(
@@ -129,15 +130,17 @@ class SavedRecipesNotifier extends StateNotifier<SavedRecipesState> {
         'recipe_id': recipe.id,
         'collection_id': collectionId,
       });
+      return true;
     } catch (e) {
       print('Error saving recipe: $e');
       state = state.copyWith(locationByRecipeId: previous);
+      return false;
     }
   }
 
-  Future<void> removeFromSaved(String recipeId) async {
+  Future<bool> removeFromSaved(String recipeId) async {
     final userId = _client.auth.currentUser?.id;
-    if (userId == null) return;
+    if (userId == null) return false;
 
     final previous = Map<String, String?>.from(state.locationByRecipeId);
     final updated = Map<String, String?>.from(previous)..remove(recipeId);
@@ -149,9 +152,11 @@ class SavedRecipesNotifier extends StateNotifier<SavedRecipesState> {
           .delete()
           .eq('user_id', userId)
           .eq('recipe_id', recipeId);
+      return true;
     } catch (e) {
       print('Error removing saved recipe: $e');
       state = state.copyWith(locationByRecipeId: previous);
+      return false;
     }
   }
 
@@ -184,3 +189,15 @@ final savedRecipesProvider =
     StateNotifierProvider<SavedRecipesNotifier, SavedRecipesState>((ref) {
       return SavedRecipesNotifier();
     });
+
+/// Resolves the recipes saved to a given destination — pass null for
+/// "All Saved", or a collection id for that specific collection.
+List<Recipe> recipesForLocation(SavedRecipesState state, String? collectionId) {
+  final ids =
+      state.locationByRecipeId.entries
+          .where((entry) => entry.value == collectionId)
+          .map((entry) => entry.key)
+          .toSet();
+  if (ids.isEmpty) return [];
+  return RecipeService.getAllRecipes().where((r) => ids.contains(r.id)).toList();
+}

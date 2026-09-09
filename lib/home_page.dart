@@ -5,6 +5,7 @@ import 'package:recipe_app/features/home_page_widgets/categories_section.dart';
 import 'package:recipe_app/features/home_page_widgets/surprise_me_section.dart';
 import 'package:recipe_app/features/home_page_widgets/my_recipes_section.dart';
 import 'package:recipe_app/features/home_page_widgets/all_recipes_section.dart';
+import 'package:recipe_app/shared/fade_page_route.dart';
 
 class RecipePage extends StatelessWidget {
   const RecipePage({super.key, this.onProfileTap});
@@ -22,9 +23,7 @@ class RecipePage extends StatelessWidget {
             onRecipeSelected: (recipe) {
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                  builder: (context) => RecipeDetailsPage(recipe: recipe),
-                ),
+                fadeRoute(RecipeDetailsPage(recipe: recipe)),
               );
             },
           ),

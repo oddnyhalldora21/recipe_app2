@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
 import 'package:recipe_app/features/favorites/favorites_page.dart';
 import 'package:recipe_app/features/profile_page/my_profile_page.dart';
+import 'package:recipe_app/features/saved/saved_page.dart';
 import 'package:recipe_app/features/widgets/main_app_bar.dart';
 import 'package:recipe_app/home_page.dart';
 import 'package:recipe_app/shared/app_theme.dart';
+import 'package:recipe_app/shared/fade_page_route.dart';
 
 class SweetTreat extends StatefulWidget {
   const SweetTreat({super.key});
@@ -17,7 +19,7 @@ class _SweetTreatState extends State<SweetTreat> {
   int currentIndex = 0;
 
   final List<GlobalKey<NavigatorState>> _navigatorKeys = List.generate(
-    3,
+    4,
     (_) => GlobalKey<NavigatorState>(),
   );
 
@@ -32,7 +34,7 @@ class _SweetTreatState extends State<SweetTreat> {
     }
   }
 
-  void _goToProfileTab() => _onDestinationSelected(2);
+  void _goToProfileTab() => _onDestinationSelected(3);
   void _goToFavoritesTab() => _onDestinationSelected(1);
 
   /// The wordmark always lands cleanly on the Home tab's root, even if it
@@ -49,8 +51,7 @@ class _SweetTreatState extends State<SweetTreat> {
   Widget _buildTab(int index, Widget child) {
     return Navigator(
       key: _navigatorKeys[index],
-      onGenerateRoute:
-          (settings) => MaterialPageRoute(builder: (context) => child),
+      onGenerateRoute: (settings) => fadeRoute(child),
     );
   }
 
@@ -82,7 +83,8 @@ class _SweetTreatState extends State<SweetTreat> {
             children: [
               _buildTab(0, RecipePage(onProfileTap: _goToProfileTab)),
               _buildTab(1, const FavoritesPage()),
-              _buildTab(2, const ProfilePage()),
+              _buildTab(2, const SavedPage()),
+              _buildTab(3, const ProfilePage()),
             ],
           ),
           bottomNavigationBar: Container(
@@ -119,6 +121,17 @@ class _SweetTreatState extends State<SweetTreat> {
                     color: AppColors.brown,
                   ),
                   label: "Favorites",
+                ),
+                NavigationDestination(
+                  icon: Icon(
+                    IconsaxPlusLinear.bookmark,
+                    color: AppColors.brownSoft,
+                  ),
+                  selectedIcon: Icon(
+                    IconsaxPlusBold.bookmark,
+                    color: AppColors.brown,
+                  ),
+                  label: "Saved",
                 ),
                 NavigationDestination(
                   icon: Icon(

@@ -36,10 +36,13 @@ class _SaveBottomSheetState extends ConsumerState<SaveBottomSheet> {
     super.dispose();
   }
 
-  Future<void> _run(Future<void> Function() action) async {
+  Future<void> _run(Future<bool> Function() action) async {
     setState(() => _busy = true);
-    await action();
-    if (mounted) Navigator.of(context).pop();
+    final success = await action();
+    if (!mounted) return;
+    final messenger = ScaffoldMessenger.of(context);
+    Navigator.of(context).pop();
+    if (!success) _showFailureSnackBar(messenger);
   }
 
   Future<void> _createAndSave() async {
@@ -49,10 +52,22 @@ class _SaveBottomSheetState extends ConsumerState<SaveBottomSheet> {
     setState(() => _busy = true);
     final notifier = ref.read(savedRecipesProvider.notifier);
     final collection = await notifier.createCollection(name);
-    if (collection != null) {
-      await notifier.saveToCollection(widget.recipe, collection.id);
-    }
-    if (mounted) Navigator.of(context).pop();
+    final success =
+        collection != null &&
+        await notifier.saveToCollection(widget.recipe, collection.id);
+    if (!mounted) return;
+    final messenger = ScaffoldMessenger.of(context);
+    Navigator.of(context).pop();
+    if (!success) _showFailureSnackBar(messenger);
+  }
+
+  void _showFailureSnackBar(ScaffoldMessengerState messenger) {
+    messenger.showSnackBar(
+      const SnackBar(
+        content: Text('Could not save right now — please try again.'),
+        backgroundColor: Colors.redAccent,
+      ),
+    );
   }
 
   @override

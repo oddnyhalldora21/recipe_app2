@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:recipe_app/features/auth/auth_page.dart';
+import 'package:recipe_app/shared/fade_page_route.dart';
 
 class LandingPage extends StatelessWidget {
   const LandingPage({super.key});
@@ -79,11 +80,7 @@ class LandingPage extends StatelessWidget {
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(
-                            builder:
-                                (context) =>
-                                    const AuthPage(mode: AuthMode.signUp),
-                          ),
+                          fadeRoute(const AuthPage(mode: AuthMode.signUp)),
                         );
                       },
                       style: ElevatedButton.styleFrom(
@@ -108,10 +105,7 @@ class LandingPage extends StatelessWidget {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
-                          builder:
-                              (context) => const AuthPage(mode: AuthMode.logIn),
-                        ),
+                        fadeRoute(const AuthPage(mode: AuthMode.logIn)),
                       );
                     },
                     child: Text(

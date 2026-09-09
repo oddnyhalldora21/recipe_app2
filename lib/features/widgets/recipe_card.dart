@@ -4,6 +4,7 @@ import 'package:recipe_app/features/favorites/favorites_saves.dart';
 import 'package:recipe_app/features/recipe_ingredients/recipes_index.dart';
 import 'package:recipe_app/features/recipes_pages/recipe_details.dart';
 import 'package:recipe_app/shared/app_theme.dart';
+import 'package:recipe_app/shared/fade_page_route.dart';
 
 /// Shared recipe card used across the home carousels, the favorites/profile/
 /// all-recipes grids: image with a time pill and favorite heart floating on
@@ -31,9 +32,7 @@ class RecipeCard extends ConsumerWidget {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(
-            builder: (context) => RecipeDetailsPage(recipe: recipe),
-          ),
+          fadeRoute(RecipeDetailsPage(recipe: recipe)),
         );
       },
       child: Column(
