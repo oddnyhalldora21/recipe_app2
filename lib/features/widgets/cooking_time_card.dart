@@ -1,38 +1,56 @@
 import 'package:flutter/material.dart';
+import 'package:recipe_app/shared/app_theme.dart';
 
+/// Meta pill row shown under the recipe title (cooking time + category).
 class CookingTimeCard extends StatelessWidget {
-  const CookingTimeCard({super.key, required this.cookingTime});
+  const CookingTimeCard({
+    super.key,
+    required this.cookingTime,
+    required this.category,
+  });
 
   final String cookingTime;
+  final String category;
 
   @override
   Widget build(BuildContext context) {
-    // This was your "Recipe Title with cute styling" section
+    return Wrap(
+      spacing: 10,
+      runSpacing: 10,
+      children: [
+        _Pill(icon: Icons.timer_outlined, label: cookingTime),
+        _Pill(icon: Icons.local_dining_outlined, label: category),
+      ],
+    );
+  }
+}
+
+class _Pill extends StatelessWidget {
+  const _Pill({required this.icon, required this.label});
+
+  final IconData icon;
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-      padding: EdgeInsets.all(16),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.7),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: const Color.fromARGB(255, 241, 181, 212),
-          width: 2,
-        ),
+        color: AppColors.pinkLight,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: AppShadows.soft,
       ),
       child: Row(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(
-            Icons.timer_outlined,
-            color: const Color.fromARGB(255, 67, 47, 21),
-            size: 24,
-          ),
-          SizedBox(width: 8),
+          Icon(icon, size: 18, color: AppColors.pinkDeep),
+          const SizedBox(width: 8),
           Text(
-            'Cooking Time: $cookingTime',
-            style: TextStyle(
-              fontSize: 18,
+            label,
+            style: const TextStyle(
+              fontSize: 14,
               fontWeight: FontWeight.w600,
-              color: const Color.fromARGB(255, 67, 47, 21),
+              color: AppColors.brown,
             ),
           ),
         ],

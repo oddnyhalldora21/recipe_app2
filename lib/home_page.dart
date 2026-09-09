@@ -6,6 +6,7 @@ import 'package:recipe_app/features/home_page_widgets/categories_section.dart';
 import 'package:recipe_app/features/home_page_widgets/surprise_me_section.dart';
 import 'package:recipe_app/features/home_page_widgets/my_recipes_section.dart';
 import 'package:recipe_app/features/home_page_widgets/all_recipes_section.dart';
+import 'package:recipe_app/shared/app_theme.dart';
 
 class RecipePage extends StatelessWidget {
   const RecipePage({super.key, this.onProfileTap});
@@ -15,7 +16,7 @@ class RecipePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 241, 181, 212),
+      backgroundColor: AppColors.background,
       appBar: HomeAppBar(onProfileTap: onProfileTap),
       body: ListView(
         padding: const EdgeInsets.all(16),

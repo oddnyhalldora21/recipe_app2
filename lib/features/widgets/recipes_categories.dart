@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:recipe_app/features/recipes_pages/recipe_category_list_home_page.dart';
 import 'package:recipe_app/features/recipes_pages/recipe_category_page.dart';
+import 'package:recipe_app/shared/app_theme.dart';
 
 class RecipesCategories extends StatelessWidget {
   const RecipesCategories({super.key});
@@ -31,93 +32,100 @@ class RecipesCategories extends StatelessWidget {
                 Expanded(
                   child: SizedBox(
                     width: 80,
-                    child: Card(
-                      clipBehavior: Clip.antiAlias,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        boxShadow: AppShadows.soft,
                       ),
-                      child: Hero(
-                        tag: category.id,
-                        child: Container(
-                          width: double.infinity,
-                          height: double.infinity,
-                          child: Image.network(
-                            category.imageUrl,
-                            fit: BoxFit.cover,
-                            loadingBuilder: (context, child, loadingProgress) {
-                              if (loadingProgress == null) return child;
-                              // Show pink background while loading
-                              return Container(
-                                decoration: BoxDecoration(
-                                  gradient: LinearGradient(
-                                    begin: Alignment.topLeft,
-                                    end: Alignment.bottomRight,
-                                    colors: [
-                                      const Color.fromARGB(
-                                        255,
-                                        241,
-                                        181,
-                                        212,
-                                      ), // Light pink
-                                      const Color.fromARGB(
-                                        255,
-                                        248,
-                                        187,
-                                        208,
-                                      ), // Slightly lighter pink
-                                    ],
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(20),
+                        child: Hero(
+                          tag: category.id,
+                          child: Container(
+                            width: double.infinity,
+                            height: double.infinity,
+                            child: Image.network(
+                              category.imageUrl,
+                              fit: BoxFit.cover,
+                              loadingBuilder: (
+                                context,
+                                child,
+                                loadingProgress,
+                              ) {
+                                if (loadingProgress == null) return child;
+                                // Show pink background while loading
+                                return Container(
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      begin: Alignment.topLeft,
+                                      end: Alignment.bottomRight,
+                                      colors: [
+                                        const Color.fromARGB(
+                                          255,
+                                          241,
+                                          181,
+                                          212,
+                                        ), // Light pink
+                                        const Color.fromARGB(
+                                          255,
+                                          248,
+                                          187,
+                                          208,
+                                        ), // Slightly lighter pink
+                                      ],
+                                    ),
                                   ),
-                                ),
-                                child: Center(
-                                  child: CircularProgressIndicator(
-                                    color: const Color.fromARGB(
-                                      255,
-                                      67,
-                                      47,
-                                      21,
-                                    ), // Chocolate brown
-                                    strokeWidth: 2,
-                                  ),
-                                ),
-                              );
-                            },
-                            errorBuilder: (context, error, stackTrace) {
-                              // Show pink background with icon if image fails to load
-                              return Container(
-                                decoration: BoxDecoration(
-                                  gradient: LinearGradient(
-                                    begin: Alignment.topLeft,
-                                    end: Alignment.bottomRight,
-                                    colors: [
-                                      const Color.fromARGB(
+                                  child: Center(
+                                    child: CircularProgressIndicator(
+                                      color: const Color.fromARGB(
                                         255,
-                                        241,
-                                        181,
-                                        212,
-                                      ), // Light pink
-                                      const Color.fromARGB(
+                                        67,
+                                        47,
+                                        21,
+                                      ), // Chocolate brown
+                                      strokeWidth: 2,
+                                    ),
+                                  ),
+                                );
+                              },
+                              errorBuilder: (context, error, stackTrace) {
+                                // Show pink background with icon if image fails to load
+                                return Container(
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      begin: Alignment.topLeft,
+                                      end: Alignment.bottomRight,
+                                      colors: [
+                                        const Color.fromARGB(
+                                          255,
+                                          241,
+                                          181,
+                                          212,
+                                        ), // Light pink
+                                        const Color.fromARGB(
+                                          255,
+                                          248,
+                                          187,
+                                          208,
+                                        ), // Slightly lighter pink
+                                      ],
+                                    ),
+                                  ),
+                                  child: Center(
+                                    child: Icon(
+                                      Icons.cake,
+                                      size: 30,
+                                      color: const Color.fromARGB(
                                         255,
-                                        248,
-                                        187,
-                                        208,
-                                      ), // Slightly lighter pink
-                                    ],
+                                        67,
+                                        47,
+                                        21,
+                                      ), // Chocolate brown
+                                    ),
                                   ),
-                                ),
-                                child: Center(
-                                  child: Icon(
-                                    Icons.cake,
-                                    size: 30,
-                                    color: const Color.fromARGB(
-                                      255,
-                                      67,
-                                      47,
-                                      21,
-                                    ), // Chocolate brown
-                                  ),
-                                ),
-                              );
-                            },
+                                );
+                              },
+                            ),
                           ),
                         ),
                       ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:recipe_app/features/recipe_ingredients/recipes_index.dart';
+import 'package:recipe_app/shared/app_theme.dart';
 
 class RecipesSearchBar extends StatelessWidget {
   const RecipesSearchBar({super.key, this.onRecipeSelected});
@@ -9,29 +10,38 @@ class RecipesSearchBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return SearchAnchor.bar(
-      barHintText: "what are we craving?",
-      barElevation: const WidgetStatePropertyAll(0.2),
-      barSide: const WidgetStatePropertyAll(
-        BorderSide(color: Color.fromARGB(255, 67, 47, 21)),
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(30),
+        boxShadow: AppShadows.card,
       ),
-      viewBackgroundColor: theme.colorScheme.surfaceContainerLowest,
-      barBackgroundColor: WidgetStateProperty.all(
-        const Color.fromARGB(255, 241, 181, 212),
+      child: SearchAnchor.bar(
+        barHintText: "what are we craving?",
+        barElevation: const WidgetStatePropertyAll(0),
+        barSide: const WidgetStatePropertyAll(BorderSide.none),
+        viewBackgroundColor: theme.colorScheme.surfaceContainerLowest,
+        barBackgroundColor: const WidgetStatePropertyAll(Colors.white),
+        barHintStyle: WidgetStatePropertyAll(
+          TextStyle(color: AppColors.brown.withOpacity(0.5)),
+        ),
+        barTextStyle: const WidgetStatePropertyAll(
+          TextStyle(color: AppColors.brown),
+        ),
+        barLeading: const Icon(Icons.search, color: AppColors.pinkDeep),
+        suggestionsBuilder: (context, controller) {
+          // If search is empty, show popular suggestions
+          if (controller.text.isEmpty) {
+            return _buildEmptySearchSuggestions(context);
+          }
+
+          // Filter recipes based on search query
+          final filteredRecipes = _filterRecipes(controller.text);
+
+          return filteredRecipes
+              .map((recipe) => _buildRecipeTile(context, recipe, controller))
+              .toList();
+        },
       ),
-      suggestionsBuilder: (context, controller) {
-        // If search is empty, show popular suggestions
-        if (controller.text.isEmpty) {
-          return _buildEmptySearchSuggestions(context);
-        }
-
-        // Filter recipes based on search query
-        final filteredRecipes = _filterRecipes(controller.text);
-
-        return filteredRecipes
-            .map((recipe) => _buildRecipeTile(context, recipe, controller))
-            .toList();
-      },
     );
   }
 

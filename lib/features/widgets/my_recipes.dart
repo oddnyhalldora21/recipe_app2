@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:recipe_app/features/recipe_ingredients/recipes_index.dart';
 import 'package:recipe_app/features/recipes_pages/recipe_details.dart';
 import 'package:recipe_app/features/user_recipes_provider.dart';
+import 'package:recipe_app/shared/app_theme.dart';
 
 class MyRecipesWidget extends ConsumerWidget {
   const MyRecipesWidget({super.key});
@@ -98,50 +99,52 @@ class MyRecipesWidget extends ConsumerWidget {
                 children: [
                   Hero(
                     tag: 'my_recipe_${recipe.id}',
-                    child: Card(
+                    child: Container(
                       margin: const EdgeInsets.only(bottom: 4),
-                      elevation: 4,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(18),
+                        boxShadow: AppShadows.card,
                       ),
-                      clipBehavior: Clip.antiAlias,
-                      child: Container(
-                        width: double.infinity,
-                        child: Image.network(
-                          recipe.imageUrl,
-                          fit: BoxFit.cover,
-                          loadingBuilder: (context, child, loadingProgress) {
-                            if (loadingProgress == null) return child;
-                            return Container(
-                              color: const Color.fromARGB(255, 241, 181, 212),
-                              child: const Center(
-                                child: CircularProgressIndicator(
-                                  color: Color.fromARGB(255, 67, 47, 21),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(18),
+                        child: Container(
+                          width: double.infinity,
+                          child: Image.network(
+                            recipe.imageUrl,
+                            fit: BoxFit.cover,
+                            loadingBuilder: (context, child, loadingProgress) {
+                              if (loadingProgress == null) return child;
+                              return Container(
+                                color: const Color.fromARGB(255, 241, 181, 212),
+                                child: const Center(
+                                  child: CircularProgressIndicator(
+                                    color: Color.fromARGB(255, 67, 47, 21),
+                                  ),
                                 ),
-                              ),
-                            );
-                          },
-                          errorBuilder: (context, error, stackTrace) {
-                            return Container(
-                              decoration: const BoxDecoration(
-                                gradient: LinearGradient(
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                  colors: [
-                                    Color.fromARGB(255, 241, 181, 212),
-                                    Color.fromARGB(255, 248, 187, 208),
-                                  ],
+                              );
+                            },
+                            errorBuilder: (context, error, stackTrace) {
+                              return Container(
+                                decoration: const BoxDecoration(
+                                  gradient: LinearGradient(
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                    colors: [
+                                      Color.fromARGB(255, 241, 181, 212),
+                                      Color.fromARGB(255, 248, 187, 208),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              child: const Center(
-                                child: Icon(
-                                  Icons.cake,
-                                  size: 40,
-                                  color: Color.fromARGB(255, 67, 47, 21),
+                                child: const Center(
+                                  child: Icon(
+                                    Icons.cake,
+                                    size: 40,
+                                    color: Color.fromARGB(255, 67, 47, 21),
+                                  ),
                                 ),
-                              ),
-                            );
-                          },
+                              );
+                            },
+                          ),
                         ),
                       ),
                     ),

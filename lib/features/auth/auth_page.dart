@@ -169,8 +169,7 @@ class _AuthPageState extends State<AuthPage> {
                                 ),
                                 onPressed: () {
                                   setState(
-                                    () =>
-                                        _obscurePassword = !_obscurePassword,
+                                    () => _obscurePassword = !_obscurePassword,
                                   );
                                 },
                               ),

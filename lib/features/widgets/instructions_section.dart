@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:recipe_app/shared/app_theme.dart';
 
 class InstructionsSection extends StatelessWidget {
   const InstructionsSection({super.key, required this.instructions});
@@ -7,24 +8,13 @@ class InstructionsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // This was your "Cute Instructions Section"
     return Container(
-      margin: EdgeInsets.all(20),
-      padding: EdgeInsets.all(20),
+      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      padding: const EdgeInsets.all(22),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.8),
-        borderRadius: BorderRadius.circular(25),
-        border: Border.all(
-          color: const Color.fromARGB(255, 241, 181, 212),
-          width: 2,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: const Color.fromARGB(255, 241, 181, 212).withOpacity(0.3),
-            blurRadius: 10,
-            offset: Offset(0, 5),
-          ),
-        ],
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(26),
+        boxShadow: AppShadows.card,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -32,81 +22,83 @@ class InstructionsSection extends StatelessWidget {
           Row(
             children: [
               Container(
-                padding: EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: const Color.fromARGB(255, 241, 181, 212),
+                padding: const EdgeInsets.all(8),
+                decoration: const BoxDecoration(
+                  color: AppColors.pinkLight,
                   shape: BoxShape.circle,
                 ),
-                child: Icon(
+                child: const Icon(
                   Icons.receipt_long_outlined,
-                  color: const Color.fromARGB(255, 67, 47, 21),
+                  color: AppColors.pinkDeep,
                   size: 20,
                 ),
               ),
-              SizedBox(width: 12),
-              Text(
+              const SizedBox(width: 12),
+              const Text(
                 'Instructions',
                 style: TextStyle(
-                  fontSize: 24,
+                  fontSize: 22,
                   fontWeight: FontWeight.bold,
-                  color: const Color.fromARGB(255, 67, 47, 21),
+                  color: AppColors.brown,
                 ),
               ),
             ],
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 18),
           ...instructions.asMap().entries.map((entry) {
-            return Container(
-              margin: EdgeInsets.only(bottom: 12),
-              padding: EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 255, 248, 231),
-                borderRadius: BorderRadius.circular(18),
-                border: Border.all(
-                  color: const Color.fromARGB(
-                    255,
-                    241,
-                    181,
-                    212,
-                  ).withOpacity(0.5),
-                ),
-              ),
+            final isLast = entry.key == instructions.length - 1;
+            return IntrinsicHeight(
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    width: 28,
-                    height: 28,
-                    decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 241, 181, 212),
-                      shape: BoxShape.circle,
-                    ),
-                    child: Center(
-                      child: Text(
-                        '${entry.key + 1}',
-                        style: TextStyle(
-                          color: const Color.fromARGB(255, 67, 47, 21),
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14,
+                  Column(
+                    children: [
+                      Container(
+                        width: 30,
+                        height: 30,
+                        decoration: const BoxDecoration(
+                          color: AppColors.pinkDeep,
+                          shape: BoxShape.circle,
+                        ),
+                        child: Center(
+                          child: Text(
+                            '${entry.key + 1}',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                            ),
+                          ),
                         ),
                       ),
-                    ),
+                      if (!isLast)
+                        Expanded(
+                          child: Container(
+                            width: 2,
+                            margin: const EdgeInsets.symmetric(vertical: 4),
+                            color: AppColors.pinkLight,
+                          ),
+                        ),
+                    ],
                   ),
-                  SizedBox(width: 12),
+                  const SizedBox(width: 14),
                   Expanded(
-                    child: Text(
-                      entry.value,
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: const Color.fromARGB(255, 67, 47, 21),
-                        height: 1.5,
+                    child: Padding(
+                      padding: EdgeInsets.only(bottom: isLast ? 0 : 18),
+                      child: Text(
+                        entry.value,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          color: AppColors.brown,
+                          height: 1.5,
+                        ),
                       ),
                     ),
                   ),
                 ],
               ),
             );
-          }).toList(),
+          }),
         ],
       ),
     );

@@ -1,55 +1,90 @@
 import 'package:flutter/material.dart';
+import 'package:recipe_app/shared/app_theme.dart';
 
+/// Full-bleed hero image for the recipe detail page, with a back button and
+/// a favorite button floating on top of the image.
 class ImageFrame extends StatelessWidget {
-  const ImageFrame({super.key, required this.imageUrl});
+  const ImageFrame({
+    super.key,
+    required this.imageUrl,
+    required this.onBack,
+    required this.favoriteButton,
+  });
 
   final String imageUrl;
+  final VoidCallback onBack;
+  final Widget favoriteButton;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
-      padding: const EdgeInsets.all(8), // Frame thickness
       decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 67, 47, 21), // Brown frame color
-        borderRadius: BorderRadius.circular(30),
-        boxShadow: [
-          BoxShadow(
-            color: const Color.fromARGB(255, 67, 47, 21).withOpacity(0.3),
-            blurRadius: 12,
-            offset: const Offset(0, 6),
-          ),
-        ],
+        borderRadius: const BorderRadius.vertical(bottom: Radius.circular(32)),
+        boxShadow: AppShadows.card,
       ),
-      child: Container(
-        height: 250,
-        width: 300, // Smaller image size
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(
-            color: const Color.fromARGB(
-              255,
-              241,
-              181,
-              212,
-            ), // Light inner border for extra cuteness
-            width: 4,
-          ),
-        ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(17),
-          child: Image.network(
-            imageUrl,
-            fit: BoxFit.cover,
-            width: double.infinity,
-            errorBuilder: (context, error, stackTrace) {
-              return _buildErrorState();
-            },
-            loadingBuilder: (context, child, loadingProgress) {
-              if (loadingProgress == null) return child;
-              return _buildLoadingState();
-            },
-          ),
+      child: ClipRRect(
+        borderRadius: const BorderRadius.vertical(bottom: Radius.circular(32)),
+        child: Stack(
+          children: [
+            SizedBox(
+              height: 320,
+              width: double.infinity,
+              child: Image.network(
+                imageUrl,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  return _buildErrorState();
+                },
+                loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress == null) return child;
+                  return _buildLoadingState();
+                },
+              ),
+            ),
+            // Scrim so the floating buttons stay legible over any image.
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              child: Container(
+                height: 110,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Colors.black.withOpacity(0.32),
+                      Colors.transparent,
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              child: SafeArea(
+                bottom: false,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 12,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      _FloatingCircleButton(
+                        icon: Icons.arrow_back_rounded,
+                        onTap: onBack,
+                      ),
+                      favoriteButton,
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -57,25 +92,43 @@ class ImageFrame extends StatelessWidget {
 
   Widget _buildErrorState() {
     return Container(
-      color: const Color.fromARGB(255, 255, 248, 231),
-      child: const Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.cake, size: 40, color: Color.fromARGB(255, 67, 47, 21)),
-          SizedBox(height: 8),
-        ],
+      color: AppColors.cream,
+      child: const Center(
+        child: Icon(Icons.cake, size: 48, color: AppColors.brown),
       ),
     );
   }
 
   Widget _buildLoadingState() {
     return Container(
-      color: const Color.fromARGB(255, 255, 248, 231),
+      color: AppColors.cream,
       child: const Center(
         child: CircularProgressIndicator(
-          color: Color.fromARGB(255, 241, 181, 212),
+          color: AppColors.pinkDeep,
           strokeWidth: 3,
         ),
+      ),
+    );
+  }
+}
+
+class _FloatingCircleButton extends StatelessWidget {
+  const _FloatingCircleButton({required this.icon, required this.onTap});
+
+  final IconData icon;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.95),
+        shape: BoxShape.circle,
+        boxShadow: AppShadows.floating,
+      ),
+      child: IconButton(
+        onPressed: onTap,
+        icon: Icon(icon, color: AppColors.brown),
       ),
     );
   }

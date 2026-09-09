@@ -40,7 +40,9 @@ class FavoritesSaves extends StateNotifier<List<Recipe>> {
 
       final allRecipes = RecipeService.getAllRecipes();
       state =
-          allRecipes.where((recipe) => favoriteIds.contains(recipe.id)).toList();
+          allRecipes
+              .where((recipe) => favoriteIds.contains(recipe.id))
+              .toList();
     } catch (e) {
       print('Error loading favorites: $e');
       state = [];

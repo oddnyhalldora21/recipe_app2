@@ -6,6 +6,7 @@ import 'package:recipe_app/features/widgets/cooking_time_card.dart';
 import 'package:recipe_app/features/widgets/ingredients_section.dart';
 import 'package:recipe_app/features/widgets/instructions_section.dart';
 import 'package:recipe_app/features/widgets/recipe_image_frame.dart';
+import 'package:recipe_app/shared/app_theme.dart';
 
 class RecipeDetailsPage extends ConsumerWidget {
   const RecipeDetailsPage({super.key, required this.recipe});
@@ -15,15 +16,51 @@ class RecipeDetailsPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 241, 181, 212),
-      appBar: _buildAppBar(context, ref),
+      backgroundColor: AppColors.background,
       body: SingleChildScrollView(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ImageFrame(imageUrl: recipe.imageUrl),
+            ImageFrame(
+              imageUrl: recipe.imageUrl,
+              onBack: () => Navigator.of(context).maybePop(),
+              favoriteButton: _FavoriteButton(recipe: recipe),
+            ),
 
-            // Cooking time card
-            CookingTimeCard(cookingTime: recipe.cookingTime),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    recipe.category.toUpperCase(),
+                    style: const TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 1.4,
+                      color: AppColors.pinkDeep,
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    recipe.name,
+                    style: const TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.brown,
+                      height: 1.15,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  CookingTimeCard(
+                    cookingTime: recipe.cookingTime,
+                    category: recipe.category,
+                  ),
+                ],
+              ),
+            ),
+
+            const SizedBox(height: 8),
 
             // Ingredients section
             IngredientsSection(ingredients: recipe.ingredients),
@@ -37,62 +74,33 @@ class RecipeDetailsPage extends ConsumerWidget {
       ),
     );
   }
+}
 
-  AppBar _buildAppBar(BuildContext context, WidgetRef ref) {
-    return AppBar(
-      backgroundColor: const Color.fromARGB(255, 241, 181, 212),
-      title: Text(
-        recipe.name,
-        style: const TextStyle(
-          color: Color.fromARGB(255, 67, 47, 21),
-          fontWeight: FontWeight.w600,
-          fontSize: 18,
+class _FavoriteButton extends ConsumerWidget {
+  const _FavoriteButton({required this.recipe});
+
+  final Recipe recipe;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final favorites = ref.watch(favoritesProvider);
+    final isFavorited = favorites.any((r) => r.id == recipe.id);
+
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.95),
+        shape: BoxShape.circle,
+        boxShadow: AppShadows.floating,
+      ),
+      child: IconButton(
+        onPressed: () {
+          ref.read(favoritesProvider.notifier).toggleFavorite(recipe);
+        },
+        icon: Icon(
+          isFavorited ? Icons.favorite : Icons.favorite_border,
+          color: isFavorited ? AppColors.pinkDeep : AppColors.brown,
         ),
       ),
-      actions: [
-        Consumer(
-          builder: (context, ref, child) {
-            final favorites = ref.watch(favoritesProvider);
-            final isFavorited = favorites.any((r) => r.id == recipe.id);
-
-            return Container(
-              margin: const EdgeInsets.only(right: 8),
-              decoration: BoxDecoration(
-                color: const Color.fromARGB(
-                  255,
-                  255,
-                  248,
-                  231,
-                ).withOpacity(0.3),
-                shape: BoxShape.circle,
-              ),
-              child: IconButton(
-                onPressed: () {
-                  ref.read(favoritesProvider.notifier).toggleFavorite(recipe);
-                },
-                icon: Icon(
-                  isFavorited ? Icons.favorite : Icons.favorite_border,
-                  color:
-                      isFavorited
-                          ? const Color.fromARGB(
-                            255,
-                            139,
-                            69,
-                            19,
-                          ) // Darker brown when favorited
-                          : const Color.fromARGB(
-                            255,
-                            255,
-                            237,
-                            214,
-                          ), // Regular brown when not favorited
-                ),
-              ),
-            );
-          },
-        ),
-      ],
-      iconTheme: const IconThemeData(color: Color.fromARGB(255, 67, 47, 21)),
     );
   }
 }

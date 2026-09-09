@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:recipe_app/shared/app_theme.dart';
 
 class IngredientsSection extends StatelessWidget {
   const IngredientsSection({super.key, required this.ingredients});
@@ -7,24 +8,13 @@ class IngredientsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // This was your "Cute Ingredients Section"
     return Container(
-      margin: EdgeInsets.all(20),
-      padding: EdgeInsets.all(20),
+      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      padding: const EdgeInsets.all(22),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.8),
-        borderRadius: BorderRadius.circular(25),
-        border: Border.all(
-          color: const Color.fromARGB(255, 241, 181, 212),
-          width: 2,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: const Color.fromARGB(255, 241, 181, 212).withOpacity(0.3),
-            blurRadius: 10,
-            offset: Offset(0, 5),
-          ),
-        ],
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(26),
+        boxShadow: AppShadows.card,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -32,62 +22,61 @@ class IngredientsSection extends StatelessWidget {
           Row(
             children: [
               Container(
-                padding: EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: const Color.fromARGB(255, 241, 181, 212),
+                padding: const EdgeInsets.all(8),
+                decoration: const BoxDecoration(
+                  color: AppColors.pinkLight,
                   shape: BoxShape.circle,
                 ),
-                child: Icon(
+                child: const Icon(
                   Icons.shopping_basket_outlined,
-                  color: const Color.fromARGB(255, 67, 47, 21),
+                  color: AppColors.pinkDeep,
                   size: 20,
                 ),
               ),
-              SizedBox(width: 12),
-              Text(
+              const SizedBox(width: 12),
+              const Text(
                 'Ingredients',
                 style: TextStyle(
-                  fontSize: 24,
+                  fontSize: 22,
                   fontWeight: FontWeight.bold,
-                  color: const Color.fromARGB(255, 67, 47, 21),
+                  color: AppColors.brown,
                 ),
               ),
             ],
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 18),
           ...ingredients.asMap().entries.map((entry) {
+            final isLast = entry.key == ingredients.length - 1;
             return Container(
-              margin: EdgeInsets.only(bottom: 8),
-              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-              decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 255, 248, 231),
-                borderRadius: BorderRadius.circular(15),
-                border: Border.all(
-                  color: const Color.fromARGB(
-                    255,
-                    241,
-                    181,
-                    212,
-                  ).withOpacity(0.5),
-                ),
-              ),
+              padding: const EdgeInsets.symmetric(vertical: 10),
+              decoration:
+                  isLast
+                      ? null
+                      : const BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(
+                            color: AppColors.pinkLight,
+                            width: 1,
+                          ),
+                        ),
+                      ),
               child: Row(
                 children: [
                   Container(
-                    width: 6,
-                    height: 6,
-                    decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 67, 47, 21),
+                    width: 8,
+                    height: 8,
+                    decoration: const BoxDecoration(
+                      color: AppColors.pinkDeep,
                       shape: BoxShape.circle,
                     ),
                   ),
-                  SizedBox(width: 12),
+                  const SizedBox(width: 14),
                   Expanded(
                     child: Text(
                       entry.value,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 16,
-                        color: const Color.fromARGB(255, 67, 47, 21),
+                        color: AppColors.brown,
                         height: 1.4,
                       ),
                     ),
@@ -95,7 +84,7 @@ class IngredientsSection extends StatelessWidget {
                 ],
               ),
             );
-          }).toList(),
+          }),
         ],
       ),
     );
