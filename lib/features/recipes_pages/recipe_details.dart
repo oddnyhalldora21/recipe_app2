@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:recipe_app/features/recipe_ingredients/recipes_index.dart';
 import 'package:recipe_app/features/favorites/favorites_saves.dart';
+import 'package:recipe_app/features/recipes_pages/save_bottom_sheet.dart';
+import 'package:recipe_app/features/saved/saved_recipes_provider.dart';
 import 'package:recipe_app/features/widgets/cooking_time_card.dart';
 import 'package:recipe_app/features/widgets/ingredients_section.dart';
 import 'package:recipe_app/features/widgets/instructions_section.dart';
@@ -24,6 +26,7 @@ class RecipeDetailsPage extends ConsumerWidget {
             ImageFrame(
               imageUrl: recipe.imageUrl,
               favoriteButton: _FavoriteButton(recipe: recipe),
+              saveButton: _SaveButton(recipe: recipe),
             ),
 
             Padding(
@@ -67,6 +70,34 @@ class RecipeDetailsPage extends ConsumerWidget {
 
             const SizedBox(height: 40),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _SaveButton extends ConsumerWidget {
+  const _SaveButton({required this.recipe});
+
+  final Recipe recipe;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isSaved = ref.watch(
+      savedRecipesProvider.select((s) => s.isSaved(recipe.id)),
+    );
+
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.95),
+        shape: BoxShape.circle,
+        boxShadow: AppShadows.floating,
+      ),
+      child: IconButton(
+        onPressed: () => SaveBottomSheet.show(context, recipe),
+        icon: Icon(
+          isSaved ? Icons.bookmark : Icons.bookmark_border,
+          color: isSaved ? AppColors.pinkDeep : AppColors.brown,
         ),
       ),
     );

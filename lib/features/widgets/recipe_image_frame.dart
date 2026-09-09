@@ -1,32 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:recipe_app/shared/app_theme.dart';
 
-/// Full-bleed hero image for the recipe detail page, with a favorite button
-/// floating on top of the image. Navigation happens via the persistent top
-/// app bar and bottom nav, so there's no back button here.
+/// Recipe detail photo: a smaller, fully-rounded card (rather than a
+/// full-bleed hero) with the Save and Favorite buttons floating on top.
+/// Navigation happens via the persistent top app bar and bottom nav, so
+/// there's no back button here.
 class ImageFrame extends StatelessWidget {
   const ImageFrame({
     super.key,
     required this.imageUrl,
     required this.favoriteButton,
+    required this.saveButton,
   });
 
   final String imageUrl;
   final Widget favoriteButton;
+  final Widget saveButton;
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      margin: const EdgeInsets.fromLTRB(20, 16, 20, 0),
       decoration: BoxDecoration(
-        borderRadius: const BorderRadius.vertical(bottom: Radius.circular(32)),
+        borderRadius: BorderRadius.circular(24),
         boxShadow: AppShadows.card,
       ),
       child: ClipRRect(
-        borderRadius: const BorderRadius.vertical(bottom: Radius.circular(32)),
+        borderRadius: BorderRadius.circular(24),
         child: Stack(
           children: [
             SizedBox(
-              height: 320,
+              height: 200,
               width: double.infinity,
               child: Image.network(
                 imageUrl,
@@ -46,13 +50,13 @@ class ImageFrame extends StatelessWidget {
               left: 0,
               right: 0,
               child: Container(
-                height: 110,
+                height: 64,
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
                     colors: [
-                      Colors.black.withOpacity(0.32),
+                      Colors.black.withOpacity(0.28),
                       Colors.transparent,
                     ],
                   ),
@@ -60,21 +64,15 @@ class ImageFrame extends StatelessWidget {
               ),
             ),
             Positioned(
-              top: 0,
-              left: 0,
-              right: 0,
-              child: SafeArea(
-                bottom: false,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 12,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [favoriteButton],
-                  ),
-                ),
+              top: 10,
+              right: 10,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  saveButton,
+                  const SizedBox(width: 8),
+                  favoriteButton,
+                ],
               ),
             ),
           ],
