@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:recipe_app/shared/app_theme.dart';
 
 class ProfileHeader extends StatelessWidget {
   const ProfileHeader({super.key});
@@ -8,66 +9,69 @@ class ProfileHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final email =
         Supabase.instance.client.auth.currentUser?.email ?? 'Sweet Treats fan';
+    final displayName =
+        email.contains('@')
+            ? email.split('@').first[0].toUpperCase() +
+                email.split('@').first.substring(1)
+            : email;
+    final initial = displayName.isNotEmpty ? displayName[0].toUpperCase() : 'S';
 
-    return Column(
-      children: [
-        Container(
-          width: 120,
-          height: 120,
-          decoration: BoxDecoration(
-            color: const Color.fromARGB(255, 241, 181, 212),
-            shape: BoxShape.circle,
-            border: Border.all(
-              color: const Color.fromARGB(255, 67, 47, 21),
-              width: 4,
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: AppColors.brown,
+        borderRadius: BorderRadius.circular(28),
+        boxShadow: AppShadows.card,
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 64,
+            height: 64,
+            decoration: const BoxDecoration(
+              color: AppColors.pinkDeep,
+              shape: BoxShape.circle,
             ),
-            boxShadow: [
-              BoxShadow(
-                color: const Color.fromARGB(255, 67, 47, 21).withOpacity(0.2),
-                blurRadius: 15,
-                offset: const Offset(0, 8),
+            child: Center(
+              child: Text(
+                initial,
+                style: AppText.serif(
+                  fontSize: 28,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.white,
+                ),
               ),
-            ],
-          ),
-          child: const Icon(
-            Icons.person,
-            size: 60,
-            color: Color.fromARGB(255, 67, 47, 21),
-          ),
-        ),
-
-        const SizedBox(height: 20),
-
-        Text(
-          email,
-          style: const TextStyle(
-            fontSize: 22,
-            fontWeight: FontWeight.bold,
-            color: Color.fromARGB(255, 67, 47, 21),
-          ),
-          textAlign: TextAlign.center,
-        ),
-
-        const SizedBox(height: 16),
-
-        TextButton.icon(
-          onPressed: () {
-            Supabase.instance.client.auth.signOut();
-          },
-          icon: const Icon(
-            Icons.logout,
-            size: 18,
-            color: Color.fromARGB(255, 67, 47, 21),
-          ),
-          label: const Text(
-            'Log Out',
-            style: TextStyle(
-              color: Color.fromARGB(255, 67, 47, 21),
-              fontWeight: FontWeight.w600,
             ),
           ),
-        ),
-      ],
+          const SizedBox(width: 18),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  displayName,
+                  style: AppText.serif(
+                    fontSize: 24,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.white,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  email,
+                  style: TextStyle(
+                    fontSize: 13,
+                    color: Colors.white.withOpacity(0.7),
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

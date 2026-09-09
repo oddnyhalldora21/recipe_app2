@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:recipe_app/features/recipe_ingredients/recipes_index.dart';
 import 'package:recipe_app/features/user_recipes_provider.dart';
+import 'package:recipe_app/shared/app_theme.dart';
 
 class AddRecipeBottomSheet extends ConsumerStatefulWidget {
   const AddRecipeBottomSheet({super.key});
@@ -87,7 +88,7 @@ class _AddRecipeBottomSheetState extends ConsumerState<AddRecipeBottomSheet> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('Recipe "${newRecipe.name}" added successfully!'),
-        backgroundColor: const Color.fromARGB(255, 67, 47, 21),
+        backgroundColor: AppColors.brown,
         duration: const Duration(seconds: 2),
       ),
     );
@@ -121,20 +122,10 @@ class _AddRecipeBottomSheetState extends ConsumerState<AddRecipeBottomSheet> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
-                  'Add New Recipe',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Color.fromARGB(255, 67, 47, 21),
-                  ),
-                ),
+                Text('Add New Recipe', style: AppText.serif(fontSize: 24)),
                 IconButton(
                   onPressed: () => Navigator.of(context).pop(),
-                  icon: const Icon(
-                    Icons.close,
-                    color: Color.fromARGB(255, 67, 47, 21),
-                  ),
+                  icon: const Icon(Icons.close, color: AppColors.brown),
                 ),
               ],
             ),
@@ -238,7 +229,7 @@ class _AddRecipeBottomSheetState extends ConsumerState<AddRecipeBottomSheet> {
               child: ElevatedButton(
                 onPressed: _isLoading ? null : _saveRecipe,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color.fromARGB(255, 67, 47, 21),
+                  backgroundColor: AppColors.brown,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20),
                   ),
@@ -281,7 +272,7 @@ class _AddRecipeBottomSheetState extends ConsumerState<AddRecipeBottomSheet> {
           style: const TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w600,
-            color: Color.fromARGB(255, 67, 47, 21),
+            color: AppColors.brown,
           ),
         ),
         const SizedBox(height: 8),
@@ -302,10 +293,7 @@ class _AddRecipeBottomSheetState extends ConsumerState<AddRecipeBottomSheet> {
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(
-                color: Color.fromARGB(255, 67, 47, 21),
-                width: 2,
-              ),
+              borderSide: const BorderSide(color: AppColors.brown, width: 2),
             ),
             errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),

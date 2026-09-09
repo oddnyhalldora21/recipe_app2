@@ -11,7 +11,7 @@ class RecipesCategories extends StatelessWidget {
     final categories = RecipeCategoryList.getAllCategories();
 
     return SizedBox(
-      height: 100,
+      height: 96,
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
         itemBuilder: (context, index) {
@@ -27,125 +27,96 @@ class RecipesCategories extends StatelessWidget {
                 ),
               );
             },
-            child: Column(
-              children: [
-                Expanded(
-                  child: SizedBox(
-                    width: 80,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        boxShadow: AppShadows.soft,
+            child: SizedBox(
+              width: 68,
+              child: Column(
+                children: [
+                  Container(
+                    width: 64,
+                    height: 64,
+                    padding: const EdgeInsets.all(3),
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.fromBorderSide(
+                        BorderSide(color: AppColors.pink, width: 2),
                       ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(20),
-                        child: Hero(
-                          tag: category.id,
-                          child: Container(
-                            width: double.infinity,
-                            height: double.infinity,
-                            child: Image.network(
-                              category.imageUrl,
-                              fit: BoxFit.cover,
-                              loadingBuilder: (
-                                context,
-                                child,
-                                loadingProgress,
-                              ) {
-                                if (loadingProgress == null) return child;
-                                // Show pink background while loading
-                                return Container(
-                                  decoration: BoxDecoration(
-                                    gradient: LinearGradient(
-                                      begin: Alignment.topLeft,
-                                      end: Alignment.bottomRight,
-                                      colors: [
-                                        const Color.fromARGB(
-                                          255,
-                                          241,
-                                          181,
-                                          212,
-                                        ), // Light pink
-                                        const Color.fromARGB(
-                                          255,
-                                          248,
-                                          187,
-                                          208,
-                                        ), // Slightly lighter pink
-                                      ],
-                                    ),
-                                  ),
-                                  child: Center(
-                                    child: CircularProgressIndicator(
-                                      color: const Color.fromARGB(
-                                        255,
-                                        67,
-                                        47,
-                                        21,
-                                      ), // Chocolate brown
-                                      strokeWidth: 2,
-                                    ),
-                                  ),
-                                );
-                              },
-                              errorBuilder: (context, error, stackTrace) {
-                                // Show pink background with icon if image fails to load
-                                return Container(
-                                  decoration: BoxDecoration(
-                                    gradient: LinearGradient(
-                                      begin: Alignment.topLeft,
-                                      end: Alignment.bottomRight,
-                                      colors: [
-                                        const Color.fromARGB(
-                                          255,
-                                          241,
-                                          181,
-                                          212,
-                                        ), // Light pink
-                                        const Color.fromARGB(
-                                          255,
-                                          248,
-                                          187,
-                                          208,
-                                        ), // Slightly lighter pink
-                                      ],
-                                    ),
-                                  ),
-                                  child: Center(
-                                    child: Icon(
-                                      Icons.cake,
-                                      size: 30,
-                                      color: const Color.fromARGB(
-                                        255,
-                                        67,
-                                        47,
-                                        21,
-                                      ), // Chocolate brown
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
+                    ),
+                    child: ClipOval(
+                      child: Hero(
+                        tag: category.id,
+                        child: Image.network(
+                          category.imageUrl,
+                          fit: BoxFit.cover,
+                          width: double.infinity,
+                          height: double.infinity,
+                          loadingBuilder: (
+                            context,
+                            child,
+                            loadingProgress,
+                          ) {
+                            if (loadingProgress == null) return child;
+                            return Container(
+                              decoration: const BoxDecoration(
+                                gradient: LinearGradient(
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                  colors: [
+                                    AppColors.pinkLight,
+                                    AppColors.pink,
+                                  ],
+                                ),
+                              ),
+                              child: const Center(
+                                child: CircularProgressIndicator(
+                                  color: AppColors.brown,
+                                  strokeWidth: 2,
+                                ),
+                              ),
+                            );
+                          },
+                          errorBuilder: (context, error, stackTrace) {
+                            return Container(
+                              decoration: const BoxDecoration(
+                                gradient: LinearGradient(
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                  colors: [
+                                    AppColors.pinkLight,
+                                    AppColors.pink,
+                                  ],
+                                ),
+                              ),
+                              child: const Center(
+                                child: Icon(
+                                  Icons.cake,
+                                  size: 26,
+                                  color: AppColors.brown,
+                                ),
+                              ),
+                            );
+                          },
                         ),
                       ),
                     ),
                   ),
-                ),
-                SizedBox(height: 4),
-                Text(
-                  category.name,
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
-                    color: const Color.fromARGB(255, 67, 47, 21),
+                  const SizedBox(height: 6),
+                  Text(
+                    category.name,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.brown,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           );
         },
-        separatorBuilder: (context, index) => SizedBox(width: 12),
+        separatorBuilder: (context, index) => const SizedBox(width: 14),
         itemCount: categories.length,
       ),
     );

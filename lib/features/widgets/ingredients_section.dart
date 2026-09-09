@@ -34,14 +34,7 @@ class IngredientsSection extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 12),
-              const Text(
-                'Ingredients',
-                style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.brown,
-                ),
-              ),
+              Text('Ingredients', style: AppText.serif(fontSize: 22)),
             ],
           ),
           const SizedBox(height: 18),

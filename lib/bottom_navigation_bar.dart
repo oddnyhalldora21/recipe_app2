@@ -3,6 +3,7 @@ import 'package:iconsax_plus/iconsax_plus.dart';
 import 'package:recipe_app/features/favorites/favorites_page.dart';
 import 'package:recipe_app/features/profile_page/my_profile_page.dart';
 import 'package:recipe_app/home_page.dart';
+import 'package:recipe_app/shared/app_theme.dart';
 
 class SweetTreat extends StatefulWidget {
   const SweetTreat({super.key});
@@ -31,6 +32,7 @@ class _SweetTreatState extends State<SweetTreat> {
   }
 
   void _goToProfileTab() => _onDestinationSelected(2);
+  void _goToFavoritesTab() => _onDestinationSelected(1);
 
   Widget _buildTab(int index, Widget child) {
     return Navigator(
@@ -55,33 +57,64 @@ class _SweetTreatState extends State<SweetTreat> {
         body: IndexedStack(
           index: currentIndex,
           children: [
-            _buildTab(0, RecipePage(onProfileTap: _goToProfileTab)),
+            _buildTab(
+              0,
+              RecipePage(
+                onProfileTap: _goToProfileTab,
+                onFavoritesTap: _goToFavoritesTab,
+              ),
+            ),
             _buildTab(1, const FavoritesPage()),
             _buildTab(2, const ProfilePage()),
           ],
         ),
-        bottomNavigationBar: NavigationBar(
-          backgroundColor: const Color.fromARGB(255, 241, 181, 212),
-
-          selectedIndex: currentIndex,
-          onDestinationSelected: _onDestinationSelected,
-          destinations: [
-            NavigationDestination(
-              icon: Icon(IconsaxPlusLinear.home),
-              selectedIcon: Icon(IconsaxPlusBold.home),
-              label: "Home",
+        bottomNavigationBar: Container(
+          decoration: BoxDecoration(
+            borderRadius: const BorderRadius.vertical(
+              top: Radius.circular(28),
             ),
-            NavigationDestination(
-              icon: Icon(IconsaxPlusLinear.heart),
-              selectedIcon: Icon(IconsaxPlusBold.heart),
-              label: "Favorites",
+            boxShadow: AppShadows.floating,
+          ),
+          child: ClipRRect(
+            borderRadius: const BorderRadius.vertical(
+              top: Radius.circular(28),
             ),
-            NavigationDestination(
-              icon: Icon(IconsaxPlusLinear.profile),
-              selectedIcon: Icon(IconsaxPlusBold.profile),
-              label: "Profile",
+            child: NavigationBar(
+              backgroundColor: AppColors.cream,
+              indicatorColor: AppColors.pinkLight,
+              selectedIndex: currentIndex,
+              onDestinationSelected: _onDestinationSelected,
+              destinations: const [
+                NavigationDestination(
+                  icon: Icon(IconsaxPlusLinear.home, color: AppColors.brownSoft),
+                  selectedIcon: Icon(IconsaxPlusBold.home, color: AppColors.brown),
+                  label: "Home",
+                ),
+                NavigationDestination(
+                  icon: Icon(
+                    IconsaxPlusLinear.heart,
+                    color: AppColors.brownSoft,
+                  ),
+                  selectedIcon: Icon(
+                    IconsaxPlusBold.heart,
+                    color: AppColors.brown,
+                  ),
+                  label: "Favorites",
+                ),
+                NavigationDestination(
+                  icon: Icon(
+                    IconsaxPlusLinear.profile,
+                    color: AppColors.brownSoft,
+                  ),
+                  selectedIcon: Icon(
+                    IconsaxPlusBold.profile,
+                    color: AppColors.brown,
+                  ),
+                  label: "Profile",
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );

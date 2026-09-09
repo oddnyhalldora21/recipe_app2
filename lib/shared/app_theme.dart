@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 /// Expanded palette for the app. Keeps the existing pink/brown identity but
 /// adds a lighter blush accent and a deeper rose so surfaces don't all read
@@ -18,6 +19,35 @@ class AppColors {
   /// Soft near-white background used for page canvases, so the saturated
   /// pink can stay reserved for the hero header and accents.
   static const Color background = Color(0xFFFDF4F7);
+
+  /// Warm grey for secondary/caption text on white or blush surfaces.
+  static const Color textMuted = Color(0xFF9C8778);
+}
+
+/// Editorial serif for display copy (titles, recipe names) paired with the
+/// existing sans body font, so headings read a step more boutique/bakery.
+class AppText {
+  AppText._();
+
+  static TextStyle serif({
+    double fontSize = 20,
+    FontWeight fontWeight = FontWeight.w600,
+    Color color = AppColors.brown,
+    double? height,
+  }) => GoogleFonts.playfairDisplay(
+    fontSize: fontSize,
+    fontWeight: fontWeight,
+    color: color,
+    height: height,
+  );
+
+  /// Small uppercase kicker used for recipe category tags.
+  static const TextStyle label = TextStyle(
+    fontSize: 11,
+    fontWeight: FontWeight.w700,
+    letterSpacing: 0.8,
+    color: AppColors.pinkDeep,
+  );
 }
 
 /// Reusable elevation presets so cards/buttons get consistent, warm-toned

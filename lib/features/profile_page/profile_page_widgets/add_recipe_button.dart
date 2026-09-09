@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:recipe_app/features/profile_page/recipe_bottom_sheet.dart';
+import 'package:recipe_app/shared/app_theme.dart';
 
 class AddRecipeButton extends ConsumerWidget {
   const AddRecipeButton({super.key});
@@ -8,9 +9,13 @@ class AddRecipeButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Center(
-      child: SizedBox(
+      child: Container(
         width: double.infinity,
         height: 60,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: AppShadows.card,
+        ),
         child: ElevatedButton.icon(
           onPressed: () {
             AddRecipeBottomSheet.show(context);
@@ -25,11 +30,11 @@ class AddRecipeButton extends ConsumerWidget {
             ),
           ),
           style: ElevatedButton.styleFrom(
-            backgroundColor: const Color.fromARGB(255, 67, 47, 21),
+            backgroundColor: AppColors.brown,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20),
             ),
-            elevation: 5,
+            elevation: 0,
           ),
         ),
       ),

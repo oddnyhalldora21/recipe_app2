@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:recipe_app/features/recipe_ingredients/recipes_index.dart';
-import 'package:recipe_app/features/recipes_pages/recipe_details.dart';
 import 'package:recipe_app/features/user_recipes_provider.dart';
+import 'package:recipe_app/features/widgets/recipe_card.dart';
 import 'package:recipe_app/shared/app_theme.dart';
 
 class MyRecipesWidget extends ConsumerWidget {
@@ -10,7 +9,6 @@ class MyRecipesWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
     final myRecipes = ref.watch(userRecipesProvider);
 
     if (myRecipes.isEmpty) {
@@ -19,37 +17,27 @@ class MyRecipesWidget extends ConsumerWidget {
         child: Container(
           height: 120,
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.3),
+            color: Colors.white.withOpacity(0.5),
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(
-              color: const Color.fromARGB(255, 67, 47, 21).withOpacity(0.2),
-              width: 1,
-            ),
+            border: Border.all(color: AppColors.pinkLight, width: 1),
           ),
           child: const Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(
-                  Icons.restaurant_menu,
-                  size: 32,
-                  color: Color.fromARGB(255, 67, 47, 21),
-                ),
+                Icon(Icons.restaurant_menu, size: 32, color: AppColors.brown),
                 SizedBox(height: 8),
                 Text(
                   'No recipes yet!',
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
-                    color: Color.fromARGB(255, 67, 47, 21),
+                    color: AppColors.brown,
                   ),
                 ),
                 Text(
                   'Add your first recipe from your profile',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Color.fromARGB(255, 67, 47, 21),
-                  ),
+                  style: TextStyle(fontSize: 12, color: AppColors.brown),
                 ),
               ],
             ),
@@ -61,135 +49,22 @@ class MyRecipesWidget extends ConsumerWidget {
     return Padding(
       padding: const EdgeInsets.only(top: 10, bottom: 20),
       child: SizedBox(
-        height: 200,
+        height: 215,
         child: ListView.separated(
           scrollDirection: Axis.horizontal,
           itemBuilder: (context, index) {
             final recipe = myRecipes[index];
-            return _buildRecipeCard(context, recipe, theme);
+            return SizedBox(
+              width: 160,
+              child: RecipeCard(
+                recipe: recipe,
+                heroTag: 'home_myrecipes_${recipe.id}',
+                showMineBadge: true,
+              ),
+            );
           },
           separatorBuilder: (context, index) => const SizedBox(width: 14),
           itemCount: myRecipes.length,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildRecipeCard(
-    BuildContext context,
-    Recipe recipe,
-    ThemeData theme,
-  ) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => RecipeDetailsPage(recipe: recipe),
-          ),
-        );
-      },
-      child: SizedBox(
-        width: 150,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: Stack(
-                children: [
-                  Hero(
-                    tag: 'my_recipe_${recipe.id}',
-                    child: Container(
-                      margin: const EdgeInsets.only(bottom: 4),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(18),
-                        boxShadow: AppShadows.card,
-                      ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(18),
-                        child: Container(
-                          width: double.infinity,
-                          child: Image.network(
-                            recipe.imageUrl,
-                            fit: BoxFit.cover,
-                            loadingBuilder: (context, child, loadingProgress) {
-                              if (loadingProgress == null) return child;
-                              return Container(
-                                color: const Color.fromARGB(255, 241, 181, 212),
-                                child: const Center(
-                                  child: CircularProgressIndicator(
-                                    color: Color.fromARGB(255, 67, 47, 21),
-                                  ),
-                                ),
-                              );
-                            },
-                            errorBuilder: (context, error, stackTrace) {
-                              return Container(
-                                decoration: const BoxDecoration(
-                                  gradient: LinearGradient(
-                                    begin: Alignment.topLeft,
-                                    end: Alignment.bottomRight,
-                                    colors: [
-                                      Color.fromARGB(255, 241, 181, 212),
-                                      Color.fromARGB(255, 248, 187, 208),
-                                    ],
-                                  ),
-                                ),
-                                child: const Center(
-                                  child: Icon(
-                                    Icons.cake,
-                                    size: 40,
-                                    color: Color.fromARGB(255, 67, 47, 21),
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  // "MINE" badge
-                  Positioned(
-                    top: 8,
-                    left: 8,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 6,
-                        vertical: 2,
-                      ),
-                      decoration: BoxDecoration(
-                        color: const Color.fromARGB(
-                          255,
-                          67,
-                          47,
-                          21,
-                        ).withOpacity(0.9),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: const Text(
-                        'MINE',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 8,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Text(
-              recipe.name,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: theme.textTheme.bodyLarge?.copyWith(
-                color: const Color.fromARGB(255, 67, 47, 21),
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ],
         ),
       ),
     );

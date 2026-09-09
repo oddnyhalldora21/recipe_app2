@@ -34,14 +34,7 @@ class InstructionsSection extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 12),
-              const Text(
-                'Instructions',
-                style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.brown,
-                ),
-              ),
+              Text('Instructions', style: AppText.serif(fontSize: 22)),
             ],
           ),
           const SizedBox(height: 18),

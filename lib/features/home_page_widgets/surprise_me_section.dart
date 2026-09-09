@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:recipe_app/features/widgets/surprise_me.dart';
 import 'package:recipe_app/features/home_page_widgets/section_header.dart';
+import 'package:recipe_app/shared/app_theme.dart';
 
 class SurpriseMeSection extends StatefulWidget {
   const SurpriseMeSection({super.key});
@@ -29,7 +30,7 @@ class _SurpriseMeSectionState extends State<SurpriseMeSection> {
             icon: const Icon(
               Icons.replay_circle_filled_rounded,
               size: 18,
-              color: Color.fromARGB(255, 67, 47, 21),
+              color: AppColors.brown,
             ),
             label: const Text(
               "shuffle",

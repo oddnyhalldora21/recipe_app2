@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:recipe_app/features/all_recipes_page/all_recipes_widgets/all_recipes_header.dart';
 import 'package:recipe_app/features/all_recipes_page/all_recipes_widgets/all_recipes_grid.dart';
 import 'package:recipe_app/features/all_recipes_page/all_recipes_widgets/recipe_service.dart';
+import 'package:recipe_app/shared/app_theme.dart';
 
 class AllRecipesPage extends ConsumerWidget {
   const AllRecipesPage({super.key});
@@ -12,17 +13,13 @@ class AllRecipesPage extends ConsumerWidget {
     final allRecipes = RecipeService.getShuffledRecipes();
 
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 241, 181, 212),
+      backgroundColor: AppColors.background,
       appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 241, 181, 212),
-        title: const Text(
-          'All Recipes',
-          style: TextStyle(
-            color: Color.fromARGB(255, 67, 47, 21),
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        iconTheme: const IconThemeData(color: Color.fromARGB(255, 67, 47, 21)),
+        backgroundColor: AppColors.background,
+        elevation: 0,
+        scrolledUnderElevation: 0,
+        title: Text('All Recipes', style: AppText.serif(fontSize: 20)),
+        iconTheme: const IconThemeData(color: AppColors.brown),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

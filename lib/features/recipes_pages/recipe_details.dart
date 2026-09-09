@@ -34,20 +34,17 @@ class RecipeDetailsPage extends ConsumerWidget {
                 children: [
                   Text(
                     recipe.category.toUpperCase(),
-                    style: const TextStyle(
+                    style: AppText.label.copyWith(
                       fontSize: 13,
-                      fontWeight: FontWeight.bold,
                       letterSpacing: 1.4,
-                      color: AppColors.pinkDeep,
                     ),
                   ),
                   const SizedBox(height: 6),
                   Text(
                     recipe.name,
-                    style: const TextStyle(
+                    style: AppText.serif(
                       fontSize: 28,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.brown,
+                      fontWeight: FontWeight.w700,
                       height: 1.15,
                     ),
                   ),
@@ -55,6 +52,7 @@ class RecipeDetailsPage extends ConsumerWidget {
                   CookingTimeCard(
                     cookingTime: recipe.cookingTime,
                     category: recipe.category,
+                    ingredientCount: recipe.ingredients.length,
                   ),
                 ],
               ),

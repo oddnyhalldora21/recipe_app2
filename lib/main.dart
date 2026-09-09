@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:recipe_app/features/auth/auth_gate.dart';
+import 'package:recipe_app/shared/app_theme.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 Future<void> main() async {
@@ -24,15 +25,13 @@ class MyApp extends StatelessWidget {
       title: 'Sweet Treats App',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color.fromARGB(255, 67, 47, 21),
-        ),
-        scaffoldBackgroundColor: const Color.fromARGB(255, 241, 181, 212),
+        colorScheme: ColorScheme.fromSeed(seedColor: AppColors.brown),
+        scaffoldBackgroundColor: AppColors.background,
         textTheme: GoogleFonts.latoTextTheme().copyWith(
           titleLarge: GoogleFonts.lato(
             fontSize: 19,
             fontWeight: FontWeight.w500,
-            color: const Color.fromARGB(255, 67, 47, 21),
+            color: AppColors.brown,
           ),
         ),
         cardTheme: CardThemeData(

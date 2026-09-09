@@ -7,10 +7,12 @@ class CookingTimeCard extends StatelessWidget {
     super.key,
     required this.cookingTime,
     required this.category,
+    required this.ingredientCount,
   });
 
   final String cookingTime;
   final String category;
+  final int ingredientCount;
 
   @override
   Widget build(BuildContext context) {
@@ -20,6 +22,10 @@ class CookingTimeCard extends StatelessWidget {
       children: [
         _Pill(icon: Icons.timer_outlined, label: cookingTime),
         _Pill(icon: Icons.local_dining_outlined, label: category),
+        _Pill(
+          icon: Icons.shopping_basket_outlined,
+          label: '$ingredientCount ingredients',
+        ),
       ],
     );
   }

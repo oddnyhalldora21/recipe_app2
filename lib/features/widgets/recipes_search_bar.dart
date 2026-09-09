@@ -95,13 +95,10 @@ class RecipesSearchBar extends StatelessWidget {
     return suggestions
         .map(
           (suggestion) => ListTile(
-            leading: const Icon(
-              Icons.search,
-              color: Color.fromARGB(255, 67, 47, 21),
-            ),
+            leading: const Icon(Icons.search, color: AppColors.brown),
             title: Text(
               suggestion,
-              style: const TextStyle(color: Color.fromARGB(255, 67, 47, 21)),
+              style: const TextStyle(color: AppColors.brown),
             ),
             onTap: () {
               // Close search when suggestion is tapped
@@ -123,10 +120,7 @@ class RecipesSearchBar extends StatelessWidget {
         height: 50,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(
-            color: const Color.fromARGB(255, 241, 181, 212),
-            width: 2,
-          ),
+          border: Border.all(color: AppColors.pink, width: 2),
         ),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(6),
@@ -135,10 +129,10 @@ class RecipesSearchBar extends StatelessWidget {
             fit: BoxFit.cover,
             errorBuilder: (context, error, stackTrace) {
               return Container(
-                color: const Color.fromARGB(255, 255, 248, 231),
+                color: AppColors.cream,
                 child: const Icon(
                   Icons.restaurant,
-                  color: Color.fromARGB(255, 67, 47, 21),
+                  color: AppColors.brown,
                   size: 20,
                 ),
               );
@@ -146,14 +140,14 @@ class RecipesSearchBar extends StatelessWidget {
             loadingBuilder: (context, child, loadingProgress) {
               if (loadingProgress == null) return child;
               return Container(
-                color: const Color.fromARGB(255, 255, 248, 231),
+                color: AppColors.cream,
                 child: const Center(
                   child: SizedBox(
                     width: 20,
                     height: 20,
                     child: CircularProgressIndicator(
                       strokeWidth: 2,
-                      color: Color.fromARGB(255, 67, 47, 21),
+                      color: AppColors.brown,
                     ),
                   ),
                 ),
@@ -164,23 +158,16 @@ class RecipesSearchBar extends StatelessWidget {
       ),
       title: Text(
         recipe.name,
-        style: const TextStyle(
-          color: Color.fromARGB(255, 67, 47, 21),
-          fontWeight: FontWeight.w600,
-        ),
+        style: AppText.serif(fontSize: 15, fontWeight: FontWeight.w600),
       ),
       subtitle: Row(
         children: [
-          Icon(
-            Icons.timer,
-            size: 14,
-            color: const Color.fromARGB(255, 67, 47, 21).withOpacity(0.7),
-          ),
+          Icon(Icons.timer, size: 14, color: AppColors.brown.withOpacity(0.7)),
           const SizedBox(width: 4),
           Text(
             recipe.cookingTime,
             style: TextStyle(
-              color: const Color.fromARGB(255, 67, 47, 21).withOpacity(0.7),
+              color: AppColors.brown.withOpacity(0.7),
               fontSize: 12,
             ),
           ),
@@ -188,13 +175,13 @@ class RecipesSearchBar extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
             decoration: BoxDecoration(
-              color: const Color.fromARGB(255, 67, 47, 21).withOpacity(0.1),
+              color: AppColors.pinkLight,
               borderRadius: BorderRadius.circular(8),
             ),
             child: Text(
               recipe.category.toUpperCase(),
               style: const TextStyle(
-                color: Color.fromARGB(255, 67, 47, 21),
+                color: AppColors.brown,
                 fontSize: 10,
                 fontWeight: FontWeight.bold,
               ),
@@ -204,7 +191,7 @@ class RecipesSearchBar extends StatelessWidget {
       ),
       trailing: const Icon(
         Icons.arrow_forward_ios,
-        color: Color.fromARGB(255, 67, 47, 21),
+        color: AppColors.brown,
         size: 16,
       ),
       onTap: () {

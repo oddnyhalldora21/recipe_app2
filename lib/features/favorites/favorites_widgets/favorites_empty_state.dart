@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:recipe_app/shared/app_theme.dart';
 
 class FavoritesEmptyState extends StatelessWidget {
   const FavoritesEmptyState({super.key});
@@ -10,15 +11,20 @@ class FavoritesEmptyState extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.all(24),
             decoration: BoxDecoration(
-              color: const Color.fromARGB(255, 241, 181, 212).withOpacity(0.3),
+              gradient: const LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [AppColors.pinkLight, AppColors.pink],
+              ),
               shape: BoxShape.circle,
+              boxShadow: AppShadows.soft,
             ),
             child: const Icon(
               Icons.favorite_border,
               size: 60,
-              color: Color.fromARGB(255, 67, 47, 21),
+              color: AppColors.brown,
             ),
           ),
           const SizedBox(height: 20),
@@ -27,17 +33,14 @@ class FavoritesEmptyState extends StatelessWidget {
             style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.w600,
-              color: Color.fromARGB(255, 67, 47, 21),
+              color: AppColors.brown,
             ),
           ),
           const SizedBox(height: 10),
           Text(
             'Start adding recipes to your favorites\nby tapping the heart icon!',
             textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 16,
-              color: const Color.fromARGB(255, 67, 47, 21).withOpacity(0.7),
-            ),
+            style: TextStyle(fontSize: 16, color: AppColors.brown.withOpacity(0.7)),
           ),
         ],
       ),

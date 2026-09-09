@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:recipe_app/features/recipes_pages/recipe_details.dart';
-import 'package:recipe_app/features/widgets/recipes_search_bar.dart';
 import 'package:recipe_app/features/home_page_widgets/home_app_bar.dart';
+import 'package:recipe_app/features/home_page_widgets/home_hero.dart';
 import 'package:recipe_app/features/home_page_widgets/categories_section.dart';
 import 'package:recipe_app/features/home_page_widgets/surprise_me_section.dart';
 import 'package:recipe_app/features/home_page_widgets/my_recipes_section.dart';
@@ -9,20 +9,23 @@ import 'package:recipe_app/features/home_page_widgets/all_recipes_section.dart';
 import 'package:recipe_app/shared/app_theme.dart';
 
 class RecipePage extends StatelessWidget {
-  const RecipePage({super.key, this.onProfileTap});
+  const RecipePage({super.key, this.onProfileTap, this.onFavoritesTap});
 
   final VoidCallback? onProfileTap;
+  final VoidCallback? onFavoritesTap;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: HomeAppBar(onProfileTap: onProfileTap),
+      appBar: HomeAppBar(
+        onProfileTap: onProfileTap,
+        onFavoritesTap: onFavoritesTap,
+      ),
       body: ListView(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.zero,
         children: [
-          // Search Bar
-          RecipesSearchBar(
+          HomeHero(
             onRecipeSelected: (recipe) {
               Navigator.push(
                 context,
@@ -33,17 +36,24 @@ class RecipePage extends StatelessWidget {
             },
           ),
 
-          // Categories Section
-          const CategoriesSection(),
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              children: [
+                // Categories Section
+                const CategoriesSection(),
 
-          // Surprise Me Section
-          const SurpriseMeSection(),
+                // Surprise Me Section
+                const SurpriseMeSection(),
 
-          // My Recipes Section
-          MyRecipesSection(onSeeAllTap: onProfileTap),
+                // My Recipes Section
+                MyRecipesSection(onSeeAllTap: onProfileTap),
 
-          // All Recipes Section
-          const AllRecipesSection(),
+                // All Recipes Section
+                const AllRecipesSection(),
+              ],
+            ),
+          ),
         ],
       ),
     );

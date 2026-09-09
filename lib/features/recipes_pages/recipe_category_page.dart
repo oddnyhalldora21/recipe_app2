@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:recipe_app/features/recipes_pages/recipe_category_list_home_page.dart';
 import 'package:recipe_app/features/recipe_ingredients/recipes_index.dart';
-import 'package:recipe_app/features/recipes_pages/recipe_details.dart';
+import 'package:recipe_app/features/widgets/recipe_card.dart';
+import 'package:recipe_app/shared/app_theme.dart';
 import 'package:recipe_app/shared/responsive.dart';
 
 class RecipeCategoryPage extends ConsumerWidget {
@@ -38,17 +39,13 @@ class RecipeCategoryPage extends ConsumerWidget {
     final recipes = getRecipesByCategory(recipeCategoryList.name);
 
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 241, 181, 212),
+      backgroundColor: AppColors.background,
       appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 241, 181, 212),
-        title: Text(
-          recipeCategoryList.name,
-          style: TextStyle(
-            color: const Color.fromARGB(255, 67, 47, 21),
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        iconTheme: IconThemeData(color: const Color.fromARGB(255, 67, 47, 21)),
+        backgroundColor: AppColors.background,
+        elevation: 0,
+        scrolledUnderElevation: 0,
+        title: Text(recipeCategoryList.name, style: AppText.serif(fontSize: 20)),
+        iconTheme: const IconThemeData(color: AppColors.brown),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 14),
@@ -66,149 +63,20 @@ class RecipeCategoryPage extends ConsumerWidget {
         padding: const EdgeInsets.all(16.0),
         child: LayoutBuilder(
           builder: (context, constraints) {
+            final shown = recipes.length > 10 ? 10 : recipes.length;
             return GridView.builder(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: recipeGridColumns(constraints.maxWidth),
                 crossAxisSpacing: 16,
                 mainAxisSpacing: 20,
-                childAspectRatio: 0.75,
+                childAspectRatio: 0.68,
               ),
-
-              itemCount: recipes.length > 10 ? 10 : recipes.length,
+              itemCount: shown,
               itemBuilder: (context, index) {
                 final recipe = recipes[index];
-
-                return GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => RecipeDetailsPage(recipe: recipe),
-                      ),
-                    );
-                  },
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        child: Card(
-                          elevation: 6,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          clipBehavior: Clip.antiAlias,
-                          child: Container(
-                            width: double.infinity,
-                            child: Image.network(
-                              recipe.imageUrl,
-                              fit: BoxFit.cover,
-                              loadingBuilder: (
-                                context,
-                                child,
-                                loadingProgress,
-                              ) {
-                                if (loadingProgress == null) return child;
-
-                                return Container(
-                                  color: const Color.fromARGB(
-                                    255,
-                                    241,
-                                    181,
-                                    212,
-                                  ),
-                                  child: Center(
-                                    child: CircularProgressIndicator(
-                                      color: const Color.fromARGB(
-                                        255,
-                                        67,
-                                        47,
-                                        21,
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              },
-                              errorBuilder: (context, error, stackTrace) {
-                                return Container(
-                                  decoration: BoxDecoration(
-                                    gradient: LinearGradient(
-                                      begin: Alignment.topLeft,
-                                      end: Alignment.bottomRight,
-                                      colors: [
-                                        const Color.fromARGB(
-                                          255,
-                                          241,
-                                          181,
-                                          212,
-                                        ),
-                                        const Color.fromARGB(
-                                          255,
-                                          248,
-                                          187,
-                                          208,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  child: Center(
-                                    child: Icon(
-                                      Icons.cake,
-                                      size: 50,
-                                      color: const Color.fromARGB(
-                                        255,
-                                        67,
-                                        47,
-                                        21,
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                        ),
-                      ),
-
-                      SizedBox(height: 8),
-
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            child: Text(
-                              recipe.name,
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                                color: const Color.fromARGB(255, 67, 47, 21),
-                              ),
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
-                            ),
-                          ),
-
-                          Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(
-                                Icons.timer,
-                                size: 16,
-                                color: const Color.fromARGB(255, 67, 47, 21),
-                              ),
-                              SizedBox(width: 4),
-                              Text(
-                                recipe.cookingTime,
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: const Color.fromARGB(255, 67, 47, 21),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
+                return RecipeCard(
+                  recipe: recipe,
+                  heroTag: 'category_${recipeCategoryList.id}_${recipe.id}',
                 );
               },
             );

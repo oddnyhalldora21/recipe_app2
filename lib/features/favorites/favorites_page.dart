@@ -4,6 +4,7 @@ import 'package:recipe_app/features/favorites/favorites_saves.dart';
 import 'package:recipe_app/features/favorites/favorites_widgets/favorites_empty_state.dart';
 import 'package:recipe_app/features/favorites/favorites_widgets/favorites_header.dart';
 import 'package:recipe_app/features/favorites/favorites_widgets/favorites_grid.dart';
+import 'package:recipe_app/shared/app_theme.dart';
 
 class FavoritesPage extends ConsumerWidget {
   const FavoritesPage({super.key});
@@ -13,35 +14,35 @@ class FavoritesPage extends ConsumerWidget {
     final favoriteRecipes = ref.watch(favoritesProvider);
 
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 241, 181, 212),
-      appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 241, 181, 212),
-        title: const Text(
-          "My Favorites",
-          style: TextStyle(
-            color: Color.fromARGB(255, 67, 47, 21),
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        iconTheme: const IconThemeData(color: Color.fromARGB(255, 67, 47, 21)),
-      ),
-      body:
-          favoriteRecipes.isEmpty
-              ? const FavoritesEmptyState()
-              : Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    FavoritesHeader(favoriteRecipes: favoriteRecipes),
-                    const SizedBox(height: 16),
+      backgroundColor: AppColors.background,
+      body: SafeArea(
+        child:
+            favoriteRecipes.isEmpty
+                ? Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      FavoritesHeader(favoriteRecipes: favoriteRecipes),
+                      const Expanded(child: FavoritesEmptyState()),
+                    ],
+                  ),
+                )
+                : Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      FavoritesHeader(favoriteRecipes: favoriteRecipes),
+                      const SizedBox(height: 20),
 
-                    Expanded(
-                      child: FavoritesGrid(favoriteRecipes: favoriteRecipes),
-                    ),
-                  ],
+                      Expanded(
+                        child: FavoritesGrid(favoriteRecipes: favoriteRecipes),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
+      ),
     );
   }
 }
