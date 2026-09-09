@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:recipe_app/features/recipes_pages/recipe_category_list_home_page.dart';
 import 'package:recipe_app/features/recipe_ingredients/recipes_index.dart';
 import 'package:recipe_app/features/recipes_pages/recipe_details.dart';
+import 'package:recipe_app/shared/responsive.dart';
 
 class RecipeCategoryPage extends ConsumerWidget {
   const RecipeCategoryPage({super.key, required this.recipeCategoryList});
@@ -63,120 +64,153 @@ class RecipeCategoryPage extends ConsumerWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: GridView.builder(
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            crossAxisSpacing: 16,
-            mainAxisSpacing: 20,
-            childAspectRatio: 0.75,
-          ),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return GridView.builder(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: recipeGridColumns(constraints.maxWidth),
+                crossAxisSpacing: 16,
+                mainAxisSpacing: 20,
+                childAspectRatio: 0.75,
+              ),
 
-          itemCount: recipes.length > 10 ? 10 : recipes.length,
-          itemBuilder: (context, index) {
-            final recipe = recipes[index];
+              itemCount: recipes.length > 10 ? 10 : recipes.length,
+              itemBuilder: (context, index) {
+                final recipe = recipes[index];
 
-            return GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => RecipeDetailsPage(recipe: recipe),
-                  ),
-                );
-              },
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: Card(
-                      elevation: 6,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => RecipeDetailsPage(recipe: recipe),
                       ),
-                      clipBehavior: Clip.antiAlias,
-                      child: Container(
-                        width: double.infinity,
-                        child: Image.network(
-                          recipe.imageUrl,
-                          fit: BoxFit.cover,
-                          loadingBuilder: (context, child, loadingProgress) {
-                            if (loadingProgress == null) return child;
-
-                            return Container(
-                              color: const Color.fromARGB(255, 241, 181, 212),
-                              child: Center(
-                                child: CircularProgressIndicator(
-                                  color: const Color.fromARGB(255, 67, 47, 21),
-                                ),
-                              ),
-                            );
-                          },
-                          errorBuilder: (context, error, stackTrace) {
-                            return Container(
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                  colors: [
-                                    const Color.fromARGB(255, 241, 181, 212),
-                                    const Color.fromARGB(255, 248, 187, 208),
-                                  ],
-                                ),
-                              ),
-                              child: Center(
-                                child: Icon(
-                                  Icons.cake,
-                                  size: 50,
-                                  color: const Color.fromARGB(255, 67, 47, 21),
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                    ),
-                  ),
-
-                  SizedBox(height: 8),
-
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    );
+                  },
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Expanded(
-                        child: Text(
-                          recipe.name,
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                            color: const Color.fromARGB(255, 67, 47, 21),
+                        child: Card(
+                          elevation: 6,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
                           ),
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
+                          clipBehavior: Clip.antiAlias,
+                          child: Container(
+                            width: double.infinity,
+                            child: Image.network(
+                              recipe.imageUrl,
+                              fit: BoxFit.cover,
+                              loadingBuilder: (
+                                context,
+                                child,
+                                loadingProgress,
+                              ) {
+                                if (loadingProgress == null) return child;
+
+                                return Container(
+                                  color: const Color.fromARGB(
+                                    255,
+                                    241,
+                                    181,
+                                    212,
+                                  ),
+                                  child: Center(
+                                    child: CircularProgressIndicator(
+                                      color: const Color.fromARGB(
+                                        255,
+                                        67,
+                                        47,
+                                        21,
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                              errorBuilder: (context, error, stackTrace) {
+                                return Container(
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      begin: Alignment.topLeft,
+                                      end: Alignment.bottomRight,
+                                      colors: [
+                                        const Color.fromARGB(
+                                          255,
+                                          241,
+                                          181,
+                                          212,
+                                        ),
+                                        const Color.fromARGB(
+                                          255,
+                                          248,
+                                          187,
+                                          208,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  child: Center(
+                                    child: Icon(
+                                      Icons.cake,
+                                      size: 50,
+                                      color: const Color.fromARGB(
+                                        255,
+                                        67,
+                                        47,
+                                        21,
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
                         ),
                       ),
 
+                      SizedBox(height: 8),
+
                       Row(
-                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Icon(
-                            Icons.timer,
-                            size: 16,
-                            color: const Color.fromARGB(255, 67, 47, 21),
-                          ),
-                          SizedBox(width: 4),
-                          Text(
-                            recipe.cookingTime,
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: const Color.fromARGB(255, 67, 47, 21),
+                          Expanded(
+                            child: Text(
+                              recipe.name,
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                color: const Color.fromARGB(255, 67, 47, 21),
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
                             ),
+                          ),
+
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                Icons.timer,
+                                size: 16,
+                                color: const Color.fromARGB(255, 67, 47, 21),
+                              ),
+                              SizedBox(width: 4),
+                              Text(
+                                recipe.cookingTime,
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: const Color.fromARGB(255, 67, 47, 21),
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
                     ],
                   ),
-                ],
-              ),
+                );
+              },
             );
           },
         ),

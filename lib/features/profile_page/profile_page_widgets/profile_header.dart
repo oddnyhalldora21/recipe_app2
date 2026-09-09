@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class ProfileHeader extends StatelessWidget {
   const ProfileHeader({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final email =
+        Supabase.instance.client.auth.currentUser?.email ?? 'Sweet Treats fan';
+
     return Column(
       children: [
         Container(
@@ -34,17 +38,35 @@ class ProfileHeader extends StatelessWidget {
 
         const SizedBox(height: 20),
 
-        const Text(
-          'Oddný Halldóra',
-          style: TextStyle(
-            fontSize: 28,
+        Text(
+          email,
+          style: const TextStyle(
+            fontSize: 22,
             fontWeight: FontWeight.bold,
             color: Color.fromARGB(255, 67, 47, 21),
           ),
           textAlign: TextAlign.center,
         ),
 
-        const SizedBox(height: 8),
+        const SizedBox(height: 16),
+
+        TextButton.icon(
+          onPressed: () {
+            Supabase.instance.client.auth.signOut();
+          },
+          icon: const Icon(
+            Icons.logout,
+            size: 18,
+            color: Color.fromARGB(255, 67, 47, 21),
+          ),
+          label: const Text(
+            'Log Out',
+            style: TextStyle(
+              color: Color.fromARGB(255, 67, 47, 21),
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
       ],
     );
   }

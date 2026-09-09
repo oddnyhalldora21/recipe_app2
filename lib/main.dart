@@ -1,9 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:recipe_app/bottom_navigation_bar.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:recipe_app/features/auth/auth_gate.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await Supabase.initialize(
+    url: 'https://mvlmupvqalbzryjuvdyv.supabase.co',
+    anonKey: 'sb_publishable_WVnNKyhi47jWSbWdM4xgSA_iVkN0Svw',
+  );
+
   runApp(ProviderScope(child: const MyApp()));
 }
 
@@ -27,13 +35,13 @@ class MyApp extends StatelessWidget {
             color: const Color.fromARGB(255, 67, 47, 21),
           ),
         ),
-        cardTheme: CardTheme(
+        cardTheme: CardThemeData(
           shape: ContinuousRectangleBorder(
             borderRadius: BorderRadius.circular(30),
           ),
         ),
       ),
-      home: SweetTreat(),
+      home: const AuthGate(),
     );
   }
 }

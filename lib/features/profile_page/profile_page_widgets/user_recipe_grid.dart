@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:recipe_app/features/recipe_ingredients/recipes_index.dart';
 import 'package:recipe_app/features/recipes_pages/recipe_details.dart';
+import 'package:recipe_app/shared/responsive.dart';
 
 class UserRecipesGrid extends StatelessWidget {
   final List<Recipe> userRecipes;
@@ -61,19 +62,23 @@ class UserRecipesGrid extends StatelessWidget {
   }
 
   Widget _buildRecipeGridView(BuildContext context) {
-    return GridView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        crossAxisSpacing: 16,
-        mainAxisSpacing: 20,
-        childAspectRatio: 0.75,
-      ),
-      itemCount: userRecipes.length > 6 ? 6 : userRecipes.length,
-      itemBuilder: (context, index) {
-        final recipe = userRecipes[index];
-        return _buildUserRecipeCard(recipe, context);
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return GridView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: recipeGridColumns(constraints.maxWidth),
+            crossAxisSpacing: 16,
+            mainAxisSpacing: 20,
+            childAspectRatio: 0.75,
+          ),
+          itemCount: userRecipes.length > 6 ? 6 : userRecipes.length,
+          itemBuilder: (context, index) {
+            final recipe = userRecipes[index];
+            return _buildUserRecipeCard(recipe, context);
+          },
+        );
       },
     );
   }

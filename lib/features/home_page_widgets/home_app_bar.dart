@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:recipe_app/features/profile_page/my_profile_page.dart';
 
 class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const HomeAppBar({super.key});
+  const HomeAppBar({super.key, this.onProfileTap});
+
+  final VoidCallback? onProfileTap;
 
   @override
   Widget build(BuildContext context) {
@@ -14,12 +16,16 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
         Padding(
           padding: const EdgeInsets.only(right: 6),
           child: IconButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const ProfilePage()),
-              );
-            },
+            onPressed:
+                onProfileTap ??
+                () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const ProfilePage(),
+                    ),
+                  );
+                },
             icon: const Icon(
               Icons.person_outline,
               color: Color.fromARGB(255, 67, 47, 21),

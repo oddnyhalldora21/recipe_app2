@@ -4,7 +4,9 @@ import 'package:recipe_app/features/profile_page/my_profile_page.dart';
 import 'package:recipe_app/features/home_page_widgets/section_header.dart';
 
 class MyRecipesSection extends StatelessWidget {
-  const MyRecipesSection({super.key});
+  const MyRecipesSection({super.key, this.onSeeAllTap});
+
+  final VoidCallback? onSeeAllTap;
 
   @override
   Widget build(BuildContext context) {
@@ -13,12 +15,14 @@ class MyRecipesSection extends StatelessWidget {
         SectionHeader(
           title: "My Recipes",
           buttonText: "see all",
-          onButtonPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const ProfilePage()),
-            );
-          },
+          onButtonPressed:
+              onSeeAllTap ??
+              () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const ProfilePage()),
+                );
+              },
         ),
         const MyRecipesWidget(),
       ],

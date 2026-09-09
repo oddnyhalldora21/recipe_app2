@@ -52,9 +52,8 @@ class RecipeDetailsPage extends ConsumerWidget {
       actions: [
         Consumer(
           builder: (context, ref, child) {
-            final isFavorited = ref
-                .watch(favoritesProvider.notifier)
-                .isFavorited(recipe.id);
+            final favorites = ref.watch(favoritesProvider);
+            final isFavorited = favorites.any((r) => r.id == recipe.id);
 
             return Container(
               margin: const EdgeInsets.only(right: 8),

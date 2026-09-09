@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:recipe_app/features/recipe_ingredients/recipes_index.dart';
 import 'package:recipe_app/features/recipes_pages/recipe_details.dart';
+import 'package:recipe_app/shared/responsive.dart';
 
 class AllRecipesGrid extends StatelessWidget {
   final List<Recipe> allRecipes;
@@ -9,17 +10,21 @@ class AllRecipesGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GridView.builder(
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        crossAxisSpacing: 16,
-        mainAxisSpacing: 20,
-        childAspectRatio: 0.75,
-      ),
-      itemCount: allRecipes.length,
-      itemBuilder: (context, index) {
-        final recipe = allRecipes[index];
-        return _buildRecipeCard(context, recipe);
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return GridView.builder(
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: recipeGridColumns(constraints.maxWidth),
+            crossAxisSpacing: 16,
+            mainAxisSpacing: 20,
+            childAspectRatio: 0.75,
+          ),
+          itemCount: allRecipes.length,
+          itemBuilder: (context, index) {
+            final recipe = allRecipes[index];
+            return _buildRecipeCard(context, recipe);
+          },
+        );
       },
     );
   }

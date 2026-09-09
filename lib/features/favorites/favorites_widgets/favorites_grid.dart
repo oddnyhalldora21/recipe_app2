@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:recipe_app/features/recipe_ingredients/recipes_index.dart';
 import 'package:recipe_app/features/recipes_pages/recipe_details.dart';
 import 'package:recipe_app/features/favorites/favorites_saves.dart';
+import 'package:recipe_app/shared/responsive.dart';
 
 class FavoritesGrid extends ConsumerWidget {
   final List<Recipe> favoriteRecipes;
@@ -11,17 +12,21 @@ class FavoritesGrid extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return GridView.builder(
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        crossAxisSpacing: 16,
-        mainAxisSpacing: 20,
-        childAspectRatio: 0.75,
-      ),
-      itemCount: favoriteRecipes.length,
-      itemBuilder: (context, index) {
-        final recipe = favoriteRecipes[index];
-        return _buildFavoriteRecipeCard(context, ref, recipe);
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return GridView.builder(
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: recipeGridColumns(constraints.maxWidth),
+            crossAxisSpacing: 16,
+            mainAxisSpacing: 20,
+            childAspectRatio: 0.75,
+          ),
+          itemCount: favoriteRecipes.length,
+          itemBuilder: (context, index) {
+            final recipe = favoriteRecipes[index];
+            return _buildFavoriteRecipeCard(context, ref, recipe);
+          },
+        );
       },
     );
   }

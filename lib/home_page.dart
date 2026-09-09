@@ -8,13 +8,15 @@ import 'package:recipe_app/features/home_page_widgets/my_recipes_section.dart';
 import 'package:recipe_app/features/home_page_widgets/all_recipes_section.dart';
 
 class RecipePage extends StatelessWidget {
-  const RecipePage({super.key});
+  const RecipePage({super.key, this.onProfileTap});
+
+  final VoidCallback? onProfileTap;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 241, 181, 212),
-      appBar: const HomeAppBar(),
+      appBar: HomeAppBar(onProfileTap: onProfileTap),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
@@ -37,7 +39,7 @@ class RecipePage extends StatelessWidget {
           const SurpriseMeSection(),
 
           // My Recipes Section
-          const MyRecipesSection(),
+          MyRecipesSection(onSeeAllTap: onProfileTap),
 
           // All Recipes Section
           const AllRecipesSection(),
