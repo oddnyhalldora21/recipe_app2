@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:recipe_app/shared/app_theme.dart';
 
-/// Full-bleed hero image for the recipe detail page, with a back button and
-/// a favorite button floating on top of the image.
+/// Full-bleed hero image for the recipe detail page, with a favorite button
+/// floating on top of the image. Navigation happens via the persistent top
+/// app bar and bottom nav, so there's no back button here.
 class ImageFrame extends StatelessWidget {
   const ImageFrame({
     super.key,
     required this.imageUrl,
-    required this.onBack,
     required this.favoriteButton,
   });
 
   final String imageUrl;
-  final VoidCallback onBack;
   final Widget favoriteButton;
 
   @override
@@ -72,14 +71,8 @@ class ImageFrame extends StatelessWidget {
                     vertical: 12,
                   ),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      _FloatingCircleButton(
-                        icon: Icons.arrow_back_rounded,
-                        onTap: onBack,
-                      ),
-                      favoriteButton,
-                    ],
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [favoriteButton],
                   ),
                 ),
               ),
@@ -107,28 +100,6 @@ class ImageFrame extends StatelessWidget {
           color: AppColors.pinkDeep,
           strokeWidth: 3,
         ),
-      ),
-    );
-  }
-}
-
-class _FloatingCircleButton extends StatelessWidget {
-  const _FloatingCircleButton({required this.icon, required this.onTap});
-
-  final IconData icon;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.95),
-        shape: BoxShape.circle,
-        boxShadow: AppShadows.floating,
-      ),
-      child: IconButton(
-        onPressed: onTap,
-        icon: Icon(icon, color: AppColors.brown),
       ),
     );
   }

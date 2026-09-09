@@ -39,48 +39,55 @@ class RecipeCategoryPage extends ConsumerWidget {
     final recipes = getRecipesByCategory(recipeCategoryList.name);
 
     return Scaffold(
-      backgroundColor: AppColors.background,
-      appBar: AppBar(
-        backgroundColor: AppColors.background,
-        elevation: 0,
-        scrolledUnderElevation: 0,
-        title: Text(recipeCategoryList.name, style: AppText.serif(fontSize: 20)),
-        iconTheme: const IconThemeData(color: AppColors.brown),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 14),
-            child: Hero(
-              tag: recipeCategoryList.id,
-              child: CircleAvatar(
-                backgroundColor: Colors.transparent,
-                backgroundImage: NetworkImage(recipeCategoryList.imageUrl),
-              ),
-            ),
-          ),
-        ],
-      ),
+      backgroundColor: Colors.transparent,
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            final shown = recipes.length > 10 ? 10 : recipes.length;
-            return GridView.builder(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: recipeGridColumns(constraints.maxWidth),
-                crossAxisSpacing: 16,
-                mainAxisSpacing: 20,
-                childAspectRatio: 0.68,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Hero(
+                  tag: recipeCategoryList.id,
+                  child: CircleAvatar(
+                    radius: 22,
+                    backgroundColor: Colors.transparent,
+                    backgroundImage: NetworkImage(recipeCategoryList.imageUrl),
+                  ),
+                ),
+                const SizedBox(width: 14),
+                Text(
+                  recipeCategoryList.name,
+                  style: AppText.serif(fontSize: 24),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            Expanded(
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  final shown = recipes.length > 10 ? 10 : recipes.length;
+                  return GridView.builder(
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: recipeGridColumns(constraints.maxWidth),
+                      crossAxisSpacing: 16,
+                      mainAxisSpacing: 20,
+                      childAspectRatio: 0.68,
+                    ),
+                    itemCount: shown,
+                    itemBuilder: (context, index) {
+                      final recipe = recipes[index];
+                      return RecipeCard(
+                        recipe: recipe,
+                        heroTag:
+                            'category_${recipeCategoryList.id}_${recipe.id}',
+                      );
+                    },
+                  );
+                },
               ),
-              itemCount: shown,
-              itemBuilder: (context, index) {
-                final recipe = recipes[index];
-                return RecipeCard(
-                  recipe: recipe,
-                  heroTag: 'category_${recipeCategoryList.id}_${recipe.id}',
-                );
-              },
-            );
-          },
+            ),
+          ],
         ),
       ),
     );

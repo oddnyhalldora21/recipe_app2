@@ -13,19 +13,14 @@ class AllRecipesPage extends ConsumerWidget {
     final allRecipes = RecipeService.getShuffledRecipes();
 
     return Scaffold(
-      backgroundColor: AppColors.background,
-      appBar: AppBar(
-        backgroundColor: AppColors.background,
-        elevation: 0,
-        scrolledUnderElevation: 0,
-        title: Text('All Recipes', style: AppText.serif(fontSize: 20)),
-        iconTheme: const IconThemeData(color: AppColors.brown),
-      ),
+      backgroundColor: Colors.transparent,
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Text('All Recipes', style: AppText.serif(fontSize: 26)),
+            const SizedBox(height: 4),
             AllRecipesHeader(allRecipes: allRecipes),
             const SizedBox(height: 16),
 

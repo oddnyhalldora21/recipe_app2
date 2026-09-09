@@ -16,14 +16,13 @@ class RecipeDetailsPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: Colors.transparent,
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             ImageFrame(
               imageUrl: recipe.imageUrl,
-              onBack: () => Navigator.of(context).maybePop(),
               favoriteButton: _FavoriteButton(recipe: recipe),
             ),
 

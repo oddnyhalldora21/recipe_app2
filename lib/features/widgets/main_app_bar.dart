@@ -2,14 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:recipe_app/features/favorites/favorites_saves.dart';
-import 'package:recipe_app/features/profile_page/my_profile_page.dart';
 import 'package:recipe_app/shared/app_theme.dart';
 
-class HomeAppBar extends ConsumerWidget implements PreferredSizeWidget {
-  const HomeAppBar({super.key, this.onProfileTap, this.onFavoritesTap});
+/// Persistent top bar shown on every screen: the wordmark always jumps back
+/// to Home, alongside a favorites shortcut and the profile avatar.
+class MainAppBar extends ConsumerWidget implements PreferredSizeWidget {
+  const MainAppBar({
+    super.key,
+    required this.onLogoTap,
+    required this.onProfileTap,
+    required this.onFavoritesTap,
+  });
 
-  final VoidCallback? onProfileTap;
-  final VoidCallback? onFavoritesTap;
+  final VoidCallback onLogoTap;
+  final VoidCallback onProfileTap;
+  final VoidCallback onFavoritesTap;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -19,26 +26,36 @@ class HomeAppBar extends ConsumerWidget implements PreferredSizeWidget {
     final favoritesCount = ref.watch(favoritesProvider).length;
 
     return AppBar(
-      backgroundColor: AppColors.background,
+      backgroundColor: Colors.transparent,
       elevation: 0,
       scrolledUnderElevation: 0,
       titleSpacing: 0,
-      title: Text.rich(
-        TextSpan(
-          children: [
+      title: GestureDetector(
+        onTap: onLogoTap,
+        behavior: HitTestBehavior.opaque,
+        child: Padding(
+          padding: const EdgeInsets.only(left: 16),
+          child: Text.rich(
             TextSpan(
-              text: 'Sweet ',
-              style: AppText.serif(fontSize: 22, fontWeight: FontWeight.w700),
+              children: [
+                TextSpan(
+                  text: 'Sweet ',
+                  style: AppText.serif(
+                    fontSize: 22,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                TextSpan(
+                  text: 'Treats.',
+                  style: AppText.serif(
+                    fontSize: 22,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.pinkDeep,
+                  ),
+                ),
+              ],
             ),
-            TextSpan(
-              text: 'Treats.',
-              style: AppText.serif(
-                fontSize: 22,
-                fontWeight: FontWeight.w700,
-                color: AppColors.pinkDeep,
-              ),
-            ),
-          ],
+          ),
         ),
       ),
       actions: [
@@ -82,16 +99,7 @@ class HomeAppBar extends ConsumerWidget implements PreferredSizeWidget {
         Padding(
           padding: const EdgeInsets.only(right: 16, left: 4),
           child: GestureDetector(
-            onTap:
-                onProfileTap ??
-                () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const ProfilePage(),
-                    ),
-                  );
-                },
+            onTap: onProfileTap,
             child: Container(
               width: 34,
               height: 34,

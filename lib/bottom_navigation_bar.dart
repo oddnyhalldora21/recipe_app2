@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
 import 'package:recipe_app/features/favorites/favorites_page.dart';
 import 'package:recipe_app/features/profile_page/my_profile_page.dart';
+import 'package:recipe_app/features/widgets/main_app_bar.dart';
 import 'package:recipe_app/home_page.dart';
 import 'package:recipe_app/shared/app_theme.dart';
 
@@ -34,6 +35,17 @@ class _SweetTreatState extends State<SweetTreat> {
   void _goToProfileTab() => _onDestinationSelected(2);
   void _goToFavoritesTab() => _onDestinationSelected(1);
 
+  /// The wordmark always lands cleanly on the Home tab's root, even if it
+  /// already had a page pushed on top of it.
+  void _goHome() {
+    _navigatorKeys[0].currentState?.popUntil((route) => route.isFirst);
+    if (currentIndex != 0) {
+      setState(() {
+        currentIndex = 0;
+      });
+    }
+  }
+
   Widget _buildTab(int index, Widget child) {
     return Navigator(
       key: _navigatorKeys[index],
@@ -44,50 +56,57 @@ class _SweetTreatState extends State<SweetTreat> {
 
   @override
   Widget build(BuildContext context) {
-    return PopScope(
-      canPop: false,
-      onPopInvokedWithResult: (didPop, result) {
-        if (didPop) return;
-        final navigator = _navigatorKeys[currentIndex].currentState;
-        if (navigator != null && navigator.canPop()) {
-          navigator.pop();
-        }
-      },
-      child: Scaffold(
-        body: IndexedStack(
-          index: currentIndex,
-          children: [
-            _buildTab(
-              0,
-              RecipePage(
-                onProfileTap: _goToProfileTab,
-                onFavoritesTap: _goToFavoritesTab,
+    return Container(
+      // Single continuous gradient behind the app bar, tab content and nav
+      // bar, so every screen sits on the same surface instead of separate
+      // colored blocks.
+      decoration: const BoxDecoration(gradient: AppGradients.background),
+      child: PopScope(
+        canPop: false,
+        onPopInvokedWithResult: (didPop, result) {
+          if (didPop) return;
+          final navigator = _navigatorKeys[currentIndex].currentState;
+          if (navigator != null && navigator.canPop()) {
+            navigator.pop();
+          }
+        },
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+          appBar: MainAppBar(
+            onLogoTap: _goHome,
+            onProfileTap: _goToProfileTab,
+            onFavoritesTap: _goToFavoritesTab,
+          ),
+          body: IndexedStack(
+            index: currentIndex,
+            children: [
+              _buildTab(0, RecipePage(onProfileTap: _goToProfileTab)),
+              _buildTab(1, const FavoritesPage()),
+              _buildTab(2, const ProfilePage()),
+            ],
+          ),
+          bottomNavigationBar: Container(
+            decoration: BoxDecoration(
+              border: Border(
+                top: BorderSide(color: AppColors.brown.withOpacity(0.14)),
               ),
             ),
-            _buildTab(1, const FavoritesPage()),
-            _buildTab(2, const ProfilePage()),
-          ],
-        ),
-        bottomNavigationBar: Container(
-          decoration: BoxDecoration(
-            borderRadius: const BorderRadius.vertical(
-              top: Radius.circular(28),
-            ),
-            boxShadow: AppShadows.floating,
-          ),
-          child: ClipRRect(
-            borderRadius: const BorderRadius.vertical(
-              top: Radius.circular(28),
-            ),
             child: NavigationBar(
-              backgroundColor: AppColors.cream,
-              indicatorColor: AppColors.pinkLight,
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              indicatorColor: Colors.white.withOpacity(0.55),
               selectedIndex: currentIndex,
               onDestinationSelected: _onDestinationSelected,
               destinations: const [
                 NavigationDestination(
-                  icon: Icon(IconsaxPlusLinear.home, color: AppColors.brownSoft),
-                  selectedIcon: Icon(IconsaxPlusBold.home, color: AppColors.brown),
+                  icon: Icon(
+                    IconsaxPlusLinear.home,
+                    color: AppColors.brownSoft,
+                  ),
+                  selectedIcon: Icon(
+                    IconsaxPlusBold.home,
+                    color: AppColors.brown,
+                  ),
                   label: "Home",
                 ),
                 NavigationDestination(

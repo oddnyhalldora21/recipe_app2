@@ -17,7 +17,7 @@ class ProfilePage extends ConsumerWidget {
     final userRecipes = ref.watch(userRecipesProvider);
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: Colors.transparent,
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(16.0),

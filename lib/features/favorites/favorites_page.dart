@@ -4,7 +4,6 @@ import 'package:recipe_app/features/favorites/favorites_saves.dart';
 import 'package:recipe_app/features/favorites/favorites_widgets/favorites_empty_state.dart';
 import 'package:recipe_app/features/favorites/favorites_widgets/favorites_header.dart';
 import 'package:recipe_app/features/favorites/favorites_widgets/favorites_grid.dart';
-import 'package:recipe_app/shared/app_theme.dart';
 
 class FavoritesPage extends ConsumerWidget {
   const FavoritesPage({super.key});
@@ -14,7 +13,7 @@ class FavoritesPage extends ConsumerWidget {
     final favoriteRecipes = ref.watch(favoritesProvider);
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: Colors.transparent,
       body: SafeArea(
         child:
             favoriteRecipes.isEmpty

@@ -50,6 +50,18 @@ class AppText {
   );
 }
 
+/// Shared gradients painted behind whole screens/bars, so the pink wash reads
+/// as one continuous surface rather than separate colored blocks.
+class AppGradients {
+  AppGradients._();
+
+  static const LinearGradient background = LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    colors: [AppColors.pinkLight, AppColors.pink],
+  );
+}
+
 /// Reusable elevation presets so cards/buttons get consistent, warm-toned
 /// shadows instead of flat borders or the default grey Material shadow.
 class AppShadows {

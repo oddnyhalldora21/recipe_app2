@@ -4,8 +4,9 @@ import 'package:recipe_app/features/recipe_ingredients/recipes_index.dart';
 import 'package:recipe_app/features/widgets/recipes_search_bar.dart';
 import 'package:recipe_app/shared/app_theme.dart';
 
-/// Blush gradient hero shown above the categories/recipe sections: a small
-/// kicker pill, a big serif headline, a subtitle and the recipe search bar.
+/// Hero shown above the categories/recipe sections: a small kicker pill, a
+/// big serif headline, a subtitle and the recipe search bar. Sits directly
+/// on the app-wide gradient background rather than painting its own.
 class HomeHero extends StatelessWidget {
   const HomeHero({super.key, this.onRecipeSelected});
 
@@ -18,16 +19,8 @@ class HomeHero extends StatelessWidget {
         (email != null && email.contains('@')) ? email.split('@').first : '';
     final greeting = firstName.isEmpty ? 'there' : firstName;
 
-    return Container(
+    return Padding(
       padding: const EdgeInsets.fromLTRB(20, 20, 20, 24),
-      decoration: const BoxDecoration(
-        borderRadius: BorderRadius.vertical(bottom: Radius.circular(32)),
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [AppColors.pinkLight, AppColors.pink],
-        ),
-      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

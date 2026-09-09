@@ -1,27 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:recipe_app/features/recipes_pages/recipe_details.dart';
-import 'package:recipe_app/features/home_page_widgets/home_app_bar.dart';
 import 'package:recipe_app/features/home_page_widgets/home_hero.dart';
 import 'package:recipe_app/features/home_page_widgets/categories_section.dart';
 import 'package:recipe_app/features/home_page_widgets/surprise_me_section.dart';
 import 'package:recipe_app/features/home_page_widgets/my_recipes_section.dart';
 import 'package:recipe_app/features/home_page_widgets/all_recipes_section.dart';
-import 'package:recipe_app/shared/app_theme.dart';
 
 class RecipePage extends StatelessWidget {
-  const RecipePage({super.key, this.onProfileTap, this.onFavoritesTap});
+  const RecipePage({super.key, this.onProfileTap});
 
   final VoidCallback? onProfileTap;
-  final VoidCallback? onFavoritesTap;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
-      appBar: HomeAppBar(
-        onProfileTap: onProfileTap,
-        onFavoritesTap: onFavoritesTap,
-      ),
+      backgroundColor: Colors.transparent,
       body: ListView(
         padding: EdgeInsets.zero,
         children: [
