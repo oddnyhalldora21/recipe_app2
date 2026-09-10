@@ -1,20 +1,47 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:recipe_app/features/user_recipes_provider.dart';
+import 'package:recipe_app/features/profile_page/profile_data_provider.dart';
 import 'package:recipe_app/features/profile_page/profile_page_widgets/profile_header.dart';
 import 'package:recipe_app/features/profile_page/profile_page_widgets/profile_stats.dart';
 import 'package:recipe_app/features/profile_page/profile_page_widgets/profile_settings_list.dart';
 import 'package:recipe_app/features/profile_page/profile_page_widgets/my_recipes_section.dart';
 import 'package:recipe_app/features/profile_page/profile_page_widgets/add_recipe_button.dart';
 import 'package:recipe_app/features/profile_page/profile_page_widgets/user_recipe_grid.dart';
+import 'package:recipe_app/features/profile_page/profile_page_widgets/public_profile_section.dart';
+import 'package:recipe_app/features/profile_page/profile_page_widgets/username_setup_dialog.dart';
 import 'package:recipe_app/shared/app_theme.dart';
 
-class ProfilePage extends ConsumerWidget {
+class ProfilePage extends ConsumerStatefulWidget {
   const ProfilePage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ProfilePage> createState() => _ProfilePageState();
+}
+
+class _ProfilePageState extends ConsumerState<ProfilePage> {
+  bool _promptShown = false;
+
+  void _maybePromptForUsername(ProfileState profileState) {
+    if (_promptShown || profileState.loading || profileState.hasProfile) {
+      return;
+    }
+    _promptShown = true;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      showDialog<void>(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const UsernameSetupDialog(),
+      );
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final userRecipes = ref.watch(userRecipesProvider);
+    final profileState = ref.watch(profileProvider);
+    _maybePromptForUsername(profileState);
 
     return Scaffold(
       backgroundColor: Colors.transparent,
@@ -26,6 +53,11 @@ class ProfilePage extends ConsumerWidget {
             children: [
               const ProfileHeader(),
               const SizedBox(height: 16),
+
+              if (profileState.hasProfile) ...[
+                PublicProfileSection(profile: profileState.profile!),
+                const SizedBox(height: 16),
+              ],
 
               const ProfileStats(),
               const SizedBox(height: 28),
