@@ -4,13 +4,13 @@ import 'package:recipe_app/features/user_recipes_provider.dart';
 import 'package:recipe_app/features/profile_page/profile_data_provider.dart';
 import 'package:recipe_app/features/profile_page/profile_page_widgets/profile_header.dart';
 import 'package:recipe_app/features/profile_page/profile_page_widgets/profile_stats.dart';
-import 'package:recipe_app/features/profile_page/profile_page_widgets/profile_settings_list.dart';
 import 'package:recipe_app/features/profile_page/profile_page_widgets/my_recipes_section.dart';
 import 'package:recipe_app/features/profile_page/profile_page_widgets/add_recipe_button.dart';
 import 'package:recipe_app/features/profile_page/profile_page_widgets/user_recipe_grid.dart';
 import 'package:recipe_app/features/profile_page/profile_page_widgets/public_profile_section.dart';
 import 'package:recipe_app/features/profile_page/profile_page_widgets/recently_added_section.dart'
     as profile_recent;
+import 'package:recipe_app/features/profile_page/profile_page_widgets/sign_out_button.dart';
 import 'package:recipe_app/features/profile_page/profile_page_widgets/username_setup_dialog.dart';
 import 'package:recipe_app/shared/app_theme.dart';
 
@@ -53,6 +53,9 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
+              const SignOutButton(),
+              const SizedBox(height: 4),
+
               const ProfileHeader(),
               const SizedBox(height: 16),
 
@@ -79,9 +82,6 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
               // User Recipes Grid
               UserRecipesGrid(userRecipes: userRecipes),
               const SizedBox(height: 28),
-
-              const ProfileSettingsList(),
-              const SizedBox(height: 20),
 
               Text(
                 'Sweet Treats · Crafted with love & cocoa',
