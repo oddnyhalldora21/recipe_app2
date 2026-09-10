@@ -1,28 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:recipe_app/features/profile_page/recipe_bottom_sheet.dart';
-import 'package:recipe_app/shared/app_theme.dart';
+import 'package:recipe_app/shared/primary_button.dart';
 
 class AddRecipeButton extends ConsumerWidget {
   const AddRecipeButton({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Center(
-      child: Container(
-        width: double.infinity,
-        height: 60,
-        decoration: BoxDecoration(
-          gradient: AppGradients.brownSoft,
-          borderRadius: BorderRadius.circular(20),
-          boxShadow: AppShadows.card,
-        ),
-        child: ElevatedButton.icon(
-          onPressed: () {
-            AddRecipeBottomSheet.show(context);
-          },
-          icon: const Icon(Icons.add, color: Colors.white, size: 24),
-          label: const Text(
+    return PrimaryButton(
+      height: 60,
+      onPressed: () {
+        AddRecipeBottomSheet.show(context);
+      },
+      child: const Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.add, color: Colors.white, size: 24),
+          SizedBox(width: 8),
+          Text(
             'Add New Recipe',
             style: TextStyle(
               color: Colors.white,
@@ -30,15 +26,7 @@ class AddRecipeButton extends ConsumerWidget {
               fontWeight: FontWeight.w600,
             ),
           ),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.transparent,
-            shadowColor: Colors.transparent,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
-            elevation: 0,
-          ),
-        ),
+        ],
       ),
     );
   }

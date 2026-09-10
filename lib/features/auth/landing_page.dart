@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:recipe_app/features/auth/auth_page.dart';
 import 'package:recipe_app/shared/app_theme.dart';
 import 'package:recipe_app/shared/fade_page_route.dart';
+import 'package:recipe_app/shared/primary_button.dart';
 
 class LandingPage extends StatelessWidget {
   const LandingPage({super.key});
@@ -53,30 +54,19 @@ class LandingPage extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 48),
-                    SizedBox(
-                      width: double.infinity,
-                      height: 56,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            fadeRoute(const AuthPage(mode: AuthMode.signUp)),
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.brown,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          elevation: 3,
-                        ),
-                        child: Text(
-                          'Create Account',
-                          style: GoogleFonts.lato(
-                            color: Colors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600,
-                          ),
+                    PrimaryButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          fadeRoute(const AuthPage(mode: AuthMode.signUp)),
+                        );
+                      },
+                      child: Text(
+                        'Create Account',
+                        style: GoogleFonts.lato(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
                     ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:recipe_app/shared/app_theme.dart';
+import 'package:recipe_app/shared/primary_button.dart';
 
 enum AuthMode { signUp, logIn }
 
@@ -218,36 +219,26 @@ class _AuthPageState extends State<AuthPage> {
 
                         const SizedBox(height: 24),
 
-                        SizedBox(
-                          height: 56,
-                          child: ElevatedButton(
-                            onPressed: _isLoading ? null : _submit,
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: AppColors.brown,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              elevation: 3,
-                            ),
-                            child:
-                                _isLoading
-                                    ? const SizedBox(
-                                      width: 24,
-                                      height: 24,
-                                      child: CircularProgressIndicator(
-                                        color: Colors.white,
-                                        strokeWidth: 2,
-                                      ),
-                                    )
-                                    : Text(
-                                      isSignUp ? 'Create Account' : 'Log In',
-                                      style: GoogleFonts.lato(
-                                        color: Colors.white,
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w600,
-                                      ),
+                        PrimaryButton(
+                          onPressed: _isLoading ? null : _submit,
+                          child:
+                              _isLoading
+                                  ? const SizedBox(
+                                    width: 24,
+                                    height: 24,
+                                    child: CircularProgressIndicator(
+                                      color: Colors.white,
+                                      strokeWidth: 2,
                                     ),
-                          ),
+                                  )
+                                  : Text(
+                                    isSignUp ? 'Create Account' : 'Log In',
+                                    style: GoogleFonts.lato(
+                                      color: Colors.white,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
                         ),
 
                         const SizedBox(height: 16),

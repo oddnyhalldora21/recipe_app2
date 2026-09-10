@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:recipe_app/features/recipe_ingredients/recipes_index.dart';
 import 'package:recipe_app/features/saved/saved_recipes_provider.dart';
 import 'package:recipe_app/shared/app_theme.dart';
+import 'package:recipe_app/shared/primary_button.dart';
 
 /// Bottom sheet shown when tapping Save on a recipe: a one-tap "All Saved"
 /// default, the user's existing collections, and a simple name-only flow
@@ -224,17 +225,14 @@ class _SaveBottomSheetState extends ConsumerState<SaveBottomSheet> {
             ),
             const SizedBox(width: 12),
             Expanded(
-              child: ElevatedButton(
+              child: PrimaryButton(
+                height: 48,
+                borderRadius: 14,
                 onPressed: _createAndSave,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.brown,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(14),
-                  ),
+                child: const Text(
+                  'Create & Save',
+                  style: TextStyle(color: Colors.white),
                 ),
-                child: const Text('Create & Save'),
               ),
             ),
           ],

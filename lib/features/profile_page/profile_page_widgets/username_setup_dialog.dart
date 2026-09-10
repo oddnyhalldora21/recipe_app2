@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:recipe_app/features/profile_page/profile_data_provider.dart';
 import 'package:recipe_app/shared/app_theme.dart';
+import 'package:recipe_app/shared/primary_button.dart';
 
 /// Blocking, non-dismissible prompt shown the first time a signed-in user
 /// has no profiles_sweettreats row yet — they must pick a username before
@@ -93,12 +94,9 @@ class _UsernameSetupDialogState extends ConsumerState<UsernameSetupDialog> {
           ],
         ),
         actions: [
-          ElevatedButton(
+          PrimaryButton(
+            height: 44,
             onPressed: _busy ? null : _submit,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.brown,
-              foregroundColor: Colors.white,
-            ),
             child:
                 _busy
                     ? const SizedBox(
@@ -109,7 +107,10 @@ class _UsernameSetupDialogState extends ConsumerState<UsernameSetupDialog> {
                         color: Colors.white,
                       ),
                     )
-                    : const Text('Continue'),
+                    : const Text(
+                      'Continue',
+                      style: TextStyle(color: Colors.white),
+                    ),
           ),
         ],
       ),

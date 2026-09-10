@@ -14,6 +14,11 @@ class AppColors {
   static const Color pinkLight = Color(0xFFFCE4EF);
   static const Color pinkDeep = Color(0xFFEC94BF);
 
+  /// A deeper, more saturated pink — same family as [pinkDeep], just dark
+  /// enough to carry white button text. Used for primary buttons instead
+  /// of the old brown fill.
+  static const Color pinkDark = Color(0xFFC2477F);
+
   static const Color cream = Color(0xFFFFF8E7);
 
   /// Soft near-white background used for page canvases, so the saturated
@@ -67,6 +72,15 @@ class AppGradients {
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
     colors: [AppColors.brownSoft, AppColors.brown],
+  );
+
+  /// The app's primary-button fill — a darker pink gradient, used instead
+  /// of a flat brown fill so buttons read as an extension of the existing
+  /// pink palette rather than a separate color scheme.
+  static const LinearGradient button = LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    colors: [AppColors.pinkDeep, AppColors.pinkDark],
   );
 }
 

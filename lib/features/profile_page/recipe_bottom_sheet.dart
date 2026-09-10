@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:recipe_app/features/user_recipes_provider.dart';
 import 'package:recipe_app/shared/app_theme.dart';
+import 'package:recipe_app/shared/primary_button.dart';
 
 class AddRecipeBottomSheet extends ConsumerStatefulWidget {
   const AddRecipeBottomSheet({super.key});
@@ -197,33 +198,22 @@ class _AddRecipeBottomSheetState extends ConsumerState<AddRecipeBottomSheet> {
 
           Container(
             padding: const EdgeInsets.all(20),
-            child: SizedBox(
-              width: double.infinity,
-              height: 56,
-              child: ElevatedButton(
-                onPressed: _isLoading ? null : _saveRecipe,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.brown,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  elevation: 3,
-                ),
-                child:
-                    _isLoading
-                        ? const CircularProgressIndicator(
+            child: PrimaryButton(
+              onPressed: _isLoading ? null : _saveRecipe,
+              child:
+                  _isLoading
+                      ? const CircularProgressIndicator(
+                        color: Colors.white,
+                        strokeWidth: 2,
+                      )
+                      : const Text(
+                        'Save Recipe',
+                        style: TextStyle(
                           color: Colors.white,
-                          strokeWidth: 2,
-                        )
-                        : const Text(
-                          'Save Recipe',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600,
-                          ),
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
                         ),
-              ),
+                      ),
             ),
           ),
         ],
