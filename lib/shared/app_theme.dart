@@ -60,6 +60,14 @@ class AppGradients {
     end: Alignment.bottomRight,
     colors: [AppColors.pinkLight, AppColors.pink],
   );
+
+  /// Softer alternative to a flat AppColors.brown fill, used on Profile
+  /// banners so they read as warm rather than heavy.
+  static const LinearGradient brownSoft = LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    colors: [AppColors.brownSoft, AppColors.brown],
+  );
 }
 
 /// Reusable elevation presets so cards/buttons get consistent, warm-toned

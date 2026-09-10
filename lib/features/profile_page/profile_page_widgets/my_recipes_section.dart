@@ -9,15 +9,6 @@ class MyRecipesSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SectionHeader(
-      title: 'My Recipes (${userRecipes.length})',
-      buttonText: userRecipes.isNotEmpty ? 'see all' : null,
-      onButtonPressed:
-          userRecipes.isNotEmpty
-              ? () {
-                print('See all user recipes');
-              }
-              : null,
-    );
+    return SectionHeader(title: 'My Recipes (${userRecipes.length})');
   }
 }

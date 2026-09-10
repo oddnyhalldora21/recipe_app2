@@ -1,7 +1,5 @@
-/// Number of grid columns for recipe cards based on the available width.
-/// Phones stay at 2 columns (current behavior); wider layouts get more.
-int recipeGridColumns(double width) {
-  if (width >= 900) return 4; // large tablet / landscape
-  if (width >= 600) return 3; // small tablet / phone landscape
-  return 2; // phone portrait
-}
+/// Single source of truth for recipe card width, so every screen — Home's
+/// horizontal carousels and every grid (Favorites, Profile, Saved, All
+/// Recipes, category pages) — renders cards at the same physical size
+/// instead of grids stretching cards to fill a fixed column count.
+const double kRecipeCardWidth = 160;

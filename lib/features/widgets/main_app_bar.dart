@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:recipe_app/features/auth/display_name_provider.dart';
 import 'package:recipe_app/features/favorites/favorites_saves.dart';
 import 'package:recipe_app/shared/app_theme.dart';
 
@@ -20,9 +20,8 @@ class MainAppBar extends ConsumerWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final email = Supabase.instance.client.auth.currentUser?.email;
-    final initial =
-        (email != null && email.isNotEmpty) ? email[0].toUpperCase() : 'S';
+    final displayName = ref.watch(displayNameProvider);
+    final initial = displayName.isNotEmpty ? displayName[0].toUpperCase() : 'S';
     final favoritesCount = ref.watch(favoritesProvider).length;
 
     return AppBar(

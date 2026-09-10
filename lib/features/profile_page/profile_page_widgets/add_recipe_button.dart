@@ -13,6 +13,7 @@ class AddRecipeButton extends ConsumerWidget {
         width: double.infinity,
         height: 60,
         decoration: BoxDecoration(
+          gradient: AppGradients.brownSoft,
           borderRadius: BorderRadius.circular(20),
           boxShadow: AppShadows.card,
         ),
@@ -30,7 +31,8 @@ class AddRecipeButton extends ConsumerWidget {
             ),
           ),
           style: ElevatedButton.styleFrom(
-            backgroundColor: AppColors.brown,
+            backgroundColor: Colors.transparent,
+            shadowColor: Colors.transparent,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20),
             ),

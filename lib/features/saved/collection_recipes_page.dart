@@ -98,25 +98,20 @@ class _CollectionBody extends StatelessWidget {
           child:
               recipes.isEmpty
                   ? const SavedEmptyState()
-                  : LayoutBuilder(
-                    builder: (context, constraints) {
-                      return GridView.builder(
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: recipeGridColumns(
-                            constraints.maxWidth,
-                          ),
+                  : GridView.builder(
+                    gridDelegate:
+                        const SliverGridDelegateWithMaxCrossAxisExtent(
+                          maxCrossAxisExtent: kRecipeCardWidth,
                           crossAxisSpacing: 16,
                           mainAxisSpacing: 20,
                           childAspectRatio: 0.68,
                         ),
-                        itemCount: recipes.length,
-                        itemBuilder: (context, index) {
-                          final recipe = recipes[index];
-                          return RecipeCard(
-                            recipe: recipe,
-                            heroTag: 'collection_${collection.id}_${recipe.id}',
-                          );
-                        },
+                    itemCount: recipes.length,
+                    itemBuilder: (context, index) {
+                      final recipe = recipes[index];
+                      return RecipeCard(
+                        recipe: recipe,
+                        heroTag: 'collection_${collection.id}_${recipe.id}',
                       );
                     },
                   ),

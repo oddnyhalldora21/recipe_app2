@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:recipe_app/features/recipe_ingredients/recipes_index.dart';
 import 'package:recipe_app/features/user_recipes_provider.dart';
 import 'package:recipe_app/shared/app_theme.dart';
 
@@ -24,9 +23,7 @@ class AddRecipeBottomSheet extends ConsumerStatefulWidget {
 class _AddRecipeBottomSheetState extends ConsumerState<AddRecipeBottomSheet> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
-  final _descriptionController = TextEditingController();
   final _imageUrlController = TextEditingController();
-  final _cookingTimeController = TextEditingController();
   final _ingredientsController = TextEditingController();
   final _instructionsController = TextEditingController();
 
@@ -35,15 +32,13 @@ class _AddRecipeBottomSheetState extends ConsumerState<AddRecipeBottomSheet> {
   @override
   void dispose() {
     _nameController.dispose();
-    _descriptionController.dispose();
     _imageUrlController.dispose();
-    _cookingTimeController.dispose();
     _ingredientsController.dispose();
     _instructionsController.dispose();
     super.dispose();
   }
 
-  void _saveRecipe() async {
+  Future<void> _saveRecipe() async {
     if (!_formKey.currentState!.validate()) return;
 
     setState(() {
@@ -64,21 +59,21 @@ class _AddRecipeBottomSheetState extends ConsumerState<AddRecipeBottomSheet> {
             .map((instruction) => instruction.trim())
             .toList();
 
-    final newRecipe = Recipe(
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
-      name: _nameController.text.trim(),
-      imageUrl:
-          _imageUrlController.text.trim().isEmpty
-              ? 'https://via.placeholder.com/300x200/F1B5D4/432F15?text=My+Recipe'
-              : _imageUrlController.text.trim(),
-      cookingTime: _cookingTimeController.text.trim(),
-      category: 'My Recipes',
-      ingredients: ingredientsList,
-      instructions: instructionsList,
-    );
+    final name = _nameController.text.trim();
+    final success = await ref
+        .read(userRecipesProvider.notifier)
+        .addRecipe(
+          name: name,
+          imageUrl:
+              _imageUrlController.text.trim().isEmpty
+                  ? 'https://via.placeholder.com/300x200/F1B5D4/432F15?text=My+Recipe'
+                  : _imageUrlController.text.trim(),
+          ingredients: ingredientsList,
+          instructions: instructionsList,
+          category: 'My Recipes',
+        );
 
-    ref.read(userRecipesProvider.notifier).addRecipe(newRecipe);
-
+    if (!mounted) return;
     setState(() {
       _isLoading = false;
     });
@@ -87,8 +82,12 @@ class _AddRecipeBottomSheetState extends ConsumerState<AddRecipeBottomSheet> {
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('Recipe "${newRecipe.name}" added successfully!'),
-        backgroundColor: AppColors.brown,
+        content: Text(
+          success
+              ? 'Recipe "$name" added successfully!'
+              : 'Could not save your recipe — please try again.',
+        ),
+        backgroundColor: success ? AppColors.brown : Colors.redAccent,
         duration: const Duration(seconds: 2),
       ),
     );
@@ -146,29 +145,6 @@ class _AddRecipeBottomSheetState extends ConsumerState<AddRecipeBottomSheet> {
                       validator: (value) {
                         if (value == null || value.trim().isEmpty) {
                           return 'Please enter a recipe name';
-                        }
-                        return null;
-                      },
-                    ),
-
-                    const SizedBox(height: 16),
-
-                    _buildTextField(
-                      controller: _descriptionController,
-                      label: 'Description',
-                      hint: 'Describe your delicious recipe',
-                      maxLines: 3,
-                    ),
-
-                    const SizedBox(height: 16),
-
-                    _buildTextField(
-                      controller: _cookingTimeController,
-                      label: 'Cooking Time',
-                      hint: 'e.g., 30 mins, 1 hour',
-                      validator: (value) {
-                        if (value == null || value.trim().isEmpty) {
-                          return 'Please enter cooking time';
                         }
                         return null;
                       },

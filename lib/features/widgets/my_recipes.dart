@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:recipe_app/features/user_recipes_provider.dart';
 import 'package:recipe_app/features/widgets/recipe_card.dart';
 import 'package:recipe_app/shared/app_theme.dart';
+import 'package:recipe_app/shared/responsive.dart';
 
 class MyRecipesWidget extends ConsumerWidget {
   const MyRecipesWidget({super.key});
@@ -28,7 +29,7 @@ class MyRecipesWidget extends ConsumerWidget {
                 Icon(Icons.restaurant_menu, size: 32, color: AppColors.brown),
                 SizedBox(height: 8),
                 Text(
-                  'No recipes yet!',
+                  'No recipes yet',
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
@@ -36,7 +37,7 @@ class MyRecipesWidget extends ConsumerWidget {
                   ),
                 ),
                 Text(
-                  'Add your first recipe from your profile',
+                  'Add your first recipe from your profile.',
                   style: TextStyle(fontSize: 12, color: AppColors.brown),
                 ),
               ],
@@ -55,7 +56,7 @@ class MyRecipesWidget extends ConsumerWidget {
           itemBuilder: (context, index) {
             final recipe = myRecipes[index];
             return SizedBox(
-              width: 160,
+              width: kRecipeCardWidth,
               child: RecipeCard(
                 recipe: recipe,
                 heroTag: 'home_myrecipes_${recipe.id}',

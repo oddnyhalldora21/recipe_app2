@@ -1,30 +1,101 @@
+import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:recipe_app/features/all_recipes_page/all_recipes_widgets/recipe_service.dart';
 import 'package:recipe_app/features/recipe_ingredients/recipes_index.dart';
-import 'package:recipe_app/features/profile_page/dummy_user_recipes.dart';
 
+/// The signed-in user's own recipes, stored in recipes_sweettreats under
+/// their own user_id with is_public = false (so they never show up in the
+/// shared/public catalog, only on this account's own Profile page).
 class UserRecipesNotifier extends StateNotifier<List<Recipe>> {
-  UserRecipesNotifier() : super(DummyUserRecipes.getDummyRecipes());
-
-  void addRecipe(Recipe recipe) {
-    state = [...state, recipe];
+  UserRecipesNotifier() : super([]) {
+    _load();
+    _authSubscription = _client.auth.onAuthStateChange.listen((_) => _load());
   }
 
-  void removeRecipe(String recipeId) {
+  SupabaseClient get _client => Supabase.instance.client;
+  late final StreamSubscription<AuthState> _authSubscription;
+
+  @override
+  void dispose() {
+    _authSubscription.cancel();
+    super.dispose();
+  }
+
+  Future<void> _load() async {
+    final userId = _client.auth.currentUser?.id;
+    if (userId == null) {
+      state = [];
+      return;
+    }
+
+    try {
+      final rows = await _client
+          .from(RecipeService.table)
+          .select('id, name, ingredients, steps, category, image_url')
+          .eq('user_id', userId);
+
+      state = (rows as List).map(RecipeService.fromRow).toList();
+    } catch (e) {
+      print('Error loading your recipes: $e');
+      state = [];
+    }
+  }
+
+  /// Adds a recipe under the current user. Returns whether it succeeded.
+  Future<bool> addRecipe({
+    required String name,
+    required String imageUrl,
+    required List<String> ingredients,
+    required List<String> instructions,
+    required String category,
+  }) async {
+    final userId = _client.auth.currentUser?.id;
+    if (userId == null) return false;
+
+    try {
+      final row =
+          await _client
+              .from(RecipeService.table)
+              .insert({
+                'user_id': userId,
+                'name': name,
+                'image_url': imageUrl,
+                'ingredients': ingredients,
+                'steps': RecipeService.toStepsText(instructions),
+                'category': category,
+                'is_public': false,
+              })
+              .select()
+              .single();
+
+      state = [...state, RecipeService.fromRow(row)];
+      return true;
+    } catch (e) {
+      print('Error adding recipe: $e');
+      return false;
+    }
+  }
+
+  Future<bool> removeRecipe(String recipeId) async {
+    final userId = _client.auth.currentUser?.id;
+    if (userId == null) return false;
+
+    final previous = state;
     state = state.where((recipe) => recipe.id != recipeId).toList();
-  }
 
-  void updateRecipe(Recipe updatedRecipe) {
-    state =
-        state.map((recipe) {
-          if (recipe.id == updatedRecipe.id) {
-            return updatedRecipe;
-          }
-          return recipe;
-        }).toList();
-  }
-
-  void clearAllRecipes() {
-    state = [];
+    try {
+      await _client
+          .from(RecipeService.table)
+          .delete()
+          .eq('user_id', userId)
+          .eq('id', recipeId);
+      return true;
+    } catch (e) {
+      print('Error removing recipe: $e');
+      state = previous;
+      return false;
+    }
   }
 }
 

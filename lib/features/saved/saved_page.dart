@@ -99,28 +99,22 @@ class _SavedBody extends StatelessWidget {
                     ),
                   )
                 else
-                  LayoutBuilder(
-                    builder: (context, constraints) {
-                      return GridView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        gridDelegate:
-                            SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: recipeGridColumns(
-                                constraints.maxWidth,
-                              ),
-                              crossAxisSpacing: 16,
-                              mainAxisSpacing: 20,
-                              childAspectRatio: 0.68,
-                            ),
-                        itemCount: allSaved.length,
-                        itemBuilder: (context, index) {
-                          final recipe = allSaved[index];
-                          return RecipeCard(
-                            recipe: recipe,
-                            heroTag: 'saved_${recipe.id}',
-                          );
-                        },
+                  GridView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    gridDelegate:
+                        const SliverGridDelegateWithMaxCrossAxisExtent(
+                          maxCrossAxisExtent: kRecipeCardWidth,
+                          crossAxisSpacing: 16,
+                          mainAxisSpacing: 20,
+                          childAspectRatio: 0.68,
+                        ),
+                    itemCount: allSaved.length,
+                    itemBuilder: (context, index) {
+                      final recipe = allSaved[index];
+                      return RecipeCard(
+                        recipe: recipe,
+                        heroTag: 'saved_${recipe.id}',
                       );
                     },
                   ),

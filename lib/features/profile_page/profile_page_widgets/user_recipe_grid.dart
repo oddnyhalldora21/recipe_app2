@@ -28,52 +28,51 @@ class UserRecipesGrid extends StatelessWidget {
         boxShadow: AppShadows.soft,
       ),
       child: const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.restaurant_menu, size: 60, color: AppColors.brown),
-            SizedBox(height: 16),
-            Text(
-              'No recipes yet!',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w600,
-                color: AppColors.brown,
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.restaurant_menu, size: 60, color: AppColors.brown),
+              SizedBox(height: 16),
+              Text(
+                'No recipes yet',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.brown,
+                ),
               ),
-            ),
-            SizedBox(height: 8),
-            Text(
-              'Create your first sweet treat recipe',
-              style: TextStyle(fontSize: 14, color: AppColors.brown),
-              textAlign: TextAlign.center,
-            ),
-          ],
+              SizedBox(height: 8),
+              Text(
+                'Add your first recipe to see it here.',
+                style: TextStyle(fontSize: 14, color: AppColors.brown),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 
   Widget _buildRecipeGridView(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        return GridView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: recipeGridColumns(constraints.maxWidth),
-            crossAxisSpacing: 16,
-            mainAxisSpacing: 20,
-            childAspectRatio: 0.68,
-          ),
-          itemCount: userRecipes.length > 6 ? 6 : userRecipes.length,
-          itemBuilder: (context, index) {
-            final recipe = userRecipes[index];
-            return RecipeCard(
-              recipe: recipe,
-              heroTag: 'profile_mine_${recipe.id}',
-              showMineBadge: true,
-            );
-          },
+    return GridView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+        maxCrossAxisExtent: kRecipeCardWidth,
+        crossAxisSpacing: 16,
+        mainAxisSpacing: 20,
+        childAspectRatio: 0.68,
+      ),
+      itemCount: userRecipes.length,
+      itemBuilder: (context, index) {
+        final recipe = userRecipes[index];
+        return RecipeCard(
+          recipe: recipe,
+          heroTag: 'profile_mine_${recipe.id}',
+          showMineBadge: true,
         );
       },
     );

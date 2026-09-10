@@ -4,6 +4,7 @@ import 'package:recipe_app/features/all_recipes_page/all_recipes_widgets/recipe_
 import 'package:recipe_app/features/recipe_ingredients/recipes_catalog_provider.dart';
 import 'package:recipe_app/features/widgets/recipe_card.dart';
 import 'package:recipe_app/shared/app_theme.dart';
+import 'package:recipe_app/shared/responsive.dart';
 
 class SurpriseMe extends ConsumerWidget {
   const SurpriseMe({super.key});
@@ -24,7 +25,7 @@ class SurpriseMe extends ConsumerWidget {
               itemBuilder: (context, index) {
                 final recipe = randomRecipes[index];
                 return SizedBox(
-                  width: 160,
+                  width: kRecipeCardWidth,
                   child: RecipeCard(
                     recipe: recipe,
                     heroTag: 'surprise_${recipe.id}',

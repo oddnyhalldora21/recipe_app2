@@ -10,23 +10,19 @@ class AllRecipesGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        return GridView.builder(
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: recipeGridColumns(constraints.maxWidth),
-            crossAxisSpacing: 16,
-            mainAxisSpacing: 20,
-            childAspectRatio: 0.68,
-          ),
-          itemCount: allRecipes.length,
-          itemBuilder: (context, index) {
-            final recipe = allRecipes[index];
-            return RecipeCard(
-              recipe: recipe,
-              heroTag: 'allrecipes_page_${recipe.id}',
-            );
-          },
+    return GridView.builder(
+      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+        maxCrossAxisExtent: kRecipeCardWidth,
+        crossAxisSpacing: 16,
+        mainAxisSpacing: 20,
+        childAspectRatio: 0.68,
+      ),
+      itemCount: allRecipes.length,
+      itemBuilder: (context, index) {
+        final recipe = allRecipes[index];
+        return RecipeCard(
+          recipe: recipe,
+          heroTag: 'allrecipes_page_${recipe.id}',
         );
       },
     );

@@ -10,21 +10,17 @@ class FavoritesGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        return GridView.builder(
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: recipeGridColumns(constraints.maxWidth),
-            crossAxisSpacing: 16,
-            mainAxisSpacing: 20,
-            childAspectRatio: 0.68,
-          ),
-          itemCount: favoriteRecipes.length,
-          itemBuilder: (context, index) {
-            final recipe = favoriteRecipes[index];
-            return RecipeCard(recipe: recipe, heroTag: 'favorites_${recipe.id}');
-          },
-        );
+    return GridView.builder(
+      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+        maxCrossAxisExtent: kRecipeCardWidth,
+        crossAxisSpacing: 16,
+        mainAxisSpacing: 20,
+        childAspectRatio: 0.68,
+      ),
+      itemCount: favoriteRecipes.length,
+      itemBuilder: (context, index) {
+        final recipe = favoriteRecipes[index];
+        return RecipeCard(recipe: recipe, heroTag: 'favorites_${recipe.id}');
       },
     );
   }

@@ -16,6 +16,7 @@ class AuthPage extends StatefulWidget {
 class _AuthPageState extends State<AuthPage> {
   late AuthMode _mode = widget.mode;
   final _formKey = GlobalKey<FormState>();
+  final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
@@ -28,6 +29,7 @@ class _AuthPageState extends State<AuthPage> {
 
   @override
   void dispose() {
+    _nameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
@@ -47,6 +49,7 @@ class _AuthPageState extends State<AuthPage> {
         final response = await Supabase.instance.client.auth.signUp(
           email: email,
           password: password,
+          data: {'display_name': _nameController.text.trim()},
         );
         if (response.session == null) {
           // Email confirmation is still enabled in Supabase settings.
@@ -139,6 +142,20 @@ class _AuthPageState extends State<AuthPage> {
                       _buildCard(
                         child: Column(
                           children: [
+                            if (isSignUp) ...[
+                              _buildTextField(
+                                controller: _nameController,
+                                label: 'Name',
+                                hint: 'What should we call you?',
+                                validator: (value) {
+                                  if (value == null || value.trim().isEmpty) {
+                                    return 'Please enter your name';
+                                  }
+                                  return null;
+                                },
+                              ),
+                              const SizedBox(height: 16),
+                            ],
                             _buildTextField(
                               controller: _emailController,
                               label: 'Email',
