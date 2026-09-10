@@ -12,7 +12,9 @@ class RecipeService {
   static Future<List<Recipe>> getAllRecipes() async {
     final rows = await Supabase.instance.client
         .from(table)
-        .select('id, name, ingredients, steps, category, image_url')
+        .select(
+          'id, name, ingredients, steps, category, image_url, user_id, is_public, created_at',
+        )
         .eq('is_public', true);
 
     return (rows as List).map(fromRow).toList();
@@ -39,6 +41,12 @@ class RecipeService {
       // time pill/badge wherever this is empty.
       cookingTime: '',
       category: row['category'] as String? ?? '',
+      createdAt:
+          row['created_at'] != null
+              ? DateTime.parse(row['created_at'] as String)
+              : null,
+      isPublic: row['is_public'] as bool? ?? true,
+      userId: row['user_id'] as String?,
     );
   }
 

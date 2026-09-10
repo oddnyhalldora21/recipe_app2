@@ -16,11 +16,17 @@ class RecipeCard extends ConsumerWidget {
     required this.recipe,
     required this.heroTag,
     this.showMineBadge = false,
+    this.showVisibilityBadge = false,
   });
 
   final Recipe recipe;
   final String heroTag;
   final bool showMineBadge;
+
+  /// Shows a "Public"/"Private" pill instead of the plain "MINE" badge —
+  /// used on Profile's Recently Added, where every card is already the
+  /// user's own, so what matters is whether others can see it.
+  final bool showVisibilityBadge;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -84,7 +90,13 @@ class RecipeCard extends ConsumerWidget {
                           );
                         },
                       ),
-                      if (showMineBadge)
+                      if (showVisibilityBadge)
+                        Positioned(
+                          top: 8,
+                          left: 8,
+                          child: _VisibilityBadge(isPublic: recipe.isPublic),
+                        )
+                      else if (showMineBadge)
                         Positioned(top: 8, left: 8, child: _MineBadge()),
                       if (recipe.cookingTime.isNotEmpty)
                         Positioned(
@@ -190,6 +202,45 @@ class _MineBadge extends StatelessWidget {
           fontSize: 8,
           fontWeight: FontWeight.bold,
         ),
+      ),
+    );
+  }
+}
+
+class _VisibilityBadge extends StatelessWidget {
+  const _VisibilityBadge({required this.isPublic});
+
+  final bool isPublic;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+      decoration: BoxDecoration(
+        color:
+            (isPublic ? Colors.green[700]! : AppColors.brown).withOpacity(
+              0.9,
+            ),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            isPublic ? Icons.public : Icons.lock_outline,
+            size: 9,
+            color: Colors.white,
+          ),
+          const SizedBox(width: 3),
+          Text(
+            isPublic ? 'PUBLIC' : 'PRIVATE',
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 8,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
       ),
     );
   }

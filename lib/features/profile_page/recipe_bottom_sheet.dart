@@ -23,16 +23,15 @@ class AddRecipeBottomSheet extends ConsumerStatefulWidget {
 class _AddRecipeBottomSheetState extends ConsumerState<AddRecipeBottomSheet> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
-  final _imageUrlController = TextEditingController();
   final _ingredientsController = TextEditingController();
   final _instructionsController = TextEditingController();
 
   bool _isLoading = false;
+  bool _isPublic = false;
 
   @override
   void dispose() {
     _nameController.dispose();
-    _imageUrlController.dispose();
     _ingredientsController.dispose();
     _instructionsController.dispose();
     super.dispose();
@@ -65,12 +64,11 @@ class _AddRecipeBottomSheetState extends ConsumerState<AddRecipeBottomSheet> {
         .addRecipe(
           name: name,
           imageUrl:
-              _imageUrlController.text.trim().isEmpty
-                  ? 'https://via.placeholder.com/300x200/F1B5D4/432F15?text=My+Recipe'
-                  : _imageUrlController.text.trim(),
+              'https://via.placeholder.com/300x200/F1B5D4/432F15?text=My+Recipe',
           ingredients: ingredientsList,
           instructions: instructionsList,
           category: 'My Recipes',
+          isPublic: _isPublic,
         );
 
     if (!mounted) return;
@@ -152,11 +150,7 @@ class _AddRecipeBottomSheetState extends ConsumerState<AddRecipeBottomSheet> {
 
                     const SizedBox(height: 16),
 
-                    _buildTextField(
-                      controller: _imageUrlController,
-                      label: 'Image URL (Optional)',
-                      hint: 'Paste an image URL for your recipe',
-                    ),
+                    _buildAddPhotoPlaceholder(),
 
                     const SizedBox(height: 16),
 
@@ -189,6 +183,10 @@ class _AddRecipeBottomSheetState extends ConsumerState<AddRecipeBottomSheet> {
                         return null;
                       },
                     ),
+
+                    const SizedBox(height: 20),
+
+                    _buildPublicToggle(),
 
                     const SizedBox(height: 32),
                   ],
@@ -227,6 +225,75 @@ class _AddRecipeBottomSheetState extends ConsumerState<AddRecipeBottomSheet> {
                         ),
               ),
             ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAddPhotoPlaceholder() {
+    return Container(
+      width: double.infinity,
+      height: 120,
+      decoration: BoxDecoration(
+        color: Colors.grey[50],
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.grey[300]!),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.camera_alt_outlined, color: Colors.grey[400], size: 28),
+          const SizedBox(height: 8),
+          Text(
+            'Add Photo',
+            style: TextStyle(
+              color: Colors.grey[400],
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPublicToggle() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      decoration: BoxDecoration(
+        color: Colors.grey[50],
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.grey[300]!),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Make this recipe public',
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.brown,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  _isPublic
+                      ? 'Anyone can find this in All Recipes.'
+                      : 'Only you can see this recipe.',
+                  style: TextStyle(fontSize: 13, color: Colors.grey[600]),
+                ),
+              ],
+            ),
+          ),
+          Switch(
+            value: _isPublic,
+            activeThumbColor: AppColors.brown,
+            onChanged: (value) => setState(() => _isPublic = value),
           ),
         ],
       ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:recipe_app/features/recipes_pages/recipe_details.dart';
 import 'package:recipe_app/features/home_page_widgets/home_hero.dart';
 import 'package:recipe_app/features/home_page_widgets/categories_section.dart';
+import 'package:recipe_app/features/home_page_widgets/recently_added_section.dart';
 import 'package:recipe_app/features/home_page_widgets/surprise_me_section.dart';
 import 'package:recipe_app/features/home_page_widgets/my_recipes_section.dart';
 import 'package:recipe_app/features/home_page_widgets/all_recipes_section.dart';
@@ -34,6 +35,9 @@ class RecipePage extends StatelessWidget {
               children: [
                 // Categories Section
                 const CategoriesSection(),
+
+                // Recently Added Section
+                const RecentlyAddedSection(),
 
                 // Surprise Me Section
                 const SurpriseMeSection(),

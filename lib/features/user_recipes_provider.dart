@@ -5,8 +5,9 @@ import 'package:recipe_app/features/all_recipes_page/all_recipes_widgets/recipe_
 import 'package:recipe_app/features/recipe_ingredients/recipes_index.dart';
 
 /// The signed-in user's own recipes, stored in recipes_sweettreats under
-/// their own user_id with is_public = false (so they never show up in the
-/// shared/public catalog, only on this account's own Profile page).
+/// their own user_id. Each recipe is private by default; the user can opt
+/// in to making one public from Add Recipe, which then also surfaces it in
+/// the shared All Recipes catalog.
 class UserRecipesNotifier extends StateNotifier<List<Recipe>> {
   UserRecipesNotifier() : super([]) {
     _load();
@@ -32,8 +33,11 @@ class UserRecipesNotifier extends StateNotifier<List<Recipe>> {
     try {
       final rows = await _client
           .from(RecipeService.table)
-          .select('id, name, ingredients, steps, category, image_url')
-          .eq('user_id', userId);
+          .select(
+            'id, name, ingredients, steps, category, image_url, user_id, is_public, created_at',
+          )
+          .eq('user_id', userId)
+          .order('created_at', ascending: false);
 
       state = (rows as List).map(RecipeService.fromRow).toList();
     } catch (e) {
@@ -42,13 +46,16 @@ class UserRecipesNotifier extends StateNotifier<List<Recipe>> {
     }
   }
 
-  /// Adds a recipe under the current user. Returns whether it succeeded.
+  /// Adds a recipe under the current user. [isPublic] defaults to false so
+  /// recipes are private unless the user opts in to sharing them. Returns
+  /// whether it succeeded.
   Future<bool> addRecipe({
     required String name,
     required String imageUrl,
     required List<String> ingredients,
     required List<String> instructions,
     required String category,
+    bool isPublic = false,
   }) async {
     final userId = _client.auth.currentUser?.id;
     if (userId == null) return false;
@@ -64,7 +71,7 @@ class UserRecipesNotifier extends StateNotifier<List<Recipe>> {
                 'ingredients': ingredients,
                 'steps': RecipeService.toStepsText(instructions),
                 'category': category,
-                'is_public': false,
+                'is_public': isPublic,
               })
               .select()
               .single();

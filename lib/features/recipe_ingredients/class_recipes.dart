@@ -8,6 +8,9 @@ class Recipe {
   final List<String> instructions;
   final String cookingTime;
   final String category;
+  final DateTime? createdAt;
+  final bool isPublic;
+  final String? userId;
 
   Recipe({
     required this.id,
@@ -17,6 +20,9 @@ class Recipe {
     required this.instructions,
     required this.cookingTime,
     required this.category,
+    this.createdAt,
+    this.isPublic = true,
+    this.userId,
   });
 
   factory Recipe.fromMap(Map<String, dynamic> map) {

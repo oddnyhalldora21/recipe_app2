@@ -9,6 +9,8 @@ import 'package:recipe_app/features/profile_page/profile_page_widgets/my_recipes
 import 'package:recipe_app/features/profile_page/profile_page_widgets/add_recipe_button.dart';
 import 'package:recipe_app/features/profile_page/profile_page_widgets/user_recipe_grid.dart';
 import 'package:recipe_app/features/profile_page/profile_page_widgets/public_profile_section.dart';
+import 'package:recipe_app/features/profile_page/profile_page_widgets/recently_added_section.dart'
+    as profile_recent;
 import 'package:recipe_app/features/profile_page/profile_page_widgets/username_setup_dialog.dart';
 import 'package:recipe_app/shared/app_theme.dart';
 
@@ -61,6 +63,10 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
 
               const ProfileStats(),
               const SizedBox(height: 28),
+
+              // Recently Added Section
+              const profile_recent.RecentlyAddedSection(),
+              const SizedBox(height: 16),
 
               // My Recipes Section Header
               MyRecipesSection(userRecipes: userRecipes),
