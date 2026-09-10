@@ -1,32 +1,54 @@
 import 'dart:math';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:recipe_app/features/recipe_ingredients/recipes_index.dart';
 
+/// Recipes now live in recipes_sweettreats (Supabase) rather than the old
+/// static Dart catalog. This is the single place that fetches them; screens
+/// get the cached list via recipesCatalogProvider and use the sync helpers
+/// below (shuffle/randomRecipes) to slice it, instead of re-querying.
 class RecipeService {
-  static List<Recipe> getAllRecipes() {
-    List<Recipe> allRecipes = [];
+  static const String _table = 'recipes_sweettreats';
 
-    allRecipes.addAll(ChocolateRecipes.getAllChocolateRecipes());
-    allRecipes.addAll(VeganRecipes.getAllVeganRecipes());
-    allRecipes.addAll(CookieRecipes.getAllCookieRecipes());
-    allRecipes.addAll(SugarFreeRecipes.getAllSugarFreeRecipes());
-    allRecipes.addAll(GlutenFreeRecipes.getAllGlutenFreeRecipes());
-    allRecipes.addAll(FrozenTreatsRecipes.getAllFrozenTreatsRecipes());
-    allRecipes.addAll(NoBakeRecipes.getAllNoBakeRecipes());
-    allRecipes.addAll(PuffPastryRecipes.getAllPuffPastryRecipes());
+  static Future<List<Recipe>> getAllRecipes() async {
+    final rows = await Supabase.instance.client
+        .from(_table)
+        .select('id, name, ingredients, steps, category, image_url')
+        .eq('is_public', true);
 
-    return allRecipes;
+    return (rows as List).map(_fromRow).toList();
   }
 
-  static List<Recipe> getShuffledRecipes() {
-    List<Recipe> recipes = getAllRecipes();
-    recipes.shuffle(Random());
-    return recipes;
+  static Recipe _fromRow(dynamic row) {
+    final steps = row['steps'] as String? ?? '';
+    // steps is stored as "1. ...\n2. ..." — recover the step list so
+    // InstructionsSection can keep rendering numbered steps.
+    final instructions =
+        steps
+            .split('\n')
+            .map((line) => line.replaceFirst(RegExp(r'^\d+\.\s*'), '').trim())
+            .where((line) => line.isNotEmpty)
+            .toList();
+
+    return Recipe(
+      id: row['id'] as String,
+      name: row['name'] as String,
+      imageUrl: row['image_url'] as String? ?? '',
+      ingredients: List<String>.from(row['ingredients'] as List? ?? const []),
+      instructions: instructions,
+      // recipes_sweettreats has no cooking-time column; UI hides the
+      // time pill/badge wherever this is empty.
+      cookingTime: '',
+      category: row['category'] as String? ?? '',
+    );
   }
 
-  // Function to get random recipes for "Surprise Me"
-  static List<Recipe> getRandomRecipes(int count) {
-    List<Recipe> allRecipes = getAllRecipes();
-    allRecipes.shuffle(Random());
-    return allRecipes.take(count).toList();
+  static List<Recipe> shuffle(List<Recipe> recipes) {
+    final copy = List<Recipe>.from(recipes);
+    copy.shuffle(Random());
+    return copy;
+  }
+
+  static List<Recipe> randomRecipes(List<Recipe> recipes, int count) {
+    return shuffle(recipes).take(count).toList();
   }
 }

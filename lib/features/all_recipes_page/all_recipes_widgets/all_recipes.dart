@@ -1,50 +1,51 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:recipe_app/features/recipe_ingredients/recipes_index.dart';
-import 'dart:math';
+import 'package:recipe_app/features/all_recipes_page/all_recipes_widgets/recipe_service.dart';
+import 'package:recipe_app/features/recipe_ingredients/recipes_catalog_provider.dart';
 import 'package:recipe_app/features/widgets/recipe_card.dart';
+import 'package:recipe_app/shared/app_theme.dart';
 
 class AllRecipes extends ConsumerWidget {
   const AllRecipes({super.key});
 
-  List<Recipe> getRandomRecipes(int count) {
-    List<Recipe> allRecipes = [];
-
-    allRecipes.addAll(ChocolateRecipes.getAllChocolateRecipes());
-    allRecipes.addAll(PuffPastryRecipes.getAllPuffPastryRecipes());
-    allRecipes.addAll(VeganRecipes.getAllVeganRecipes());
-    allRecipes.addAll(CookieRecipes.getAllCookieRecipes());
-    allRecipes.addAll(FrozenTreatsRecipes.getAllFrozenTreatsRecipes());
-    allRecipes.addAll(GlutenFreeRecipes.getAllGlutenFreeRecipes());
-    allRecipes.addAll(NoBakeRecipes.getAllNoBakeRecipes());
-    allRecipes.addAll(SugarFreeRecipes.getAllSugarFreeRecipes());
-
-    allRecipes.shuffle(Random());
-    return allRecipes.take(count).toList();
-  }
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final randomRecipes = getRandomRecipes(10);
+    final catalog = ref.watch(recipesCatalogProvider);
 
     return Padding(
       padding: const EdgeInsets.only(top: 10, bottom: 20),
       child: SizedBox(
         height: 215,
-        child: ListView.separated(
-          scrollDirection: Axis.horizontal,
-          itemBuilder: (context, index) {
-            final recipe = randomRecipes[index];
-            return SizedBox(
-              width: 160,
-              child: RecipeCard(
-                recipe: recipe,
-                heroTag: 'home_allrecipes_${recipe.id}',
-              ),
+        child: catalog.when(
+          data: (recipes) {
+            final randomRecipes = RecipeService.randomRecipes(recipes, 10);
+            return ListView.separated(
+              scrollDirection: Axis.horizontal,
+              itemBuilder: (context, index) {
+                final recipe = randomRecipes[index];
+                return SizedBox(
+                  width: 160,
+                  child: RecipeCard(
+                    recipe: recipe,
+                    heroTag: 'home_allrecipes_${recipe.id}',
+                  ),
+                );
+              },
+              separatorBuilder: (context, index) => const SizedBox(width: 14),
+              itemCount: randomRecipes.length,
             );
           },
-          separatorBuilder: (context, index) => const SizedBox(width: 14),
-          itemCount: randomRecipes.length,
+          loading:
+              () => const Center(
+                child: CircularProgressIndicator(color: AppColors.pinkDeep),
+              ),
+          error:
+              (error, stackTrace) => Center(
+                child: Text(
+                  'Could not load recipes.',
+                  style: TextStyle(color: AppColors.brown.withOpacity(0.7)),
+                ),
+              ),
         ),
       ),
     );

@@ -20,7 +20,8 @@ class CookingTimeCard extends StatelessWidget {
       spacing: 10,
       runSpacing: 10,
       children: [
-        _Pill(icon: Icons.timer_outlined, label: cookingTime),
+        if (cookingTime.isNotEmpty)
+          _Pill(icon: Icons.timer_outlined, label: cookingTime),
         _Pill(icon: Icons.local_dining_outlined, label: category),
         _Pill(
           icon: Icons.shopping_basket_outlined,

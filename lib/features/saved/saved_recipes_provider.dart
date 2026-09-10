@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:recipe_app/features/all_recipes_page/all_recipes_widgets/recipe_service.dart';
 import 'package:recipe_app/features/recipe_ingredients/recipes_index.dart';
 
 /// A user-created named collection (e.g. "Make Later", "Cookies").
@@ -191,13 +190,19 @@ final savedRecipesProvider =
     });
 
 /// Resolves the recipes saved to a given destination — pass null for
-/// "All Saved", or a collection id for that specific collection.
-List<Recipe> recipesForLocation(SavedRecipesState state, String? collectionId) {
+/// "All Saved", or a collection id for that specific collection. [catalog]
+/// is the already-loaded recipe list (from recipesCatalogProvider); this
+/// stays a plain sync function so it can run straight from a widget build.
+List<Recipe> recipesForLocation(
+  SavedRecipesState state,
+  String? collectionId,
+  List<Recipe> catalog,
+) {
   final ids =
       state.locationByRecipeId.entries
           .where((entry) => entry.value == collectionId)
           .map((entry) => entry.key)
           .toSet();
   if (ids.isEmpty) return [];
-  return RecipeService.getAllRecipes().where((r) => ids.contains(r.id)).toList();
+  return catalog.where((r) => ids.contains(r.id)).toList();
 }

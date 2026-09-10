@@ -38,7 +38,7 @@ class FavoritesSaves extends StateNotifier<List<Recipe>> {
       final favoriteIds =
           (rows as List).map((row) => row['recipe_id'] as String).toSet();
 
-      final allRecipes = RecipeService.getAllRecipes();
+      final allRecipes = await RecipeService.getAllRecipes();
       state =
           allRecipes
               .where((recipe) => favoriteIds.contains(recipe.id))

@@ -86,14 +86,15 @@ class RecipeCard extends ConsumerWidget {
                       ),
                       if (showMineBadge)
                         Positioned(top: 8, left: 8, child: _MineBadge()),
-                      Positioned(
-                        bottom: 8,
-                        left: 8,
-                        child: _Pill(
-                          icon: Icons.access_time_rounded,
-                          label: recipe.cookingTime,
+                      if (recipe.cookingTime.isNotEmpty)
+                        Positioned(
+                          bottom: 8,
+                          left: 8,
+                          child: _Pill(
+                            icon: Icons.access_time_rounded,
+                            label: recipe.cookingTime,
+                          ),
                         ),
-                      ),
                       Positioned(
                         top: 8,
                         right: 8,

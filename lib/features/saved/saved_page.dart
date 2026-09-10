@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:recipe_app/features/recipe_ingredients/recipes_catalog_provider.dart';
+import 'package:recipe_app/features/recipe_ingredients/recipes_index.dart';
 import 'package:recipe_app/features/saved/collection_recipes_page.dart';
 import 'package:recipe_app/features/saved/saved_empty_state.dart';
 import 'package:recipe_app/features/saved/saved_recipes_provider.dart';
@@ -14,84 +16,118 @@ class SavedPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final saved = ref.watch(savedRecipesProvider);
-    final allSaved = recipesForLocation(saved, null);
-    final collections = saved.collections;
-    final isEmpty = allSaved.isEmpty && collections.isEmpty;
+    final catalog = ref.watch(recipesCatalogProvider);
 
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _SavedHeader(savedCount: allSaved.length, collectionCount: collections.length),
-              const SizedBox(height: 20),
-              if (isEmpty)
-                const Expanded(child: SavedEmptyState())
-              else
-                Expanded(
-                  child: ListView(
-                    children: [
-                      if (collections.isNotEmpty) ...[
-                        Text('Collections', style: AppText.serif(fontSize: 21)),
-                        const SizedBox(height: 12),
-                        ...collections.map(
-                          (collection) => _CollectionTile(
-                            collection: collection,
-                            recipeCount:
-                                recipesForLocation(saved, collection.id).length,
-                          ),
-                        ),
-                        const SizedBox(height: 24),
-                      ],
-                      Text('All Saved', style: AppText.serif(fontSize: 21)),
-                      const SizedBox(height: 12),
-                      if (allSaved.isEmpty)
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 12),
-                          child: Text(
-                            'Recipes you save without picking a collection show up here.',
-                            style: TextStyle(
-                              fontSize: 13,
-                              color: AppColors.brown.withOpacity(0.7),
-                            ),
-                          ),
-                        )
-                      else
-                        LayoutBuilder(
-                          builder: (context, constraints) {
-                            return GridView.builder(
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              gridDelegate:
-                                  SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: recipeGridColumns(
-                                      constraints.maxWidth,
-                                    ),
-                                    crossAxisSpacing: 16,
-                                    mainAxisSpacing: 20,
-                                    childAspectRatio: 0.68,
-                                  ),
-                              itemCount: allSaved.length,
-                              itemBuilder: (context, index) {
-                                final recipe = allSaved[index];
-                                return RecipeCard(
-                                  recipe: recipe,
-                                  heroTag: 'saved_${recipe.id}',
-                                );
-                              },
-                            );
-                          },
-                        ),
-                    ],
+          child: catalog.when(
+            data: (recipes) => _SavedBody(saved: saved, catalog: recipes),
+            loading:
+                () => const Center(
+                  child: CircularProgressIndicator(color: AppColors.pinkDeep),
+                ),
+            error:
+                (error, stackTrace) => Center(
+                  child: Text(
+                    'Could not load your saved recipes.',
+                    style: TextStyle(color: AppColors.brown.withOpacity(0.7)),
                   ),
                 ),
-            ],
           ),
         ),
       ),
+    );
+  }
+}
+
+class _SavedBody extends StatelessWidget {
+  const _SavedBody({required this.saved, required this.catalog});
+
+  final SavedRecipesState saved;
+  final List<Recipe> catalog;
+
+  @override
+  Widget build(BuildContext context) {
+    final allSaved = recipesForLocation(saved, null, catalog);
+    final collections = saved.collections;
+    final isEmpty = allSaved.isEmpty && collections.isEmpty;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _SavedHeader(
+          savedCount: allSaved.length,
+          collectionCount: collections.length,
+        ),
+        const SizedBox(height: 20),
+        if (isEmpty)
+          const Expanded(child: SavedEmptyState())
+        else
+          Expanded(
+            child: ListView(
+              children: [
+                if (collections.isNotEmpty) ...[
+                  Text('Collections', style: AppText.serif(fontSize: 21)),
+                  const SizedBox(height: 12),
+                  ...collections.map(
+                    (collection) => _CollectionTile(
+                      collection: collection,
+                      recipeCount:
+                          recipesForLocation(
+                            saved,
+                            collection.id,
+                            catalog,
+                          ).length,
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                ],
+                Text('All Saved', style: AppText.serif(fontSize: 21)),
+                const SizedBox(height: 12),
+                if (allSaved.isEmpty)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    child: Text(
+                      'Recipes you save without picking a collection show up here.',
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: AppColors.brown.withOpacity(0.7),
+                      ),
+                    ),
+                  )
+                else
+                  LayoutBuilder(
+                    builder: (context, constraints) {
+                      return GridView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        gridDelegate:
+                            SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: recipeGridColumns(
+                                constraints.maxWidth,
+                              ),
+                              crossAxisSpacing: 16,
+                              mainAxisSpacing: 20,
+                              childAspectRatio: 0.68,
+                            ),
+                        itemCount: allSaved.length,
+                        itemBuilder: (context, index) {
+                          final recipe = allSaved[index];
+                          return RecipeCard(
+                            recipe: recipe,
+                            heroTag: 'saved_${recipe.id}',
+                          );
+                        },
+                      );
+                    },
+                  ),
+              ],
+            ),
+          ),
+      ],
     );
   }
 }

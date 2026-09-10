@@ -1,15 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:recipe_app/features/recipe_ingredients/recipes_catalog_provider.dart';
 import 'package:recipe_app/features/recipe_ingredients/recipes_index.dart';
 import 'package:recipe_app/shared/app_theme.dart';
 
-class RecipesSearchBar extends StatelessWidget {
+class RecipesSearchBar extends ConsumerWidget {
   const RecipesSearchBar({super.key, this.onRecipeSelected});
 
   final Function(Recipe)? onRecipeSelected;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
+    // suggestionsBuilder below runs synchronously, so the resolved catalog
+    // is captured here once and reused for every keystroke.
+    final catalog = ref.watch(recipesCatalogProvider).valueOrNull ?? const [];
+
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(30),
@@ -29,13 +35,15 @@ class RecipesSearchBar extends StatelessWidget {
         ),
         barLeading: const Icon(Icons.search, color: AppColors.pinkDeep),
         suggestionsBuilder: (context, controller) {
-          // If search is empty, show popular suggestions
+          if (catalog.isEmpty) {
+            return _buildEmptySearchSuggestions(context);
+          }
+
           if (controller.text.isEmpty) {
             return _buildEmptySearchSuggestions(context);
           }
 
-          // Filter recipes based on search query
-          final filteredRecipes = _filterRecipes(controller.text);
+          final filteredRecipes = _filterRecipes(catalog, controller.text);
 
           return filteredRecipes
               .map((recipe) => _buildRecipeTile(context, recipe, controller))
@@ -45,46 +53,21 @@ class RecipesSearchBar extends StatelessWidget {
     );
   }
 
-  List<Recipe> _getAllRecipes() {
-    List<Recipe> allRecipes = [];
-
-    // Add recipes from all categories
-    allRecipes.addAll(ChocolateRecipes.getAllChocolateRecipes());
-    allRecipes.addAll(VeganRecipes.getAllVeganRecipes());
-    allRecipes.addAll(CookieRecipes.getAllCookieRecipes());
-    allRecipes.addAll(SugarFreeRecipes.getAllSugarFreeRecipes());
-    allRecipes.addAll(GlutenFreeRecipes.getAllGlutenFreeRecipes());
-    allRecipes.addAll(FrozenTreatsRecipes.getAllFrozenTreatsRecipes());
-    allRecipes.addAll(NoBakeRecipes.getAllNoBakeRecipes());
-    allRecipes.addAll(PuffPastryRecipes.getAllPuffPastryRecipes());
-
-    return allRecipes;
-  }
-
-  List<Recipe> _filterRecipes(String query) {
+  List<Recipe> _filterRecipes(List<Recipe> catalog, String query) {
     final lowercaseQuery = query.toLowerCase();
-    final allRecipes = _getAllRecipes();
 
-    return allRecipes.where((recipe) {
-      // Search in recipe name
+    return catalog.where((recipe) {
       final nameMatch = recipe.name.toLowerCase().contains(lowercaseQuery);
 
-      // Search in ingredients
       final ingredientsMatch = recipe.ingredients.any(
         (ingredient) => ingredient.toLowerCase().contains(lowercaseQuery),
       );
 
-      // Search in cooking time
-      final timeMatch = recipe.cookingTime.toLowerCase().contains(
-        lowercaseQuery,
-      );
-
-      // Search in category
       final categoryMatch = recipe.category.toLowerCase().contains(
         lowercaseQuery,
       );
 
-      return nameMatch || ingredientsMatch || timeMatch || categoryMatch;
+      return nameMatch || ingredientsMatch || categoryMatch;
     }).toList();
   }
 
@@ -162,16 +145,22 @@ class RecipesSearchBar extends StatelessWidget {
       ),
       subtitle: Row(
         children: [
-          Icon(Icons.timer, size: 14, color: AppColors.brown.withOpacity(0.7)),
-          const SizedBox(width: 4),
-          Text(
-            recipe.cookingTime,
-            style: TextStyle(
+          if (recipe.cookingTime.isNotEmpty) ...[
+            Icon(
+              Icons.timer,
+              size: 14,
               color: AppColors.brown.withOpacity(0.7),
-              fontSize: 12,
             ),
-          ),
-          const SizedBox(width: 12),
+            const SizedBox(width: 4),
+            Text(
+              recipe.cookingTime,
+              style: TextStyle(
+                color: AppColors.brown.withOpacity(0.7),
+                fontSize: 12,
+              ),
+            ),
+            const SizedBox(width: 12),
+          ],
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
             decoration: BoxDecoration(

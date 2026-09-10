@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:recipe_app/features/recipe_ingredients/recipes_catalog_provider.dart';
 import 'package:recipe_app/features/recipes_pages/recipe_category_list_home_page.dart';
-import 'package:recipe_app/features/recipe_ingredients/recipes_index.dart';
 import 'package:recipe_app/features/widgets/recipe_card.dart';
 import 'package:recipe_app/shared/app_theme.dart';
 import 'package:recipe_app/shared/responsive.dart';
@@ -11,32 +11,35 @@ class RecipeCategoryPage extends ConsumerWidget {
 
   final RecipeCategoryList recipeCategoryList;
 
-  List<Recipe> getRecipesByCategory(String categoryName) {
-    switch (categoryName.toLowerCase()) {
+  /// Maps the category list's display name to the slug stored in
+  /// recipes_sweettreats.category (e.g. "No Sugar" -> "sugar-free").
+  String _categorySlug(String displayName) {
+    switch (displayName.toLowerCase()) {
       case 'chocolate':
-        return ChocolateRecipes.getAllChocolateRecipes();
+        return 'chocolate';
       case 'puff pastry':
-        return PuffPastryRecipes.getAllPuffPastryRecipes();
+        return 'puff-pastry';
       case 'gluten free':
-        return GlutenFreeRecipes.getAllGlutenFreeRecipes();
+        return 'gluten-free';
       case 'frozen':
-        return FrozenTreatsRecipes.getAllFrozenTreatsRecipes();
+        return 'frozen';
       case 'cookies':
-        return CookieRecipes.getAllCookieRecipes();
+        return 'cookies';
       case 'vegan':
-        return VeganRecipes.getAllVeganRecipes();
+        return 'vegan';
       case 'no bake':
-        return NoBakeRecipes.getAllNoBakeRecipes();
+        return 'no-bake';
       case 'no sugar':
-        return SugarFreeRecipes.getAllSugarFreeRecipes();
+        return 'sugar-free';
       default:
-        return ChocolateRecipes.getAllChocolateRecipes(); // Default fallback
+        return displayName.toLowerCase();
     }
   }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final recipes = getRecipesByCategory(recipeCategoryList.name);
+    final catalog = ref.watch(recipesCatalogProvider);
+    final slug = _categorySlug(recipeCategoryList.name);
 
     return Scaffold(
       backgroundColor: Colors.transparent,
@@ -64,27 +67,51 @@ class RecipeCategoryPage extends ConsumerWidget {
             ),
             const SizedBox(height: 16),
             Expanded(
-              child: LayoutBuilder(
-                builder: (context, constraints) {
-                  final shown = recipes.length > 10 ? 10 : recipes.length;
-                  return GridView.builder(
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: recipeGridColumns(constraints.maxWidth),
-                      crossAxisSpacing: 16,
-                      mainAxisSpacing: 20,
-                      childAspectRatio: 0.68,
-                    ),
-                    itemCount: shown,
-                    itemBuilder: (context, index) {
-                      final recipe = recipes[index];
-                      return RecipeCard(
-                        recipe: recipe,
-                        heroTag:
-                            'category_${recipeCategoryList.id}_${recipe.id}',
+              child: catalog.when(
+                data: (allRecipes) {
+                  final recipes =
+                      allRecipes.where((r) => r.category == slug).toList();
+                  return LayoutBuilder(
+                    builder: (context, constraints) {
+                      final shown = recipes.length > 10 ? 10 : recipes.length;
+                      return GridView.builder(
+                        gridDelegate:
+                            SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: recipeGridColumns(
+                                constraints.maxWidth,
+                              ),
+                              crossAxisSpacing: 16,
+                              mainAxisSpacing: 20,
+                              childAspectRatio: 0.68,
+                            ),
+                        itemCount: shown,
+                        itemBuilder: (context, index) {
+                          final recipe = recipes[index];
+                          return RecipeCard(
+                            recipe: recipe,
+                            heroTag:
+                                'category_${recipeCategoryList.id}_${recipe.id}',
+                          );
+                        },
                       );
                     },
                   );
                 },
+                loading:
+                    () => const Center(
+                      child: CircularProgressIndicator(
+                        color: AppColors.pinkDeep,
+                      ),
+                    ),
+                error:
+                    (error, stackTrace) => Center(
+                      child: Text(
+                        'Could not load recipes.',
+                        style: TextStyle(
+                          color: AppColors.brown.withOpacity(0.7),
+                        ),
+                      ),
+                    ),
               ),
             ),
           ],
