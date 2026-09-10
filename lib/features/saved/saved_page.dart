@@ -91,7 +91,7 @@ class _SavedBody extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 12),
                     child: Text(
-                      'Recipes you save without picking a collection show up here.',
+                      'Every recipe you save shows up here, collection or not.',
                       style: TextStyle(
                         fontSize: 13,
                         color: AppColors.brown.withOpacity(0.7),

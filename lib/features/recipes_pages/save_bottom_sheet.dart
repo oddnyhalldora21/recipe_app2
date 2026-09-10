@@ -135,7 +135,9 @@ class _SaveBottomSheetState extends ConsumerState<SaveBottomSheet> {
         _OptionTile(
           icon: Icons.bookmark_rounded,
           label: 'All Saved',
-          selected: isSaved && currentCollectionId == null,
+          // Every saved recipe is part of All Saved, tagged with a
+          // collection or not, so this checks whenever it's saved at all.
+          selected: isSaved,
           onTap:
               () => _run(
                 () => ref
@@ -147,7 +149,7 @@ class _SaveBottomSheetState extends ConsumerState<SaveBottomSheet> {
           _OptionTile(
             icon: Icons.folder_rounded,
             label: collection.name,
-            selected: isSaved && currentCollectionId == collection.id,
+            selected: currentCollectionId == collection.id,
             onTap:
                 () => _run(
                   () => ref

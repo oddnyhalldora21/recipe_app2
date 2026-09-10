@@ -11,27 +11,35 @@ class RecipeCollection {
   final String name;
 }
 
+/// Where and when a saved recipe was filed. [collectionId] is an optional
+/// organizational tag — a recipe with a collection is still part of
+/// "All Saved", not moved out of it.
+class SavedEntry {
+  const SavedEntry({required this.collectionId, required this.savedAt});
+
+  final String? collectionId;
+  final DateTime savedAt;
+}
+
 class SavedRecipesState {
   const SavedRecipesState({
-    this.locationByRecipeId = const {},
+    this.entriesByRecipeId = const {},
     this.collections = const [],
   });
 
-  /// recipeId -> collectionId. A null value means the recipe is saved to
-  /// "All Saved" rather than a specific named collection. A recipe not
-  /// present in this map isn't saved at all.
-  final Map<String, String?> locationByRecipeId;
+  final Map<String, SavedEntry> entriesByRecipeId;
   final List<RecipeCollection> collections;
 
-  bool isSaved(String recipeId) => locationByRecipeId.containsKey(recipeId);
-  String? collectionIdFor(String recipeId) => locationByRecipeId[recipeId];
+  bool isSaved(String recipeId) => entriesByRecipeId.containsKey(recipeId);
+  String? collectionIdFor(String recipeId) =>
+      entriesByRecipeId[recipeId]?.collectionId;
 
   SavedRecipesState copyWith({
-    Map<String, String?>? locationByRecipeId,
+    Map<String, SavedEntry>? entriesByRecipeId,
     List<RecipeCollection>? collections,
   }) {
     return SavedRecipesState(
-      locationByRecipeId: locationByRecipeId ?? this.locationByRecipeId,
+      entriesByRecipeId: entriesByRecipeId ?? this.entriesByRecipeId,
       collections: collections ?? this.collections,
     );
   }
@@ -65,7 +73,7 @@ class SavedRecipesNotifier extends StateNotifier<SavedRecipesState> {
     try {
       final savedRows = await _client
           .from(_savedTable)
-          .select('recipe_id, collection_id')
+          .select('recipe_id, collection_id, created_at')
           .eq('user_id', userId);
 
       final collectionRows = await _client
@@ -74,9 +82,12 @@ class SavedRecipesNotifier extends StateNotifier<SavedRecipesState> {
           .eq('user_id', userId)
           .order('name');
 
-      final locations = <String, String?>{
+      final entries = <String, SavedEntry>{
         for (final row in (savedRows as List))
-          row['recipe_id'] as String: row['collection_id'] as String?,
+          row['recipe_id'] as String: SavedEntry(
+            collectionId: row['collection_id'] as String?,
+            savedAt: DateTime.parse(row['created_at'] as String),
+          ),
       };
 
       final collections =
@@ -90,7 +101,7 @@ class SavedRecipesNotifier extends StateNotifier<SavedRecipesState> {
               .toList();
 
       state = SavedRecipesState(
-        locationByRecipeId: locations,
+        entriesByRecipeId: entries,
         collections: collections,
       );
     } catch (e) {
@@ -98,12 +109,13 @@ class SavedRecipesNotifier extends StateNotifier<SavedRecipesState> {
     }
   }
 
-  /// Saves [recipe] to "All Saved" (no collection), moving it there if it
-  /// was previously filed under a collection. Returns whether it succeeded.
+  /// Saves [recipe] with no collection tag, moving it out of any collection
+  /// it was previously filed under. It stays part of "All Saved" either
+  /// way. Returns whether it succeeded.
   Future<bool> saveToAllSaved(Recipe recipe) => _saveTo(recipe, null);
 
-  /// Saves [recipe] into [collectionId], moving it there if already saved
-  /// elsewhere. Returns whether it succeeded.
+  /// Tags [recipe] with [collectionId] — it remains part of "All Saved" too.
+  /// Returns whether it succeeded.
   Future<bool> saveToCollection(Recipe recipe, String collectionId) =>
       _saveTo(recipe, collectionId);
 
@@ -111,14 +123,21 @@ class SavedRecipesNotifier extends StateNotifier<SavedRecipesState> {
     final userId = _client.auth.currentUser?.id;
     if (userId == null) return false;
 
-    final previous = Map<String, String?>.from(state.locationByRecipeId);
+    final previous = Map<String, SavedEntry>.from(state.entriesByRecipeId);
+    final previousSavedAt = previous[recipe.id]?.savedAt ?? DateTime.now();
     state = state.copyWith(
-      locationByRecipeId: {...previous, recipe.id: collectionId},
+      entriesByRecipeId: {
+        ...previous,
+        recipe.id: SavedEntry(
+          collectionId: collectionId,
+          savedAt: previousSavedAt,
+        ),
+      },
     );
 
     try {
-      // A recipe lives in exactly one place at a time, so clear any
-      // existing save before filing it under the new destination.
+      // A recipe has exactly one row (and one collection tag) at a time, so
+      // clear any existing save before filing it under the new tag.
       await _client
           .from(_savedTable)
           .delete()
@@ -132,7 +151,7 @@ class SavedRecipesNotifier extends StateNotifier<SavedRecipesState> {
       return true;
     } catch (e) {
       print('Error saving recipe: $e');
-      state = state.copyWith(locationByRecipeId: previous);
+      state = state.copyWith(entriesByRecipeId: previous);
       return false;
     }
   }
@@ -141,9 +160,9 @@ class SavedRecipesNotifier extends StateNotifier<SavedRecipesState> {
     final userId = _client.auth.currentUser?.id;
     if (userId == null) return false;
 
-    final previous = Map<String, String?>.from(state.locationByRecipeId);
-    final updated = Map<String, String?>.from(previous)..remove(recipeId);
-    state = state.copyWith(locationByRecipeId: updated);
+    final previous = Map<String, SavedEntry>.from(state.entriesByRecipeId);
+    final updated = Map<String, SavedEntry>.from(previous)..remove(recipeId);
+    state = state.copyWith(entriesByRecipeId: updated);
 
     try {
       await _client
@@ -154,7 +173,7 @@ class SavedRecipesNotifier extends StateNotifier<SavedRecipesState> {
       return true;
     } catch (e) {
       print('Error removing saved recipe: $e');
-      state = state.copyWith(locationByRecipeId: previous);
+      state = state.copyWith(entriesByRecipeId: previous);
       return false;
     }
   }
@@ -189,20 +208,30 @@ final savedRecipesProvider =
       return SavedRecipesNotifier();
     });
 
-/// Resolves the recipes saved to a given destination — pass null for
-/// "All Saved", or a collection id for that specific collection. [catalog]
-/// is the already-loaded recipe list (from recipesCatalogProvider); this
-/// stays a plain sync function so it can run straight from a widget build.
+/// Resolves the recipes saved to a given destination, most-recently-saved
+/// first. Pass null for "All Saved" — every saved recipe, whether or not
+/// it also has a collection tag — or a collection id to see just that
+/// collection's recipes. [catalog] is the already-loaded recipe list (from
+/// recipesCatalogProvider); this stays a plain sync function so it can run
+/// straight from a widget build.
 List<Recipe> recipesForLocation(
   SavedRecipesState state,
   String? collectionId,
   List<Recipe> catalog,
 ) {
-  final ids =
-      state.locationByRecipeId.entries
-          .where((entry) => entry.value == collectionId)
-          .map((entry) => entry.key)
-          .toSet();
-  if (ids.isEmpty) return [];
-  return catalog.where((r) => ids.contains(r.id)).toList();
+  final matching =
+      state.entriesByRecipeId.entries
+          .where(
+            (entry) =>
+                collectionId == null ||
+                entry.value.collectionId == collectionId,
+          )
+          .toList()
+        ..sort((a, b) => b.value.savedAt.compareTo(a.value.savedAt));
+
+  final byId = {for (final r in catalog) r.id: r};
+  return [
+    for (final entry in matching)
+      if (byId[entry.key] != null) byId[entry.key]!,
+  ];
 }
