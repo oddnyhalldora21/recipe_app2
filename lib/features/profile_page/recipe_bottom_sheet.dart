@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:recipe_app/features/user_recipes_provider.dart';
+import 'package:recipe_app/shared/add_photo_placeholder.dart';
 import 'package:recipe_app/shared/app_theme.dart';
 import 'package:recipe_app/shared/primary_button.dart';
 
@@ -151,7 +152,7 @@ class _AddRecipeBottomSheetState extends ConsumerState<AddRecipeBottomSheet> {
 
                     const SizedBox(height: 16),
 
-                    _buildAddPhotoPlaceholder(),
+                    const AddPhotoPlaceholder(),
 
                     const SizedBox(height: 16),
 
@@ -214,33 +215,6 @@ class _AddRecipeBottomSheetState extends ConsumerState<AddRecipeBottomSheet> {
                           fontWeight: FontWeight.w600,
                         ),
                       ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildAddPhotoPlaceholder() {
-    return Container(
-      width: double.infinity,
-      height: 120,
-      decoration: BoxDecoration(
-        color: Colors.grey[50],
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.grey[300]!),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.camera_alt_outlined, color: Colors.grey[400], size: 28),
-          const SizedBox(height: 8),
-          Text(
-            'Add Photo',
-            style: TextStyle(
-              color: Colors.grey[400],
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
             ),
           ),
         ],

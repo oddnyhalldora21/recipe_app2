@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:recipe_app/features/profile_page/profile_data_provider.dart';
+import 'package:recipe_app/shared/add_photo_placeholder.dart';
 import 'package:recipe_app/shared/app_theme.dart';
 
 /// Shows the current user's public profile (username/bio/avatar) with an
@@ -119,16 +120,12 @@ class _EditProfileDialogState extends ConsumerState<_EditProfileDialog> {
   late final _bioController = TextEditingController(
     text: widget.profile.bio ?? '',
   );
-  late final _avatarController = TextEditingController(
-    text: widget.profile.avatarUrl ?? '',
-  );
   bool _busy = false;
 
   @override
   void dispose() {
     _usernameController.dispose();
     _bioController.dispose();
-    _avatarController.dispose();
     super.dispose();
   }
 
@@ -147,11 +144,7 @@ class _EditProfileDialogState extends ConsumerState<_EditProfileDialog> {
     setState(() => _busy = true);
     final success = await ref
         .read(profileProvider.notifier)
-        .updateProfile(
-          username: username,
-          bio: _bioController.text,
-          avatarUrl: _avatarController.text,
-        );
+        .updateProfile(username: username, bio: _bioController.text);
     if (!mounted) return;
 
     if (success) {
@@ -189,13 +182,7 @@ class _EditProfileDialogState extends ConsumerState<_EditProfileDialog> {
               decoration: const InputDecoration(labelText: 'Bio (optional)'),
             ),
             const SizedBox(height: 12),
-            TextField(
-              controller: _avatarController,
-              enabled: !_busy,
-              decoration: const InputDecoration(
-                labelText: 'Avatar image URL (optional)',
-              ),
-            ),
+            const AddPhotoPlaceholder(height: 100),
           ],
         ),
       ),
