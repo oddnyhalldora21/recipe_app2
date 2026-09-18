@@ -1,5 +1,3 @@
-import 'package:recipe_app/features/recipe_ingredients/recipes_index.dart';
-
 class Recipe {
   final String id;
   final String name;
