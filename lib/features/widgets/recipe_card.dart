@@ -15,17 +15,15 @@ class RecipeCard extends ConsumerWidget {
     super.key,
     required this.recipe,
     required this.heroTag,
-    this.showMineBadge = false,
     this.showVisibilityBadge = false,
   });
 
   final Recipe recipe;
   final String heroTag;
-  final bool showMineBadge;
 
-  /// Shows a "Public"/"Private" pill instead of the plain "MINE" badge —
-  /// used on Profile's Recently Added, where every card is already the
-  /// user's own, so what matters is whether others can see it.
+  /// Shows a "Public"/"Private" pill — used wherever every card in the
+  /// list is already the current user's own, so what matters is whether
+  /// others can see it.
   final bool showVisibilityBadge;
 
   @override
@@ -95,9 +93,7 @@ class RecipeCard extends ConsumerWidget {
                           top: 8,
                           left: 8,
                           child: _VisibilityBadge(isPublic: recipe.isPublic),
-                        )
-                      else if (showMineBadge)
-                        Positioned(top: 8, left: 8, child: _MineBadge()),
+                        ),
                       if (recipe.cookingTime.isNotEmpty)
                         Positioned(
                           bottom: 8,
@@ -186,27 +182,6 @@ class _Pill extends StatelessWidget {
   }
 }
 
-class _MineBadge extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-      decoration: BoxDecoration(
-        color: AppColors.brown.withOpacity(0.9),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: const Text(
-        'MINE',
-        style: TextStyle(
-          color: Colors.white,
-          fontSize: 8,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-    );
-  }
-}
-
 class _VisibilityBadge extends StatelessWidget {
   const _VisibilityBadge({required this.isPublic});
 
@@ -217,10 +192,9 @@ class _VisibilityBadge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
       decoration: BoxDecoration(
-        color:
-            (isPublic ? Colors.green[700]! : AppColors.brown).withOpacity(
-              0.9,
-            ),
+        color: (isPublic ? AppColors.pinkDark : AppColors.brown).withOpacity(
+          0.9,
+        ),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Row(

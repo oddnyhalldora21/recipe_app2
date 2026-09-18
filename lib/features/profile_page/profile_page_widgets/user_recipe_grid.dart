@@ -72,7 +72,7 @@ class UserRecipesGrid extends StatelessWidget {
         return RecipeCard(
           recipe: recipe,
           heroTag: 'profile_mine_${recipe.id}',
-          showMineBadge: true,
+          showVisibilityBadge: true,
         );
       },
     );

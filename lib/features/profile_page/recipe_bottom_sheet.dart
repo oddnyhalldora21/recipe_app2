@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:recipe_app/features/user_recipes_provider.dart';
 import 'package:recipe_app/shared/add_photo_placeholder.dart';
 import 'package:recipe_app/shared/app_theme.dart';
+import 'package:recipe_app/shared/pink_toggle_switch.dart';
 import 'package:recipe_app/shared/primary_button.dart';
 
 class AddRecipeBottomSheet extends ConsumerStatefulWidget {
@@ -254,9 +255,8 @@ class _AddRecipeBottomSheetState extends ConsumerState<AddRecipeBottomSheet> {
               ],
             ),
           ),
-          Switch(
+          PinkToggleSwitch(
             value: _isPublic,
-            activeThumbColor: AppColors.brown,
             onChanged: (value) => setState(() => _isPublic = value),
           ),
         ],

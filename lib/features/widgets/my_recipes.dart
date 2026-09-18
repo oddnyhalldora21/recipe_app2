@@ -60,7 +60,7 @@ class MyRecipesWidget extends ConsumerWidget {
               child: RecipeCard(
                 recipe: recipe,
                 heroTag: 'home_myrecipes_${recipe.id}',
-                showMineBadge: true,
+                showVisibilityBadge: true,
               ),
             );
           },
