@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:recipe_app/features/auth/display_name_provider.dart';
 import 'package:recipe_app/features/favorites/favorites_saves.dart';
 import 'package:recipe_app/shared/app_theme.dart';
+import 'package:recipe_app/shared/app_wordmark.dart';
 
 /// Persistent top bar shown on every screen: the wordmark always jumps back
 /// to Home, alongside a favorites shortcut and the profile avatar.
@@ -32,29 +33,9 @@ class MainAppBar extends ConsumerWidget implements PreferredSizeWidget {
       title: GestureDetector(
         onTap: onLogoTap,
         behavior: HitTestBehavior.opaque,
-        child: Padding(
-          padding: const EdgeInsets.only(left: 16),
-          child: Text.rich(
-            TextSpan(
-              children: [
-                TextSpan(
-                  text: 'Sweet ',
-                  style: AppText.serif(
-                    fontSize: 22,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                TextSpan(
-                  text: 'Treats.',
-                  style: AppText.serif(
-                    fontSize: 22,
-                    fontWeight: FontWeight.w700,
-                    color: AppColors.pinkDeep,
-                  ),
-                ),
-              ],
-            ),
-          ),
+        child: const Padding(
+          padding: EdgeInsets.only(left: 16),
+          child: AppWordmark(fontSize: 22),
         ),
       ),
       actions: [

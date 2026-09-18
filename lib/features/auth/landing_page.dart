@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:recipe_app/features/auth/auth_page.dart';
 import 'package:recipe_app/shared/app_theme.dart';
+import 'package:recipe_app/shared/app_wordmark.dart';
 import 'package:recipe_app/shared/fade_page_route.dart';
 import 'package:recipe_app/shared/primary_button.dart';
 
@@ -23,27 +24,7 @@ class LandingPage extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Container(
-                      width: 140,
-                      height: 140,
-                      decoration: BoxDecoration(
-                        color: AppColors.cream,
-                        shape: BoxShape.circle,
-                        border: Border.all(color: AppColors.brown, width: 4),
-                        boxShadow: AppShadows.card,
-                      ),
-                      child: const Icon(
-                        Icons.cake_rounded,
-                        size: 72,
-                        color: AppColors.brown,
-                      ),
-                    ),
-                    const SizedBox(height: 24),
-                    Text(
-                      'Sweet Treats App',
-                      textAlign: TextAlign.center,
-                      style: AppText.serif(fontSize: 30),
-                    ),
+                    const AppWordmark(fontSize: 36, textAlign: TextAlign.center),
                     const SizedBox(height: 10),
                     Text(
                       'Chocolate, cookies & cozy desserts\nall in one place',
