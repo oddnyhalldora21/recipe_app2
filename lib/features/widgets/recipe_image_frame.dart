@@ -11,11 +11,16 @@ class ImageFrame extends StatelessWidget {
     required this.imageUrl,
     required this.favoriteButton,
     required this.saveButton,
+    this.deleteButton,
   });
 
   final String imageUrl;
   final Widget favoriteButton;
   final Widget saveButton;
+
+  /// Shown floating top-left, opposite Save/Favorite — only passed in for
+  /// recipes the current user owns.
+  final Widget? deleteButton;
 
   @override
   Widget build(BuildContext context) {
@@ -75,6 +80,8 @@ class ImageFrame extends StatelessWidget {
                 ],
               ),
             ),
+            if (deleteButton != null)
+              Positioned(top: 10, left: 10, child: deleteButton!),
           ],
         ),
       ),
