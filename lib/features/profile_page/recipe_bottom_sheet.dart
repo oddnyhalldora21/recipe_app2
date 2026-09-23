@@ -45,6 +45,18 @@ class _AddRecipeBottomSheetState extends ConsumerState<AddRecipeBottomSheet> {
   Future<void> _saveRecipe() async {
     if (!_formKey.currentState!.validate()) return;
 
+    if (_isPublic && _pickedPhoto == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Please add a photo before making this recipe public.',
+          ),
+          backgroundColor: Colors.redAccent,
+        ),
+      );
+      return;
+    }
+
     setState(() {
       _isLoading = true;
     });
@@ -65,9 +77,10 @@ class _AddRecipeBottomSheetState extends ConsumerState<AddRecipeBottomSheet> {
 
     final name = _nameController.text.trim();
 
-    // No photo picked (or its upload fails) falls back to the placeholder
-    // image rather than blocking the save — see PR notes for why photo was
-    // made optional instead of required.
+    // Private recipes: no photo (or a failed upload) falls back to the
+    // placeholder image. Public recipes require a real photo — the guard
+    // above already blocked saving with none picked, and below a failed
+    // upload blocks the save too instead of silently falling back.
     var imageUrl =
         'https://via.placeholder.com/300x200/F1B5D4/432F15?text=My+Recipe';
     final pickedPhoto = _pickedPhoto;
@@ -78,6 +91,20 @@ class _AddRecipeBottomSheetState extends ConsumerState<AddRecipeBottomSheet> {
       );
       if (uploadedUrl != null) {
         imageUrl = uploadedUrl;
+      } else if (_isPublic) {
+        if (!mounted) return;
+        setState(() {
+          _isLoading = false;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+              'Could not upload your photo. Please try again before making this recipe public.',
+            ),
+            backgroundColor: Colors.redAccent,
+          ),
+        );
+        return;
       } else if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
