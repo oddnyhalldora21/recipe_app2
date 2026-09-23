@@ -24,16 +24,29 @@ class Recipe {
   });
 
   factory Recipe.fromMap(Map<String, dynamic> map) {
+    final stepsText = map['steps'] as String? ?? '';
+    final instructions =
+        stepsText
+            .split(RegExp(r'\d+\.\s+'))
+            .map((s) => s.trim())
+            .where((s) => s.isNotEmpty)
+            .toList();
+
     return Recipe(
-      id: map['1'] as String,
-      name: map['Classic Fudgy Brownies'] as String,
-      imageUrl:
-          map['https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=400']
-              as String,
+      id: map['id'] as String,
+      userId: map['user_id'] as String?,
+      name: map['name'] as String,
       ingredients: List<String>.from(map['ingredients'] as List<dynamic>),
-      instructions: List<String>.from(map['instructions'] as List<dynamic>),
-      cookingTime: map['30 min'] as String,
-      category: map['Chocolate'] as String,
+      instructions: instructions,
+      // recipes_sweettreats has no cooking_time column yet.
+      cookingTime: '',
+      category: map['category'] as String,
+      imageUrl: map['image_url'] as String,
+      createdAt:
+          map['created_at'] != null
+              ? DateTime.parse(map['created_at'] as String)
+              : null,
+      isPublic: map['is_public'] as bool? ?? true,
     );
   }
 }
