@@ -45,5 +45,9 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>Sweet Treats needs camera access so you can take a photo for your recipe.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Sweet Treats needs photo library access so you can choose a photo for your recipe.</string>
 </dict>
 </plist>

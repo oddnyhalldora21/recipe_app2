@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:recipe_app/features/user_recipes_provider.dart';
-import 'package:recipe_app/shared/add_photo_placeholder.dart';
 import 'package:recipe_app/shared/app_theme.dart';
+import 'package:recipe_app/shared/photo_picker_field.dart';
 import 'package:recipe_app/shared/pink_toggle_switch.dart';
 import 'package:recipe_app/shared/primary_button.dart';
+import 'package:recipe_app/shared/recipe_image_upload_service.dart';
 
 class AddRecipeBottomSheet extends ConsumerStatefulWidget {
   const AddRecipeBottomSheet({super.key});
@@ -31,6 +32,7 @@ class _AddRecipeBottomSheetState extends ConsumerState<AddRecipeBottomSheet> {
 
   bool _isLoading = false;
   bool _isPublic = false;
+  PickedPhoto? _pickedPhoto;
 
   @override
   void dispose() {
@@ -62,12 +64,37 @@ class _AddRecipeBottomSheetState extends ConsumerState<AddRecipeBottomSheet> {
             .toList();
 
     final name = _nameController.text.trim();
+
+    // No photo picked (or its upload fails) falls back to the placeholder
+    // image rather than blocking the save — see PR notes for why photo was
+    // made optional instead of required.
+    var imageUrl =
+        'https://via.placeholder.com/300x200/F1B5D4/432F15?text=My+Recipe';
+    final pickedPhoto = _pickedPhoto;
+    if (pickedPhoto != null) {
+      final uploadedUrl = await RecipeImageUploadService.upload(
+        bytes: pickedPhoto.bytes,
+        fileExtension: pickedPhoto.extension,
+      );
+      if (uploadedUrl != null) {
+        imageUrl = uploadedUrl;
+      } else if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+              'Could not upload your photo — saving with a placeholder image instead.',
+            ),
+            backgroundColor: Colors.redAccent,
+          ),
+        );
+      }
+    }
+
     final success = await ref
         .read(userRecipesProvider.notifier)
         .addRecipe(
           name: name,
-          imageUrl:
-              'https://via.placeholder.com/300x200/F1B5D4/432F15?text=My+Recipe',
+          imageUrl: imageUrl,
           ingredients: ingredientsList,
           instructions: instructionsList,
           category: 'My Recipes',
@@ -153,7 +180,9 @@ class _AddRecipeBottomSheetState extends ConsumerState<AddRecipeBottomSheet> {
 
                     const SizedBox(height: 16),
 
-                    const AddPhotoPlaceholder(),
+                    PhotoPickerField(
+                      onChanged: (photo) => setState(() => _pickedPhoto = photo),
+                    ),
 
                     const SizedBox(height: 16),
 
