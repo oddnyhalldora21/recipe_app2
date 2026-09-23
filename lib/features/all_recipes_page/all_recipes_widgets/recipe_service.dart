@@ -22,13 +22,14 @@ class RecipeService {
 
   static Recipe fromRow(dynamic row) {
     final steps = row['steps'] as String? ?? '';
-    // steps is stored as "1. ...\n2. ..." — recover the step list so
-    // InstructionsSection can keep rendering numbered steps.
+    // steps is stored as "1. ...\n2. ..." for newer rows, but older rows
+    // have no real line breaks — just "1. Do this. 2. Do that." — so split
+    // on the number markers themselves, which handles both.
     final instructions =
         steps
-            .split('\n')
-            .map((line) => line.replaceFirst(RegExp(r'^\d+\.\s*'), '').trim())
-            .where((line) => line.isNotEmpty)
+            .split(RegExp(r'\d+\.\s+'))
+            .map((s) => s.trim())
+            .where((s) => s.isNotEmpty)
             .toList();
 
     return Recipe(
