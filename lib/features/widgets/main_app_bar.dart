@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:recipe_app/features/auth/display_name_provider.dart';
-import 'package:recipe_app/features/favorites/favorites_saves.dart';
 import 'package:recipe_app/shared/app_theme.dart';
 import 'package:recipe_app/shared/app_wordmark.dart';
 
@@ -23,7 +22,6 @@ class MainAppBar extends ConsumerWidget implements PreferredSizeWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final displayName = ref.watch(displayNameProvider);
     final initial = displayName.isNotEmpty ? displayName[0].toUpperCase() : 'S';
-    final favoritesCount = ref.watch(favoritesProvider).length;
 
     return AppBar(
       backgroundColor: Colors.transparent,
@@ -39,42 +37,9 @@ class MainAppBar extends ConsumerWidget implements PreferredSizeWidget {
         ),
       ),
       actions: [
-        Stack(
-          clipBehavior: Clip.none,
-          children: [
-            IconButton(
-              onPressed: onFavoritesTap,
-              icon: const Icon(
-                Icons.favorite_border,
-                color: AppColors.brown,
-              ),
-            ),
-            if (favoritesCount > 0)
-              Positioned(
-                top: 6,
-                right: 6,
-                child: Container(
-                  padding: const EdgeInsets.all(3),
-                  decoration: const BoxDecoration(
-                    color: AppColors.pinkDeep,
-                    shape: BoxShape.circle,
-                  ),
-                  constraints: const BoxConstraints(
-                    minWidth: 16,
-                    minHeight: 16,
-                  ),
-                  child: Text(
-                    '$favoritesCount',
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 9,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
-          ],
+        IconButton(
+          onPressed: onFavoritesTap,
+          icon: const Icon(Icons.favorite_border, color: AppColors.brown),
         ),
         Padding(
           padding: const EdgeInsets.only(right: 16, left: 4),
