@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
 
-/// Wraps a pushed page so dragging right from the screen's left edge pops
-/// it, mirroring the native iOS back gesture. [fadeRoute] applies this to
-/// every push in the app, so it works alongside — not instead of — the
-/// logo's "jump straight to Home" navigation.
+/// Wraps a pushed page so dragging right pops it, mirroring apps like
+/// Instagram rather than iOS's narrow-edge-only gesture. [fadeRoute] applies
+/// this to every push in the app, so it works alongside — not instead of —
+/// the logo's "jump straight to Home" navigation.
 class SwipeBackWrapper extends StatefulWidget {
-  const SwipeBackWrapper({super.key, required this.child});
+  const SwipeBackWrapper({super.key, required this.child, this.fullWidth = true});
 
   final Widget child;
+
+  /// When true (the default), the gesture is detected anywhere on the
+  /// page. Set false for pages with their own horizontal-scrolling content
+  /// (e.g. a carousel) that a full-width same-axis gesture can't reliably
+  /// share with — those fall back to the narrow left-edge-only zone.
+  final bool fullWidth;
 
   @override
   State<SwipeBackWrapper> createState() => _SwipeBackWrapperState();
@@ -106,7 +112,7 @@ class _SwipeBackWrapperState extends State<SwipeBackWrapper>
           left: 0,
           top: 0,
           bottom: 0,
-          width: _edgeWidth,
+          width: widget.fullWidth ? width : _edgeWidth,
           child: GestureDetector(
             behavior: HitTestBehavior.translucent,
             onHorizontalDragStart: (_) => _settleController.stop(),

@@ -19,7 +19,13 @@ class MyRecipesSection extends StatelessWidget {
           onButtonPressed:
               onSeeAllTap ??
               () {
-                Navigator.push(context, fadeRoute(const ProfilePage()));
+                Navigator.push(
+                  context,
+                  // Profile's Recently Added carousel scrolls horizontally,
+                  // which a full-width swipe-back gesture can't reliably
+                  // share — keep the narrow edge-only zone here.
+                  fadeRoute(const ProfilePage(), fullWidth: false),
+                );
               },
         ),
         const MyRecipesWidget(),
