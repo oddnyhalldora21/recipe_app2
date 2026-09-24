@@ -76,7 +76,9 @@ class UserRecipesNotifier extends StateNotifier<List<Recipe>> {
               .select()
               .single();
 
-      state = [...state, RecipeService.fromRow(row)];
+      // Prepend, not append — state is kept newest-first to match _load's
+      // `order('created_at', ascending: false)`.
+      state = [RecipeService.fromRow(row), ...state];
       return true;
     } catch (e) {
       print('Error adding recipe: $e');
