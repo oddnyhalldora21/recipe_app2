@@ -1,17 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:recipe_app/features/auth/display_name_provider.dart';
-import 'package:recipe_app/features/recipe_ingredients/recipes_index.dart';
-import 'package:recipe_app/features/widgets/recipes_search_bar.dart';
 import 'package:recipe_app/shared/app_theme.dart';
 
-/// Hero shown above the categories/recipe sections: a small kicker pill, a
-/// big serif headline, a subtitle and the recipe search bar. Sits directly
-/// on the app-wide gradient background rather than painting its own.
+/// Hero shown above the categories/recipe sections: a small kicker pill and
+/// a big serif headline. Sits directly on the app-wide gradient background
+/// rather than painting its own.
 class HomeHero extends ConsumerWidget {
-  const HomeHero({super.key, this.onRecipeSelected});
-
-  final Function(Recipe)? onRecipeSelected;
+  const HomeHero({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -72,8 +68,6 @@ class HomeHero extends ConsumerWidget {
               ],
             ),
           ),
-          const SizedBox(height: 18),
-          RecipesSearchBar(onRecipeSelected: onRecipeSelected),
         ],
       ),
     );
