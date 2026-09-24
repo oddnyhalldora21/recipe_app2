@@ -21,10 +21,19 @@ class PickedPhoto {
 /// via [RecipeImageUploadService]. Generic on purpose so both Add Recipe and
 /// the upcoming Edit Recipe screen can reuse it as-is.
 class PhotoPickerField extends StatefulWidget {
-  const PhotoPickerField({super.key, required this.onChanged, this.height = 120});
+  const PhotoPickerField({
+    super.key,
+    required this.onChanged,
+    this.height = 120,
+    this.initialImageUrl,
+  });
 
   final ValueChanged<PickedPhoto?> onChanged;
   final double height;
+
+  /// An existing photo to show until the user picks a new one — used when
+  /// editing a recipe that already has a real (non-placeholder) photo.
+  final String? initialImageUrl;
 
   @override
   State<PhotoPickerField> createState() => _PhotoPickerFieldState();
@@ -106,13 +115,15 @@ class _PhotoPickerFieldState extends State<PhotoPickerField> {
 
   @override
   Widget build(BuildContext context) {
+    final hasInitialImage =
+        widget.initialImageUrl != null && widget.initialImageUrl!.isNotEmpty;
+    final hasImage = _picked != null || hasInitialImage;
+
     return GestureDetector(
       onTap: _busy ? null : _showSourceSheet,
       child: Stack(
         children: [
-          if (_picked == null)
-            AddPhotoPlaceholder(height: widget.height)
-          else
+          if (_picked != null)
             ClipRRect(
               borderRadius: BorderRadius.circular(12),
               child: SizedBox(
@@ -120,8 +131,22 @@ class _PhotoPickerFieldState extends State<PhotoPickerField> {
                 height: widget.height,
                 child: Image.memory(_picked!.bytes, fit: BoxFit.cover),
               ),
-            ),
-          if (_picked != null)
+            )
+          else if (hasInitialImage)
+            ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: SizedBox(
+                width: double.infinity,
+                height: widget.height,
+                child: Image.network(
+                  widget.initialImageUrl!,
+                  fit: BoxFit.cover,
+                ),
+              ),
+            )
+          else
+            AddPhotoPlaceholder(height: widget.height),
+          if (hasImage)
             Positioned(
               top: 6,
               right: 6,

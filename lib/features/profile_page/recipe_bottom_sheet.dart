@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:recipe_app/features/recipe_ingredients/recipes_catalog_provider.dart';
+import 'package:recipe_app/features/recipe_ingredients/recipes_index.dart';
 import 'package:recipe_app/features/user_recipes_provider.dart';
 import 'package:recipe_app/shared/app_theme.dart';
 import 'package:recipe_app/shared/photo_picker_field.dart';
@@ -7,15 +9,35 @@ import 'package:recipe_app/shared/pink_toggle_switch.dart';
 import 'package:recipe_app/shared/primary_button.dart';
 import 'package:recipe_app/shared/recipe_image_upload_service.dart';
 
-class AddRecipeBottomSheet extends ConsumerStatefulWidget {
-  const AddRecipeBottomSheet({super.key});
+/// What the form did before closing, so the caller (the recipe detail
+/// page's edit button) can react — Add-mode callers ignore the result.
+sealed class RecipeFormResult {}
 
-  static void show(BuildContext context) {
-    showModalBottomSheet(
+class RecipeUpdated extends RecipeFormResult {
+  RecipeUpdated(this.recipe);
+  final Recipe recipe;
+}
+
+class RecipeDeleted extends RecipeFormResult {}
+
+class AddRecipeBottomSheet extends ConsumerStatefulWidget {
+  const AddRecipeBottomSheet({super.key, this.existingRecipe});
+
+  /// When non-null, the form opens pre-filled in edit mode: submitting
+  /// updates this recipe instead of creating a new one, and a delete
+  /// option is shown.
+  final Recipe? existingRecipe;
+
+  static Future<RecipeFormResult?> show(
+    BuildContext context, {
+    Recipe? existingRecipe,
+  }) {
+    return showModalBottomSheet<RecipeFormResult>(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => const AddRecipeBottomSheet(),
+      builder:
+          (context) => AddRecipeBottomSheet(existingRecipe: existingRecipe),
     );
   }
 
@@ -34,6 +56,31 @@ class _AddRecipeBottomSheetState extends ConsumerState<AddRecipeBottomSheet> {
   bool _isPublic = false;
   PickedPhoto? _pickedPhoto;
 
+  bool get _isEditing => widget.existingRecipe != null;
+
+  /// True when the recipe being edited already has a real photo (not the
+  /// hardcoded placeholder) — lets a public recipe stay public on save
+  /// without forcing a new photo to be picked, and without a failed
+  /// re-upload wiping out a working photo.
+  bool get _hasExistingUsablePhoto {
+    final existing = widget.existingRecipe;
+    if (existing == null) return false;
+    return existing.imageUrl.isNotEmpty &&
+        !existing.imageUrl.contains('via.placeholder.com');
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    final existing = widget.existingRecipe;
+    if (existing != null) {
+      _nameController.text = existing.name;
+      _ingredientsController.text = existing.ingredients.join('\n');
+      _instructionsController.text = existing.instructions.join('\n');
+      _isPublic = existing.isPublic;
+    }
+  }
+
   @override
   void dispose() {
     _nameController.dispose();
@@ -45,7 +92,7 @@ class _AddRecipeBottomSheetState extends ConsumerState<AddRecipeBottomSheet> {
   Future<void> _saveRecipe() async {
     if (!_formKey.currentState!.validate()) return;
 
-    if (_isPublic && _pickedPhoto == null) {
+    if (_isPublic && _pickedPhoto == null && !_hasExistingUsablePhoto) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text(
@@ -77,11 +124,12 @@ class _AddRecipeBottomSheetState extends ConsumerState<AddRecipeBottomSheet> {
 
     final name = _nameController.text.trim();
 
-    // Private recipes: no photo (or a failed upload) falls back to the
-    // placeholder image. Public recipes require a real photo — the guard
-    // above already blocked saving with none picked, and below a failed
-    // upload blocks the save too instead of silently falling back.
+    // Editing an existing recipe keeps its current photo by default;
+    // otherwise (Add) falls back to the placeholder. A failed upload below
+    // leaves this untouched, so editing never overwrites a working photo
+    // with the placeholder just because a re-upload attempt failed.
     var imageUrl =
+        widget.existingRecipe?.imageUrl ??
         'https://via.placeholder.com/300x200/F1B5D4/432F15?text=My+Recipe';
     final pickedPhoto = _pickedPhoto;
     if (pickedPhoto != null) {
@@ -91,7 +139,9 @@ class _AddRecipeBottomSheetState extends ConsumerState<AddRecipeBottomSheet> {
       );
       if (uploadedUrl != null) {
         imageUrl = uploadedUrl;
-      } else if (_isPublic) {
+      } else if (_isPublic && !_hasExistingUsablePhoto) {
+        // No usable photo to fall back to (new public recipe, or an
+        // existing one that never had a real photo) — block entirely.
         if (!mounted) return;
         setState(() {
           _isLoading = false;
@@ -106,10 +156,17 @@ class _AddRecipeBottomSheetState extends ConsumerState<AddRecipeBottomSheet> {
         );
         return;
       } else if (mounted) {
+        // Either private (falls back to the placeholder or the existing
+        // photo — imageUrl already defaults to whichever applies) or
+        // public with an existing usable photo to fall back to. Either
+        // way the save isn't blocked, just note the new photo didn't
+        // make it.
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
+          SnackBar(
             content: Text(
-              'Could not upload your photo — saving with a placeholder image instead.',
+              _hasExistingUsablePhoto
+                  ? 'Could not upload your new photo — kept the existing one.'
+                  : 'Could not upload your photo — saving with a placeholder image instead.',
             ),
             backgroundColor: Colors.redAccent,
           ),
@@ -117,33 +174,110 @@ class _AddRecipeBottomSheetState extends ConsumerState<AddRecipeBottomSheet> {
       }
     }
 
-    final success = await ref
-        .read(userRecipesProvider.notifier)
-        .addRecipe(
-          name: name,
-          imageUrl: imageUrl,
-          ingredients: ingredientsList,
-          instructions: instructionsList,
-          category: 'My Recipes',
-          isPublic: _isPublic,
-        );
+    Recipe? updatedRecipe;
+    bool success;
+    if (_isEditing) {
+      updatedRecipe = await ref
+          .read(userRecipesProvider.notifier)
+          .updateRecipe(
+            recipeId: widget.existingRecipe!.id,
+            name: name,
+            imageUrl: imageUrl,
+            ingredients: ingredientsList,
+            instructions: instructionsList,
+            category: widget.existingRecipe!.category,
+            isPublic: _isPublic,
+          );
+      success = updatedRecipe != null;
+    } else {
+      success = await ref
+          .read(userRecipesProvider.notifier)
+          .addRecipe(
+            name: name,
+            imageUrl: imageUrl,
+            ingredients: ingredientsList,
+            instructions: instructionsList,
+            category: 'My Recipes',
+            isPublic: _isPublic,
+          );
+    }
 
     if (!mounted) return;
     setState(() {
       _isLoading = false;
     });
 
-    Navigator.of(context).pop();
+    Navigator.of(
+      context,
+    ).pop(success && _isEditing ? RecipeUpdated(updatedRecipe!) : null);
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
           success
-              ? 'Recipe "$name" added successfully!'
+              ? (_isEditing
+                  ? 'Recipe "$name" updated successfully!'
+                  : 'Recipe "$name" added successfully!')
               : 'Could not save your recipe — please try again.',
         ),
         backgroundColor: success ? AppColors.brown : Colors.redAccent,
         duration: const Duration(seconds: 2),
+      ),
+    );
+  }
+
+  Future<void> _confirmAndDelete() async {
+    final existing = widget.existingRecipe;
+    if (existing == null) return;
+
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder:
+          (context) => AlertDialog(
+            title: const Text('Delete Recipe'),
+            content: const Text(
+              'Are you sure you want to delete the recipe? This action cannot be undone.',
+            ),
+            actions: [
+              TextButton(
+                style: TextButton.styleFrom(
+                  backgroundColor: AppColors.pinkLight,
+                  foregroundColor: AppColors.brown,
+                ),
+                onPressed: () => Navigator.of(context).pop(false),
+                child: const Text('Cancel'),
+              ),
+              TextButton(
+                style: TextButton.styleFrom(
+                  backgroundColor: AppColors.pinkDark,
+                  foregroundColor: Colors.white,
+                ),
+                onPressed: () => Navigator.of(context).pop(true),
+                child: const Text('Yes, delete'),
+              ),
+            ],
+          ),
+    );
+    if (confirmed != true || !mounted) return;
+
+    setState(() => _isLoading = true);
+    final success = await ref
+        .read(userRecipesProvider.notifier)
+        .removeRecipe(existing.id);
+    if (!mounted) return;
+
+    if (success) {
+      // The catalog cache may still hold this recipe if it was public —
+      // drop it so it doesn't linger stale on Home/All Recipes/etc.
+      ref.invalidate(recipesCatalogProvider);
+      Navigator.of(context).pop(RecipeDeleted());
+      return;
+    }
+    setState(() => _isLoading = false);
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Could not delete this recipe — please try again.'),
+        backgroundColor: Colors.redAccent,
       ),
     );
   }
@@ -176,7 +310,10 @@ class _AddRecipeBottomSheetState extends ConsumerState<AddRecipeBottomSheet> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Add New Recipe', style: AppText.serif(fontSize: 24)),
+                Text(
+                  _isEditing ? 'Edit Recipe' : 'Add New Recipe',
+                  style: AppText.serif(fontSize: 24),
+                ),
                 IconButton(
                   onPressed: () => Navigator.of(context).pop(),
                   icon: const Icon(Icons.close, color: AppColors.brown),
@@ -208,7 +345,12 @@ class _AddRecipeBottomSheetState extends ConsumerState<AddRecipeBottomSheet> {
                     const SizedBox(height: 16),
 
                     PhotoPickerField(
-                      onChanged: (photo) => setState(() => _pickedPhoto = photo),
+                      initialImageUrl:
+                          _hasExistingUsablePhoto
+                              ? widget.existingRecipe!.imageUrl
+                              : null,
+                      onChanged:
+                          (photo) => setState(() => _pickedPhoto = photo),
                     ),
 
                     const SizedBox(height: 16),
@@ -247,6 +389,26 @@ class _AddRecipeBottomSheetState extends ConsumerState<AddRecipeBottomSheet> {
 
                     _buildPublicToggle(),
 
+                    if (_isEditing) ...[
+                      const SizedBox(height: 20),
+                      Center(
+                        child: TextButton.icon(
+                          onPressed: _isLoading ? null : _confirmAndDelete,
+                          icon: const Icon(
+                            Icons.delete_outline,
+                            color: Colors.redAccent,
+                          ),
+                          label: const Text(
+                            'Delete Recipe',
+                            style: TextStyle(
+                              color: Colors.redAccent,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+
                     const SizedBox(height: 32),
                   ],
                 ),
@@ -264,9 +426,9 @@ class _AddRecipeBottomSheetState extends ConsumerState<AddRecipeBottomSheet> {
                         color: Colors.white,
                         strokeWidth: 2,
                       )
-                      : const Text(
-                        'Save Recipe',
-                        style: TextStyle(
+                      : Text(
+                        _isEditing ? 'Save Changes' : 'Save Recipe',
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 18,
                           fontWeight: FontWeight.w600,

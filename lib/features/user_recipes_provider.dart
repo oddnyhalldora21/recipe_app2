@@ -84,6 +84,50 @@ class UserRecipesNotifier extends StateNotifier<List<Recipe>> {
     }
   }
 
+  /// Updates an existing recipe owned by the current user. Returns the
+  /// updated [Recipe] on success, or null on failure (no signed-in user,
+  /// not the owner, or a network/database error).
+  Future<Recipe?> updateRecipe({
+    required String recipeId,
+    required String name,
+    required String imageUrl,
+    required List<String> ingredients,
+    required List<String> instructions,
+    required String category,
+    required bool isPublic,
+  }) async {
+    final userId = _client.auth.currentUser?.id;
+    if (userId == null) return null;
+
+    try {
+      final row =
+          await _client
+              .from(RecipeService.table)
+              .update({
+                'name': name,
+                'image_url': imageUrl,
+                'ingredients': ingredients,
+                'steps': RecipeService.toStepsText(instructions),
+                'category': category,
+                'is_public': isPublic,
+              })
+              .eq('user_id', userId)
+              .eq('id', recipeId)
+              .select()
+              .single();
+
+      final updated = RecipeService.fromRow(row);
+      state = [
+        for (final recipe in state)
+          if (recipe.id == recipeId) updated else recipe,
+      ];
+      return updated;
+    } catch (e) {
+      print('Error updating recipe: $e');
+      return null;
+    }
+  }
+
   Future<bool> removeRecipe(String recipeId) async {
     final userId = _client.auth.currentUser?.id;
     if (userId == null) return false;

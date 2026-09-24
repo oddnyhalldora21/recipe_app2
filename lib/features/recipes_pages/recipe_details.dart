@@ -3,15 +3,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:recipe_app/features/recipe_ingredients/recipes_index.dart';
 import 'package:recipe_app/features/favorites/favorites_saves.dart';
-import 'package:recipe_app/features/recipe_ingredients/recipes_catalog_provider.dart';
+import 'package:recipe_app/features/profile_page/recipe_bottom_sheet.dart';
 import 'package:recipe_app/features/recipes_pages/save_bottom_sheet.dart';
 import 'package:recipe_app/features/saved/saved_recipes_provider.dart';
-import 'package:recipe_app/features/user_recipes_provider.dart';
 import 'package:recipe_app/features/widgets/cooking_time_card.dart';
 import 'package:recipe_app/features/widgets/ingredients_section.dart';
 import 'package:recipe_app/features/widgets/instructions_section.dart';
 import 'package:recipe_app/features/widgets/recipe_image_frame.dart';
 import 'package:recipe_app/shared/app_theme.dart';
+import 'package:recipe_app/shared/fade_page_route.dart';
 
 class RecipeDetailsPage extends ConsumerWidget {
   const RecipeDetailsPage({super.key, required this.recipe});
@@ -34,7 +34,7 @@ class RecipeDetailsPage extends ConsumerWidget {
               imageUrl: recipe.imageUrl,
               favoriteButton: _FavoriteButton(recipe: recipe),
               saveButton: _SaveButton(recipe: recipe),
-              deleteButton: isOwner ? _DeleteButton(recipe: recipe) : null,
+              editButton: isOwner ? _EditButton(recipe: recipe) : null,
             ),
 
             Padding(
@@ -141,59 +141,29 @@ class _FavoriteButton extends ConsumerWidget {
   }
 }
 
-class _DeleteButton extends ConsumerWidget {
-  const _DeleteButton({required this.recipe});
+class _EditButton extends StatelessWidget {
+  const _EditButton({required this.recipe});
 
   final Recipe recipe;
 
-  Future<void> _confirmAndDelete(BuildContext context, WidgetRef ref) async {
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder:
-          (context) => AlertDialog(
-            title: const Text('Delete this recipe?'),
-            content: Text(
-              '"${recipe.name}" will be permanently deleted. This can\'t be undone.',
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(false),
-                child: const Text('Cancel'),
-              ),
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(true),
-                child: const Text(
-                  'Delete',
-                  style: TextStyle(color: Colors.redAccent),
-                ),
-              ),
-            ],
-          ),
+  Future<void> _openEditForm(BuildContext context) async {
+    final result = await AddRecipeBottomSheet.show(
+      context,
+      existingRecipe: recipe,
     );
-    if (confirmed != true || !context.mounted) return;
-
-    final success = await ref
-        .read(userRecipesProvider.notifier)
-        .removeRecipe(recipe.id);
     if (!context.mounted) return;
 
-    if (success) {
-      // The catalog cache may still hold this recipe if it was public —
-      // drop it so it doesn't linger stale on Home/All Recipes/etc.
-      ref.invalidate(recipesCatalogProvider);
+    if (result is RecipeUpdated) {
+      Navigator.of(
+        context,
+      ).pushReplacement(fadeRoute(RecipeDetailsPage(recipe: result.recipe)));
+    } else if (result is RecipeDeleted) {
       Navigator.of(context).pop();
-      return;
     }
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Could not delete this recipe — please try again.'),
-        backgroundColor: Colors.redAccent,
-      ),
-    );
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white.withOpacity(0.95),
@@ -201,8 +171,8 @@ class _DeleteButton extends ConsumerWidget {
         boxShadow: AppShadows.floating,
       ),
       child: IconButton(
-        onPressed: () => _confirmAndDelete(context, ref),
-        icon: const Icon(Icons.delete_outline, color: Colors.redAccent),
+        onPressed: () => _openEditForm(context),
+        icon: const Icon(Icons.edit_outlined, color: AppColors.brown),
       ),
     );
   }
