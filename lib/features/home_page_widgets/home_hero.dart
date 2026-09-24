@@ -72,16 +72,6 @@ class HomeHero extends ConsumerWidget {
               ],
             ),
           ),
-          const SizedBox(height: 8),
-          Text(
-            'Handcrafted desserts and delicate pastries — '
-            'discover your next favorite treat.',
-            style: TextStyle(
-              fontSize: 13,
-              color: AppColors.brown.withOpacity(0.75),
-              height: 1.4,
-            ),
-          ),
           const SizedBox(height: 18),
           RecipesSearchBar(onRecipeSelected: onRecipeSelected),
         ],
