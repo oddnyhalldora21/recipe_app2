@@ -70,12 +70,16 @@ class _SwipeBackWrapperState extends State<SwipeBackWrapper>
     final shouldPop =
         velocity > _flingVelocity || _dragExtent > width * _popDistanceFraction;
     if (shouldPop) {
-      _runSettle(
-        width,
-        onDone: () {
-          if (mounted) Navigator.of(context).pop();
-        },
-      );
+      // Pop immediately rather than waiting for the settle animation to
+      // finish — PageRouteBuilder is opaque, so Flutter only paints the
+      // page underneath once its own route transition is actually
+      // running. Waiting left a window where our manual slide had already
+      // moved this page out of the way but Flutter still considered the
+      // route "settled" and skipped painting what's behind it, showing a
+      // blank gap instead of the destination page. Popping now starts the
+      // real transition alongside our slide instead of after it.
+      Navigator.of(context).pop();
+      _runSettle(width);
     } else {
       _runSettle(0);
     }
