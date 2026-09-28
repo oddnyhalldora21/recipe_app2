@@ -25,6 +25,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
   bool _promptShown = false;
 
   void _maybePromptForUsername(ProfileState profileState) {
+    if (!kUsernameSetupEnabled) return;
     if (_promptShown || profileState.loading || profileState.hasProfile) {
       return;
     }

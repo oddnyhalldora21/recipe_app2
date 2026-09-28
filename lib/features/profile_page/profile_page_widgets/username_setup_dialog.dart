@@ -4,6 +4,12 @@ import 'package:recipe_app/features/profile_page/profile_data_provider.dart';
 import 'package:recipe_app/shared/app_theme.dart';
 import 'package:recipe_app/shared/primary_button.dart';
 
+/// Turned off while the profiles_sweettreats fetch/insert flow is being
+/// fixed (it's currently stuck showing "username taken" for everyone) —
+/// flip back to true once that's resolved. Left in place rather than
+/// deleted since usernames are still needed for profile/follow features.
+const bool kUsernameSetupEnabled = false;
+
 /// Blocking, non-dismissible prompt shown the first time a signed-in user
 /// has no profiles_sweettreats row yet — they must pick a username before
 /// continuing. Bio/avatar stay optional and are edited later from Profile.
