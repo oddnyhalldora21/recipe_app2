@@ -69,4 +69,17 @@ class RecipeService {
   static List<Recipe> randomRecipes(List<Recipe> recipes, int count) {
     return shuffle(recipes).take(count).toList();
   }
+
+  /// Most-recently-added first; recipes with no createdAt sort last.
+  static List<Recipe> sortByNewest(List<Recipe> recipes) {
+    final sorted = [...recipes]..sort((a, b) {
+      final aTime = a.createdAt;
+      final bTime = b.createdAt;
+      if (aTime == null && bTime == null) return 0;
+      if (aTime == null) return 1;
+      if (bTime == null) return -1;
+      return bTime.compareTo(aTime);
+    });
+    return sorted;
+  }
 }

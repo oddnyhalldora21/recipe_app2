@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:recipe_app/features/all_recipes_page/all_recipes_widgets/recipe_service.dart';
 import 'package:recipe_app/features/recipe_ingredients/recipes_catalog_provider.dart';
 import 'package:recipe_app/features/widgets/recipe_card.dart';
 import 'package:recipe_app/shared/app_theme.dart';
@@ -21,15 +22,7 @@ class RecentlyAdded extends ConsumerWidget {
         height: 215,
         child: catalog.when(
           data: (recipes) {
-            final sorted = [...recipes]..sort((a, b) {
-              final aTime = a.createdAt;
-              final bTime = b.createdAt;
-              if (aTime == null && bTime == null) return 0;
-              if (aTime == null) return 1;
-              if (bTime == null) return -1;
-              return bTime.compareTo(aTime);
-            });
-            final recent = sorted.take(10).toList();
+            final recent = RecipeService.sortByNewest(recipes).take(10).toList();
 
             if (recent.isEmpty) {
               return const Center(

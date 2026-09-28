@@ -5,8 +5,13 @@ import 'package:recipe_app/shared/responsive.dart';
 
 class AllRecipesGrid extends StatelessWidget {
   final List<Recipe> allRecipes;
+  final String heroTagPrefix;
 
-  const AllRecipesGrid({super.key, required this.allRecipes});
+  const AllRecipesGrid({
+    super.key,
+    required this.allRecipes,
+    this.heroTagPrefix = 'allrecipes_page_',
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +27,7 @@ class AllRecipesGrid extends StatelessWidget {
         final recipe = allRecipes[index];
         return RecipeCard(
           recipe: recipe,
-          heroTag: 'allrecipes_page_${recipe.id}',
+          heroTag: '$heroTagPrefix${recipe.id}',
         );
       },
     );
