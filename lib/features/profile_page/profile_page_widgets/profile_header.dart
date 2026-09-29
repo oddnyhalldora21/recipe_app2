@@ -220,18 +220,36 @@ class _ProfileHeaderState extends ConsumerState<ProfileHeader> {
               color: Colors.white.withOpacity(0.14),
             ),
             const SizedBox(height: 16),
+            Text(
+              // Chosen once at sign-up and permanent for now — no edit
+              // affordance here, unlike the name/bio above and below it.
+              '@${profile!.username}',
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w700,
+                color: Colors.white,
+              ),
+              overflow: TextOverflow.ellipsis,
+            ),
+            const SizedBox(height: 4),
             Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 Flexible(
                   child: Text(
-                    '@${profile!.username}',
-                    style: const TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.white,
+                    (profile.bio ?? '').isNotEmpty
+                        ? profile.bio!
+                        : 'Add a bio to tell others about you.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 13,
+                      fontStyle:
+                          (profile.bio ?? '').isNotEmpty
+                              ? FontStyle.normal
+                              : FontStyle.italic,
+                      color: Colors.white.withOpacity(0.7),
                     ),
-                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
                 const SizedBox(width: 6),
@@ -250,21 +268,6 @@ class _ProfileHeaderState extends ConsumerState<ProfileHeader> {
                 ),
               ],
             ),
-            const SizedBox(height: 4),
-            Text(
-              (profile.bio ?? '').isNotEmpty
-                  ? profile.bio!
-                  : 'Add a bio to tell others about you.',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 13,
-                fontStyle:
-                    (profile.bio ?? '').isNotEmpty
-                        ? FontStyle.normal
-                        : FontStyle.italic,
-                color: Colors.white.withOpacity(0.7),
-              ),
-            ),
           ],
         ],
       ),
@@ -272,14 +275,19 @@ class _ProfileHeaderState extends ConsumerState<ProfileHeader> {
   }
 }
 
-/// Owns its own text controllers so they're disposed exactly when this
-/// dialog's element unmounts (after its closing animation finishes) —
-/// disposing them right after `showDialog` returns instead races the
-/// dialog's still-rebuilding, still-animating-out TextFields.
+/// Edits the bio only — username is chosen once at sign-up (via
+/// UsernameSetupDialog) and permanent for now, so it's shown here as
+/// read-only context rather than an editable field.
 ///
-/// Moved here unchanged from the now-deleted public_profile_section.dart —
-/// only its file location changed, not its logic, since there's a separate
-/// open investigation into a crash in this exact dialog.
+/// Owns its own text controller so it's disposed exactly when this dialog's
+/// element unmounts (after its closing animation finishes) — disposing it
+/// right after `showDialog` returns instead races the dialog's
+/// still-rebuilding, still-animating-out TextField.
+///
+/// Originally moved here unchanged from the now-deleted
+/// public_profile_section.dart as part of a card merge, then had username
+/// editing removed — there's a separate open investigation into a crash in
+/// this exact dialog, so keep that in mind before restructuring it further.
 class _EditProfileDialog extends ConsumerStatefulWidget {
   const _EditProfileDialog({required this.profile});
 
@@ -291,9 +299,6 @@ class _EditProfileDialog extends ConsumerStatefulWidget {
 }
 
 class _EditProfileDialogState extends ConsumerState<_EditProfileDialog> {
-  late final _usernameController = TextEditingController(
-    text: widget.profile.username,
-  );
   late final _bioController = TextEditingController(
     text: widget.profile.bio ?? '',
   );
@@ -301,27 +306,15 @@ class _EditProfileDialogState extends ConsumerState<_EditProfileDialog> {
 
   @override
   void dispose() {
-    _usernameController.dispose();
     _bioController.dispose();
     super.dispose();
   }
 
   Future<void> _save() async {
-    final username = _usernameController.text.trim();
-    if (username.length < 3) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Username must be at least 3 characters.'),
-          backgroundColor: Colors.redAccent,
-        ),
-      );
-      return;
-    }
-
     setState(() => _busy = true);
     final success = await ref
         .read(profileProvider.notifier)
-        .updateProfile(username: username, bio: _bioController.text);
+        .updateProfile(bio: _bioController.text);
     if (!mounted) return;
 
     if (success) {
@@ -340,18 +333,28 @@ class _EditProfileDialogState extends ConsumerState<_EditProfileDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text('Edit public profile', style: AppText.serif(fontSize: 20)),
+      title: Text('Edit bio', style: AppText.serif(fontSize: 20)),
       content: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            TextField(
-              controller: _usernameController,
-              enabled: !_busy,
-              decoration: const InputDecoration(labelText: 'Username'),
+            // Username is chosen once at sign-up and permanent for now, so
+            // it's shown here for context only — not an editable field.
+            Text(
+              'Username',
+              style: TextStyle(fontSize: 12, color: AppColors.textMuted),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 4),
+            Text(
+              '@${widget.profile.username}',
+              style: const TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w600,
+                color: AppColors.brown,
+              ),
+            ),
+            const SizedBox(height: 16),
             TextField(
               controller: _bioController,
               maxLines: 3,
