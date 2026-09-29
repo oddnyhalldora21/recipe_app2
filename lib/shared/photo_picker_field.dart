@@ -26,6 +26,8 @@ class PhotoPickerField extends StatefulWidget {
     required this.onChanged,
     this.height = 120,
     this.initialImageUrl,
+    this.shape = BoxShape.rectangle,
+    this.placeholder,
   });
 
   final ValueChanged<PickedPhoto?> onChanged;
@@ -34,6 +36,16 @@ class PhotoPickerField extends StatefulWidget {
   /// An existing photo to show until the user picks a new one — used when
   /// editing a recipe that already has a real (non-placeholder) photo.
   final String? initialImageUrl;
+
+  /// [BoxShape.circle] renders a fixed `height`-diameter circle (e.g. for a
+  /// profile avatar) instead of the default full-width rounded rectangle.
+  /// Picking/upload-error handling is identical either way.
+  final BoxShape shape;
+
+  /// Empty-state widget shown when there's no photo yet. Defaults to
+  /// [AddPhotoPlaceholder], which is sized for the rectangle shape — pass
+  /// your own for [BoxShape.circle] (e.g. an initials circle).
+  final Widget? placeholder;
 
   @override
   State<PhotoPickerField> createState() => _PhotoPickerFieldState();
@@ -118,25 +130,34 @@ class _PhotoPickerFieldState extends State<PhotoPickerField> {
     final hasInitialImage =
         widget.initialImageUrl != null && widget.initialImageUrl!.isNotEmpty;
     final hasImage = _picked != null || hasInitialImage;
+    final isCircle = widget.shape == BoxShape.circle;
+    final imageWidth = isCircle ? widget.height : double.infinity;
+    final clipShape = isCircle ? BoxShape.circle : BoxShape.rectangle;
+    final borderRadius =
+        isCircle ? null : BorderRadius.circular(12) as BorderRadius?;
+
+    Widget clip(Widget child) {
+      return isCircle
+          ? ClipOval(child: child)
+          : ClipRRect(borderRadius: borderRadius!, child: child);
+    }
 
     return GestureDetector(
       onTap: _busy ? null : _showSourceSheet,
       child: Stack(
         children: [
           if (_picked != null)
-            ClipRRect(
-              borderRadius: BorderRadius.circular(12),
-              child: SizedBox(
-                width: double.infinity,
+            clip(
+              SizedBox(
+                width: imageWidth,
                 height: widget.height,
                 child: Image.memory(_picked!.bytes, fit: BoxFit.cover),
               ),
             )
           else if (hasInitialImage)
-            ClipRRect(
-              borderRadius: BorderRadius.circular(12),
-              child: SizedBox(
-                width: double.infinity,
+            clip(
+              SizedBox(
+                width: imageWidth,
                 height: widget.height,
                 child: Image.network(
                   widget.initialImageUrl!,
@@ -145,11 +166,12 @@ class _PhotoPickerFieldState extends State<PhotoPickerField> {
               ),
             )
           else
-            AddPhotoPlaceholder(height: widget.height),
+            widget.placeholder ?? AddPhotoPlaceholder(height: widget.height),
           if (hasImage)
             Positioned(
-              top: 6,
-              right: 6,
+              top: isCircle ? null : 6,
+              right: isCircle ? 0 : 6,
+              bottom: isCircle ? 0 : null,
               child: Container(
                 padding: const EdgeInsets.all(4),
                 decoration: BoxDecoration(
@@ -164,7 +186,8 @@ class _PhotoPickerFieldState extends State<PhotoPickerField> {
               child: Container(
                 decoration: BoxDecoration(
                   color: Colors.black26,
-                  borderRadius: BorderRadius.circular(12),
+                  shape: clipShape,
+                  borderRadius: isCircle ? null : BorderRadius.circular(12),
                 ),
                 child: const Center(
                   child: CircularProgressIndicator(color: Colors.white),

@@ -4,8 +4,10 @@ import 'package:recipe_app/features/favorites/favorites_saves.dart';
 import 'package:recipe_app/features/user_recipes_provider.dart';
 import 'package:recipe_app/shared/app_theme.dart';
 
-/// Real-data stat cards only (favorites and the user's own recipe count) —
-/// no invented metrics like "recipes cooked" since we don't track that.
+/// Real-data stat cards (favorites, the user's own recipe count) plus
+/// Followers/Following placeholders — always 0 until a follow feature
+/// exists, no invented metrics like "recipes cooked" since we don't track
+/// that.
 class ProfileStats extends ConsumerWidget {
   const ProfileStats({super.key});
 
@@ -14,22 +16,46 @@ class ProfileStats extends ConsumerWidget {
     final favoritesCount = ref.watch(favoritesProvider).length;
     final myRecipesCount = ref.watch(userRecipesProvider).length;
 
-    return Row(
+    return Column(
       children: [
-        Expanded(
-          child: _StatCard(
-            icon: Icons.favorite,
-            value: favoritesCount,
-            label: 'Favorites',
-          ),
+        Row(
+          children: [
+            Expanded(
+              child: _StatCard(
+                icon: Icons.favorite,
+                value: favoritesCount,
+                label: 'Favorites',
+              ),
+            ),
+            const SizedBox(width: 14),
+            Expanded(
+              child: _StatCard(
+                icon: Icons.menu_book_rounded,
+                value: myRecipesCount,
+                label: 'My Recipes',
+              ),
+            ),
+          ],
         ),
-        const SizedBox(width: 14),
-        Expanded(
-          child: _StatCard(
-            icon: Icons.menu_book_rounded,
-            value: myRecipesCount,
-            label: 'My Recipes',
-          ),
+        const SizedBox(height: 14),
+        Row(
+          children: [
+            Expanded(
+              child: _StatCard(
+                icon: Icons.people_outline,
+                value: 0,
+                label: 'Followers',
+              ),
+            ),
+            const SizedBox(width: 14),
+            Expanded(
+              child: _StatCard(
+                icon: Icons.person_add_alt_outlined,
+                value: 0,
+                label: 'Following',
+              ),
+            ),
+          ],
         ),
       ],
     );
