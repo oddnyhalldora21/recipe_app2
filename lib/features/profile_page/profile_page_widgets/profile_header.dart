@@ -23,35 +23,13 @@ class _ProfileHeaderState extends ConsumerState<ProfileHeader> {
   bool _uploadingAvatar = false;
 
   Future<void> _editName(BuildContext context) async {
-    final controller = TextEditingController(
-      text: ref.read(displayNameProvider),
-    );
     final newName = await showDialog<String>(
       context: context,
       builder:
-          (context) => AlertDialog(
-            title: Text('Edit name', style: AppText.serif(fontSize: 20)),
-            content: TextField(
-              controller: controller,
-              autofocus: true,
-              textCapitalization: TextCapitalization.words,
-              decoration: const InputDecoration(hintText: 'Your name'),
-              onSubmitted: (value) => Navigator.of(context).pop(value),
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: const Text('Cancel'),
-              ),
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(controller.text),
-                child: const Text('Save'),
-              ),
-            ],
-          ),
+          (context) =>
+              _EditNameDialog(initialName: ref.read(displayNameProvider)),
     );
 
-    controller.dispose();
     if (newName == null || newName.trim().isEmpty) return;
 
     final success = await ref
@@ -271,6 +249,54 @@ class _ProfileHeaderState extends ConsumerState<ProfileHeader> {
           ],
         ],
       ),
+    );
+  }
+}
+
+/// Owns its own text controller so it's disposed exactly when this dialog's
+/// element unmounts (after its closing animation finishes) — disposing it
+/// right after `showDialog` returns instead races the dialog's
+/// still-rebuilding, still-animating-out TextField, which threw
+/// "A TextEditingController was used after being disposed" here previously.
+class _EditNameDialog extends StatefulWidget {
+  const _EditNameDialog({required this.initialName});
+
+  final String initialName;
+
+  @override
+  State<_EditNameDialog> createState() => _EditNameDialogState();
+}
+
+class _EditNameDialogState extends State<_EditNameDialog> {
+  late final _controller = TextEditingController(text: widget.initialName);
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: Text('Edit name', style: AppText.serif(fontSize: 20)),
+      content: TextField(
+        controller: _controller,
+        autofocus: true,
+        textCapitalization: TextCapitalization.words,
+        decoration: const InputDecoration(hintText: 'Your name'),
+        onSubmitted: (value) => Navigator.of(context).pop(value),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: const Text('Cancel'),
+        ),
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(_controller.text),
+          child: const Text('Save'),
+        ),
+      ],
     );
   }
 }
