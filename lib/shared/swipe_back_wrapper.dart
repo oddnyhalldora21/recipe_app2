@@ -88,8 +88,12 @@ class _SwipeBackWrapperState extends State<SwipeBackWrapper>
   @override
   Widget build(BuildContext context) {
     // Nothing to go back to (e.g. a tab's root page) — skip the gesture
-    // entirely so it never eats an edge touch for no reason.
-    if (!Navigator.of(context).canPop()) return widget.child;
+    // entirely so it never eats an edge touch for no reason. Asks whether
+    // *this* route is first rather than Navigator.canPop(): once we pop,
+    // canPop() stops counting this route, so popping onto a tab's root
+    // flipped it to false mid-slide, dropping the Transform below and
+    // snapping the page back to x=0 for the rest of the fade.
+    if (ModalRoute.of(context)?.isFirst ?? true) return widget.child;
 
     final width = MediaQuery.sizeOf(context).width;
 
