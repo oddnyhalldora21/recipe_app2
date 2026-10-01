@@ -16,6 +16,7 @@ class RecipePage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: ListView(
+        primary: true,
         padding: EdgeInsets.zero,
         children: [
           const HomeHero(),

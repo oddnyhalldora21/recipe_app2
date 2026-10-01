@@ -68,6 +68,7 @@ class _SavedBody extends StatelessWidget {
         else
           Expanded(
             child: ListView(
+              primary: true,
               children: [
                 if (collections.isNotEmpty) ...[
                   Text('Collections', style: AppText.serif(fontSize: 21)),
@@ -100,6 +101,7 @@ class _SavedBody extends StatelessWidget {
                   )
                 else
                   GridView.builder(
+                    primary: false,
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     gridDelegate:

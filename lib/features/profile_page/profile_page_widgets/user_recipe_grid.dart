@@ -58,6 +58,7 @@ class UserRecipesGrid extends StatelessWidget {
 
   Widget _buildRecipeGridView(BuildContext context) {
     return GridView.builder(
+      primary: false,
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(

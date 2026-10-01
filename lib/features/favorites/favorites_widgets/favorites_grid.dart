@@ -11,6 +11,7 @@ class FavoritesGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GridView.builder(
+      primary: true,
       gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
         maxCrossAxisExtent: kRecipeCardWidth,
         crossAxisSpacing: 16,

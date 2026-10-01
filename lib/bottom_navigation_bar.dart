@@ -24,10 +24,33 @@ class _SweetTreatState extends State<SweetTreat> {
     (_) => GlobalKey<NavigatorState>(),
   );
 
+  /// One per tab, handed to the tab's root page as its
+  /// [PrimaryScrollController] so a re-tap can scroll it back to the top.
+  final List<ScrollController> _scrollControllers = List.generate(
+    5,
+    (_) => ScrollController(),
+  );
+
+  static const int _searchTabIndex = 2;
+
+  @override
+  void dispose() {
+    for (final controller in _scrollControllers) {
+      controller.dispose();
+    }
+    super.dispose();
+  }
+
   void _onDestinationSelected(int index) {
     if (index == currentIndex) {
-      // Tapping the current tab again pops back to its root.
-      _navigatorKeys[index].currentState?.popUntil((route) => route.isFirst);
+      // Tapping the current tab again first pops back to its root, and
+      // only once already there scrolls the root back to the top.
+      final navigator = _navigatorKeys[index].currentState;
+      if (navigator != null && navigator.canPop()) {
+        navigator.popUntil((route) => route.isFirst);
+      } else {
+        _scrollToTop(index);
+      }
     } else {
       setState(() {
         currentIndex = index;
@@ -49,10 +72,31 @@ class _SweetTreatState extends State<SweetTreat> {
     }
   }
 
+  void _scrollToTop(int index) {
+    if (index == _searchTabIndex) return;
+    final controller = _scrollControllers[index];
+    // No client when the tab's root currently has nothing to scroll (e.g.
+    // an empty Favorites or Saved).
+    if (!controller.hasClients) return;
+    controller.animateTo(
+      0,
+      duration: const Duration(milliseconds: 400),
+      curve: Curves.easeOutCubic,
+    );
+  }
+
   Widget _buildTab(int index, Widget child) {
     return Navigator(
       key: _navigatorKeys[index],
-      onGenerateRoute: (settings) => fadeRoute(child),
+      // Only the root page sees this controller — pages pushed on top are
+      // their own routes, each with its own PrimaryScrollController.
+      onGenerateRoute:
+          (settings) => fadeRoute(
+            PrimaryScrollController(
+              controller: _scrollControllers[index],
+              child: child,
+            ),
+          ),
     );
   }
 

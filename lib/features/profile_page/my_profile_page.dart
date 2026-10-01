@@ -47,6 +47,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
       backgroundColor: Colors.transparent,
       body: SafeArea(
         child: SingleChildScrollView(
+          primary: true,
           padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
