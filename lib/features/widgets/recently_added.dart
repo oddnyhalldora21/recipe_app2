@@ -21,6 +21,8 @@ class RecentlyAdded extends ConsumerWidget {
       child: SizedBox(
         height: 215,
         child: catalog.when(
+          // Keeps showing the last recipes if a pull-to-refresh fails.
+          skipError: true,
           data: (recipes) {
             final recent = RecipeService.sortByNewest(recipes).take(10).toList();
 

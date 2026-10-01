@@ -23,6 +23,18 @@ class UserRecipesNotifier extends StateNotifier<List<Recipe>> {
     super.dispose();
   }
 
+  Future<List<Recipe>> _fetch(String userId) async {
+    final rows = await _client
+        .from(RecipeService.table)
+        .select(
+          'id, name, ingredients, steps, category, image_url, user_id, is_public, created_at',
+        )
+        .eq('user_id', userId)
+        .order('created_at', ascending: false);
+
+    return (rows as List).map(RecipeService.fromRow).toList();
+  }
+
   Future<void> _load() async {
     final userId = _client.auth.currentUser?.id;
     if (userId == null) {
@@ -31,19 +43,20 @@ class UserRecipesNotifier extends StateNotifier<List<Recipe>> {
     }
 
     try {
-      final rows = await _client
-          .from(RecipeService.table)
-          .select(
-            'id, name, ingredients, steps, category, image_url, user_id, is_public, created_at',
-          )
-          .eq('user_id', userId)
-          .order('created_at', ascending: false);
-
-      state = (rows as List).map(RecipeService.fromRow).toList();
+      state = await _fetch(userId);
     } catch (e) {
       print('Error loading your recipes: $e');
       state = [];
     }
+  }
+
+  /// Re-fetches for pull-to-refresh. Unlike [_load], a failure keeps the
+  /// current list (rather than wiping it) and rethrows so the caller can
+  /// tell the user.
+  Future<void> refresh() async {
+    final userId = _client.auth.currentUser?.id;
+    if (userId == null) return;
+    state = await _fetch(userId);
   }
 
   /// Adds a recipe under the current user. [isPublic] defaults to false so

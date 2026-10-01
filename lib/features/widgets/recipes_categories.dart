@@ -16,6 +16,8 @@ class RecipesCategories extends ConsumerWidget {
     return SizedBox(
       height: 96,
       child: catalog.when(
+        // Keeps showing the last recipes if a pull-to-refresh fails.
+        skipError: true,
         data: (recipes) {
           final categories = categoriesFromRecipes(recipes);
           return ListView.separated(

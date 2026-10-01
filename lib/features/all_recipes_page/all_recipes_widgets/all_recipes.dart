@@ -18,6 +18,8 @@ class AllRecipes extends ConsumerWidget {
       child: SizedBox(
         height: 215,
         child: catalog.when(
+          // Keeps showing the last recipes if a pull-to-refresh fails.
+          skipError: true,
           data: (recipes) {
             final randomRecipes = RecipeService.randomRecipes(recipes, 10);
             return ListView.separated(
