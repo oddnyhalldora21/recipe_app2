@@ -12,7 +12,17 @@ Route<T> fadeRoute<T>(Widget page, {bool fullWidth = true}) {
     pageBuilder: (context, animation, secondaryAnimation) =>
         SwipeBackWrapper(fullWidth: fullWidth, child: page),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      return FadeTransition(opacity: animation, child: child);
+      // Pages are transparent over one shared gradient, so the page being
+      // covered also has to fade out (secondaryAnimation) — otherwise it
+      // shows through at full strength under the incoming page, then
+      // vanishes in a single frame once the push settles.
+      return FadeTransition(
+        opacity: animation,
+        child: FadeTransition(
+          opacity: ReverseAnimation(secondaryAnimation),
+          child: child,
+        ),
+      );
     },
     transitionDuration: const Duration(milliseconds: 250),
   );
