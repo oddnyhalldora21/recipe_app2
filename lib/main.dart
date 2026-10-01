@@ -40,6 +40,17 @@ class MyApp extends StatelessWidget {
             borderRadius: BorderRadius.circular(30),
           ),
         ),
+        // Without these, dialogs and sheets fall back to a beige surface
+        // derived from the brown seed color.
+        dialogTheme: const DialogThemeData(
+          backgroundColor: AppColors.cardWhite,
+          surfaceTintColor: Colors.transparent,
+        ),
+        bottomSheetTheme: const BottomSheetThemeData(
+          backgroundColor: AppColors.cardWhite,
+          modalBackgroundColor: AppColors.cardWhite,
+          surfaceTintColor: Colors.transparent,
+        ),
       ),
       home: const AuthGate(),
     );

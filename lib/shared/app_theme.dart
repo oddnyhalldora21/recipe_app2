@@ -21,6 +21,10 @@ class AppColors {
 
   static const Color cream = Color(0xFFFFF8E7);
 
+  /// Near-opaque white (white at 95%) used for floating cards and every
+  /// dialog/bottom sheet surface.
+  static const Color cardWhite = Color(0xF2FFFFFF);
+
   /// Soft near-white background used for page canvases, so the saturated
   /// pink can stay reserved for the hero header and accents.
   static const Color background = Color(0xFFFDF4F7);

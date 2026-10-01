@@ -18,8 +18,10 @@ Future<bool> showConfirmDialog(
           content: Text(message),
           actions: [
             TextButton(
+              // pink rather than pinkLight, which nearly vanished on the
+              // white dialog surface; still clearly lighter than confirm.
               style: TextButton.styleFrom(
-                backgroundColor: AppColors.pinkLight,
+                backgroundColor: AppColors.pink,
                 foregroundColor: AppColors.brown,
               ),
               onPressed: () => Navigator.of(context).pop(false),
