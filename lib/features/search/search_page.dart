@@ -26,6 +26,11 @@ class _SearchPageState extends ConsumerState<SearchPage> {
     super.dispose();
   }
 
+  void _clearQuery() {
+    _controller.clear();
+    setState(() => _query = '');
+  }
+
   /// Unchanged from the old RecipesSearchBar — matches recipe name,
   /// ingredients, or category (case-insensitive substring match).
   List<Recipe> _filterRecipes(List<Recipe> catalog, String query) {
@@ -70,6 +75,9 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                   controller: _controller,
                   autofocus: true,
                   onChanged: (value) => setState(() => _query = value),
+                  // The keyboard covers the bottom nav bar, so tapping
+                  // anywhere else has to put it away or the page traps you.
+                  onTapOutside: (_) => FocusScope.of(context).unfocus(),
                   style: const TextStyle(color: AppColors.brown),
                   decoration: InputDecoration(
                     hintText: 'what are we craving?',
@@ -80,6 +88,17 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                       Icons.search,
                       color: AppColors.pinkDeep,
                     ),
+                    suffixIcon:
+                        hasQuery
+                            ? IconButton(
+                              tooltip: 'Clear search',
+                              onPressed: _clearQuery,
+                              icon: Icon(
+                                Icons.cancel_rounded,
+                                color: AppColors.brown.withValues(alpha: 0.4),
+                              ),
+                            )
+                            : null,
                     filled: true,
                     fillColor: Colors.white,
                     contentPadding: const EdgeInsets.symmetric(vertical: 14),
@@ -98,6 +117,8 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                         : results.isEmpty
                         ? _buildNoResults()
                         : GridView.builder(
+                          keyboardDismissBehavior:
+                              ScrollViewKeyboardDismissBehavior.onDrag,
                           gridDelegate:
                               const SliverGridDelegateWithMaxCrossAxisExtent(
                                 maxCrossAxisExtent: kRecipeCardWidth,
