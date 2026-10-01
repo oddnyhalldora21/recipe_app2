@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:recipe_app/shared/app_back_button.dart';
 import 'package:recipe_app/features/recipe_ingredients/recipes_catalog_provider.dart';
 import 'package:recipe_app/features/recipes_pages/recipe_category_info.dart';
 import 'package:recipe_app/features/recipes_pages/recipe_category_page.dart';
@@ -20,7 +21,13 @@ class AllCategoriesPage extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('All Categories', style: AppText.serif(fontSize: 26)),
+            Row(
+              children: [
+                const AppBackButton(),
+                const SizedBox(width: 12),
+                Text('All Categories', style: AppText.serif(fontSize: 26)),
+              ],
+            ),
             const SizedBox(height: 16),
             Expanded(
               child: catalog.when(

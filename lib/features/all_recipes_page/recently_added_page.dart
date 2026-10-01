@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:recipe_app/shared/app_back_button.dart';
 import 'package:recipe_app/features/all_recipes_page/all_recipes_widgets/all_recipes_grid.dart';
 import 'package:recipe_app/features/all_recipes_page/all_recipes_widgets/all_recipes_header.dart';
 import 'package:recipe_app/features/all_recipes_page/all_recipes_widgets/recipe_service.dart';
@@ -20,7 +21,13 @@ class RecentlyAddedPage extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Recently Added', style: AppText.serif(fontSize: 26)),
+            Row(
+              children: [
+                const AppBackButton(),
+                const SizedBox(width: 12),
+                Text('Recently Added', style: AppText.serif(fontSize: 26)),
+              ],
+            ),
             const SizedBox(height: 4),
             Expanded(
               child: catalog.when(

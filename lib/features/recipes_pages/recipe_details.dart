@@ -10,6 +10,7 @@ import 'package:recipe_app/features/widgets/cooking_time_card.dart';
 import 'package:recipe_app/features/widgets/ingredients_section.dart';
 import 'package:recipe_app/features/widgets/instructions_section.dart';
 import 'package:recipe_app/features/widgets/recipe_image_frame.dart';
+import 'package:recipe_app/shared/app_back_button.dart';
 import 'package:recipe_app/shared/app_theme.dart';
 import 'package:recipe_app/shared/fade_page_route.dart';
 
@@ -34,6 +35,7 @@ class RecipeDetailsPage extends ConsumerWidget {
               imageUrl: recipe.imageUrl,
               favoriteButton: _FavoriteButton(recipe: recipe),
               saveButton: _SaveButton(recipe: recipe),
+              backButton: const AppBackButton(),
               editButton: isOwner ? _EditButton(recipe: recipe) : null,
             ),
 

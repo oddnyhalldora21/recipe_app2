@@ -2,21 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:recipe_app/shared/app_theme.dart';
 
 /// Recipe detail photo: a smaller, fully-rounded card (rather than a
-/// full-bleed hero) with the Save and Favorite buttons floating on top.
-/// Navigation happens via the persistent top app bar and bottom nav, so
-/// there's no back button here.
+/// full-bleed hero) with the back button floating top-left and the Save and
+/// Favorite buttons top-right.
 class ImageFrame extends StatelessWidget {
   const ImageFrame({
     super.key,
     required this.imageUrl,
     required this.favoriteButton,
     required this.saveButton,
+    required this.backButton,
     this.editButton,
   });
 
   final String imageUrl;
   final Widget favoriteButton;
   final Widget saveButton;
+  final Widget backButton;
 
   /// Shown floating bottom-right — only passed in for recipes the current
   /// user owns.
@@ -68,6 +69,7 @@ class ImageFrame extends StatelessWidget {
                 ),
               ),
             ),
+            Positioned(top: 10, left: 10, child: backButton),
             Positioned(
               top: 10,
               right: 10,
