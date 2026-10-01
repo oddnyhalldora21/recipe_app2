@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:recipe_app/features/favorites/favorite_toggle.dart';
 import 'package:recipe_app/features/favorites/favorites_saves.dart';
 import 'package:recipe_app/features/recipe_ingredients/recipes_index.dart';
 import 'package:recipe_app/features/recipes_pages/recipe_details.dart';
@@ -251,7 +252,7 @@ class _FavoriteButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return GestureDetector(
-      onTap: () => ref.read(favoritesProvider.notifier).toggleFavorite(recipe),
+      onTap: () => toggleFavoriteWithConfirm(context, ref, recipe),
       child: Container(
         padding: const EdgeInsets.all(6),
         decoration: BoxDecoration(

@@ -4,6 +4,7 @@ import 'package:recipe_app/features/recipe_ingredients/recipes_catalog_provider.
 import 'package:recipe_app/features/recipe_ingredients/recipes_index.dart';
 import 'package:recipe_app/features/user_recipes_provider.dart';
 import 'package:recipe_app/shared/app_theme.dart';
+import 'package:recipe_app/shared/confirm_dialog.dart';
 import 'package:recipe_app/shared/photo_picker_field.dart';
 import 'package:recipe_app/shared/pink_toggle_switch.dart';
 import 'package:recipe_app/shared/primary_button.dart';
@@ -230,35 +231,14 @@ class _AddRecipeBottomSheetState extends ConsumerState<AddRecipeBottomSheet> {
     final existing = widget.existingRecipe;
     if (existing == null) return;
 
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder:
-          (context) => AlertDialog(
-            title: const Text('Delete Recipe'),
-            content: const Text(
-              'Are you sure you want to delete the recipe? This action cannot be undone.',
-            ),
-            actions: [
-              TextButton(
-                style: TextButton.styleFrom(
-                  backgroundColor: AppColors.pinkLight,
-                  foregroundColor: AppColors.brown,
-                ),
-                onPressed: () => Navigator.of(context).pop(false),
-                child: const Text('Cancel'),
-              ),
-              TextButton(
-                style: TextButton.styleFrom(
-                  backgroundColor: AppColors.pinkDark,
-                  foregroundColor: Colors.white,
-                ),
-                onPressed: () => Navigator.of(context).pop(true),
-                child: const Text('Yes, delete'),
-              ),
-            ],
-          ),
+    final confirmed = await showConfirmDialog(
+      context,
+      title: 'Delete Recipe',
+      message:
+          'Are you sure you want to delete the recipe? This action cannot be undone.',
+      confirmLabel: 'Yes, delete',
     );
-    if (confirmed != true || !mounted) return;
+    if (!confirmed || !mounted) return;
 
     setState(() => _isLoading = true);
     final success = await ref

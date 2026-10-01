@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:recipe_app/features/recipe_ingredients/recipes_index.dart';
+import 'package:recipe_app/features/favorites/favorite_toggle.dart';
 import 'package:recipe_app/features/favorites/favorites_saves.dart';
 import 'package:recipe_app/features/profile_page/recipe_bottom_sheet.dart';
 import 'package:recipe_app/features/recipes_pages/save_bottom_sheet.dart';
@@ -131,9 +132,7 @@ class _FavoriteButton extends ConsumerWidget {
         boxShadow: AppShadows.floating,
       ),
       child: IconButton(
-        onPressed: () {
-          ref.read(favoritesProvider.notifier).toggleFavorite(recipe);
-        },
+        onPressed: () => toggleFavoriteWithConfirm(context, ref, recipe),
         icon: Icon(
           isFavorited ? Icons.favorite : Icons.favorite_border,
           color: isFavorited ? AppColors.pinkDeep : AppColors.brown,
