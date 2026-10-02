@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:recipe_app/features/recipe_ingredients/recipes_catalog_provider.dart';
 import 'package:recipe_app/features/recipe_ingredients/recipes_index.dart';
@@ -52,10 +53,22 @@ class _AddRecipeBottomSheetState extends ConsumerState<AddRecipeBottomSheet> {
   final _nameController = TextEditingController();
   final _ingredientsController = TextEditingController();
   final _instructionsController = TextEditingController();
+  final _descriptionController = TextEditingController();
+  final _ovenTempController = TextEditingController();
+  final _prepTimeController = TextEditingController();
+  final _bakeTimeController = TextEditingController();
+  final _servingsController = TextEditingController();
+  final _tagInputController = TextEditingController();
 
   bool _isLoading = false;
   bool _isPublic = false;
+  bool _isNoBake = false;
+  RecipeDifficulty? _difficulty;
+  List<String> _tags = [];
   PickedPhoto? _pickedPhoto;
+
+  static const _maxTags = 10;
+  static const _maxTagLength = 24;
 
   bool get _isEditing => widget.existingRecipe != null;
 
@@ -70,6 +83,29 @@ class _AddRecipeBottomSheetState extends ConsumerState<AddRecipeBottomSheet> {
         !existing.imageUrl.contains('via.placeholder.com');
   }
 
+  /// Oven temp, bake time and difficulty are required for new recipes, but
+  /// recipes created before these fields existed may save without them —
+  /// unless they were already filled in, in which case they can't be
+  /// cleared.
+  RecipeDetails? get _originalDetails => widget.existingRecipe?.details;
+  bool get _requireOvenTemp =>
+      !_isNoBake && (!_isEditing || _originalDetails!.ovenTemp != null);
+  bool get _requireBakeTime =>
+      !_isNoBake && (!_isEditing || _originalDetails!.bakeMinutes != null);
+  bool get _requireDifficulty =>
+      !_isEditing || _originalDetails!.difficulty != null;
+
+  /// Non-blocking nudge shown when editing an older recipe that's missing
+  /// some of the baking details.
+  bool get _showMissingDetailsHint {
+    final original = _originalDetails;
+    if (original == null) return false;
+    final missingBaking =
+        !original.isNoBake &&
+        (original.ovenTemp == null || original.bakeMinutes == null);
+    return missingBaking || original.difficulty == null;
+  }
+
   @override
   void initState() {
     super.initState();
@@ -79,6 +115,15 @@ class _AddRecipeBottomSheetState extends ConsumerState<AddRecipeBottomSheet> {
       _ingredientsController.text = existing.ingredients.join('\n');
       _instructionsController.text = existing.instructions.join('\n');
       _isPublic = existing.isPublic;
+      final details = existing.details;
+      _descriptionController.text = details.description ?? '';
+      _ovenTempController.text = details.ovenTemp ?? '';
+      _prepTimeController.text = details.prepMinutes?.toString() ?? '';
+      _bakeTimeController.text = details.bakeMinutes?.toString() ?? '';
+      _servingsController.text = details.servings?.toString() ?? '';
+      _isNoBake = details.isNoBake;
+      _difficulty = details.difficulty;
+      _tags = List.of(details.tags);
     }
   }
 
@@ -87,18 +132,74 @@ class _AddRecipeBottomSheetState extends ConsumerState<AddRecipeBottomSheet> {
     _nameController.dispose();
     _ingredientsController.dispose();
     _instructionsController.dispose();
+    _descriptionController.dispose();
+    _ovenTempController.dispose();
+    _prepTimeController.dispose();
+    _bakeTimeController.dispose();
+    _servingsController.dispose();
+    _tagInputController.dispose();
     super.dispose();
   }
 
+  String? _trimmedOrNull(TextEditingController controller) {
+    final text = controller.text.trim();
+    return text.isEmpty ? null : text;
+  }
+
+  RecipeDetails _buildDetails() {
+    return RecipeDetails(
+      description: _trimmedOrNull(_descriptionController),
+      ovenTemp: _isNoBake ? null : _trimmedOrNull(_ovenTempController),
+      prepMinutes: int.tryParse(_prepTimeController.text.trim()),
+      bakeMinutes:
+          _isNoBake ? null : int.tryParse(_bakeTimeController.text.trim()),
+      servings: int.tryParse(_servingsController.text.trim()),
+      difficulty: _difficulty,
+      tags: _tags,
+      isNoBake: _isNoBake,
+    );
+  }
+
+  /// Turns whatever is typed in the tag field into tags — on enter, or as
+  /// soon as a comma is typed — lowercased, trimmed and de-duplicated.
+  void _addTagsFromInput() {
+    final newTags = _tagInputController.text
+        .split(',')
+        .map((tag) => tag.trim().toLowerCase())
+        .where((tag) => tag.isNotEmpty)
+        .map(
+          (tag) =>
+              tag.length > _maxTagLength
+                  ? tag.substring(0, _maxTagLength)
+                  : tag,
+        );
+    setState(() {
+      for (final tag in newTags) {
+        if (_tags.length >= _maxTags) break;
+        if (!_tags.contains(tag)) _tags.add(tag);
+      }
+      _tagInputController.clear();
+    });
+  }
+
+  /// Optional whole-number fields: empty is fine, anything else must parse.
+  String? _validateOptionalNumber(String? value) {
+    final text = value?.trim() ?? '';
+    if (text.isEmpty) return null;
+    final number = int.tryParse(text);
+    if (number == null || number <= 0) return 'Enter a whole number';
+    return null;
+  }
+
   Future<void> _saveRecipe() async {
+    // Catches a half-typed tag the user never confirmed with enter/comma.
+    if (_tagInputController.text.trim().isNotEmpty) _addTagsFromInput();
     if (!_formKey.currentState!.validate()) return;
 
     if (_isPublic && _pickedPhoto == null && !_hasExistingUsablePhoto) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text(
-            'Please add a photo before making this recipe public.',
-          ),
+          content: Text('Please add a photo before making this recipe public.'),
           backgroundColor: Colors.redAccent,
         ),
       );
@@ -188,6 +289,7 @@ class _AddRecipeBottomSheetState extends ConsumerState<AddRecipeBottomSheet> {
             instructions: instructionsList,
             category: widget.existingRecipe!.category,
             isPublic: _isPublic,
+            details: _buildDetails(),
           );
       success = updatedRecipe != null;
     } else {
@@ -200,6 +302,7 @@ class _AddRecipeBottomSheetState extends ConsumerState<AddRecipeBottomSheet> {
             instructions: instructionsList,
             category: 'My Recipes',
             isPublic: _isPublic,
+            details: _buildDetails(),
           );
     }
 
@@ -310,6 +413,8 @@ class _AddRecipeBottomSheetState extends ConsumerState<AddRecipeBottomSheet> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    _buildSectionHeading('The basics'),
+
                     _buildTextField(
                       controller: _nameController,
                       label: 'Recipe Name',
@@ -336,6 +441,15 @@ class _AddRecipeBottomSheetState extends ConsumerState<AddRecipeBottomSheet> {
                     const SizedBox(height: 16),
 
                     _buildTextField(
+                      controller: _descriptionController,
+                      label: 'Description',
+                      hint: 'Optional — a short intro to your recipe',
+                      maxLines: 3,
+                    ),
+
+                    _buildSectionHeading('What you need'),
+
+                    _buildTextField(
                       controller: _ingredientsController,
                       label: 'Ingredients',
                       hint:
@@ -349,7 +463,11 @@ class _AddRecipeBottomSheetState extends ConsumerState<AddRecipeBottomSheet> {
                       },
                     ),
 
-                    const SizedBox(height: 16),
+                    _buildSectionHeading('Baking'),
+
+                    _buildBakingSection(),
+
+                    _buildSectionHeading('Method'),
 
                     _buildTextField(
                       controller: _instructionsController,
@@ -365,7 +483,11 @@ class _AddRecipeBottomSheetState extends ConsumerState<AddRecipeBottomSheet> {
                       },
                     ),
 
-                    const SizedBox(height: 20),
+                    _buildSectionHeading('Extras'),
+
+                    _buildTagsField(),
+
+                    const SizedBox(height: 24),
 
                     _buildPublicToggle(),
 
@@ -421,6 +543,248 @@ class _AddRecipeBottomSheetState extends ConsumerState<AddRecipeBottomSheet> {
     );
   }
 
+  Widget _buildSectionHeading(String title) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 24, bottom: 12),
+      child: Text(
+        title.toUpperCase(),
+        style: AppText.label.copyWith(fontSize: 12, color: AppColors.pinkDark),
+      ),
+    );
+  }
+
+  Widget _buildBakingSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (_showMissingDetailsHint) ...[
+          Text(
+            'This recipe is missing some baking details — add them whenever you like.',
+            style: TextStyle(fontSize: 13, color: Colors.grey[600]),
+          ),
+          const SizedBox(height: 12),
+        ],
+        _buildSwitchRow(
+          title: 'No-bake recipe',
+          subtitle: 'Skips oven temperature and bake time.',
+          value: _isNoBake,
+          onChanged: (value) => setState(() => _isNoBake = value),
+        ),
+        if (!_isNoBake) ...[
+          const SizedBox(height: 16),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: _buildTextField(
+                  controller: _ovenTempController,
+                  label: 'Oven temp',
+                  hint: 'e.g. 180°C',
+                  validator: (value) {
+                    if (_requireOvenTemp &&
+                        (value == null || value.trim().isEmpty)) {
+                      return 'Required';
+                    }
+                    return null;
+                  },
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: _buildTextField(
+                  controller: _bakeTimeController,
+                  label: 'Bake time',
+                  hint: 'Minutes, e.g. 35',
+                  keyboardType: TextInputType.number,
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                  validator: (value) {
+                    final text = value?.trim() ?? '';
+                    if (text.isEmpty)
+                      return _requireBakeTime ? 'Required' : null;
+                    return _validateOptionalNumber(text);
+                  },
+                ),
+              ),
+            ],
+          ),
+        ],
+        const SizedBox(height: 16),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: _buildTextField(
+                controller: _prepTimeController,
+                label: 'Prep time',
+                hint: 'Optional, minutes',
+                keyboardType: TextInputType.number,
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                validator: _validateOptionalNumber,
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: _buildTextField(
+                controller: _servingsController,
+                label: 'Servings',
+                hint: 'Optional, e.g. 12',
+                keyboardType: TextInputType.number,
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                validator: _validateOptionalNumber,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 16),
+        _buildDifficultyPicker(),
+      ],
+    );
+  }
+
+  Widget _buildDifficultyPicker() {
+    return FormField<RecipeDifficulty>(
+      initialValue: _difficulty,
+      validator:
+          (_) =>
+              _requireDifficulty && _difficulty == null
+                  ? 'Please choose a difficulty'
+                  : null,
+      builder:
+          (field) => Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildFieldLabel('Difficulty'),
+              const SizedBox(height: 8),
+              Wrap(
+                spacing: 8,
+                children: [
+                  for (final difficulty in RecipeDifficulty.values)
+                    ChoiceChip(
+                      label: Text(difficulty.label),
+                      selected: _difficulty == difficulty,
+                      showCheckmark: false,
+                      selectedColor: AppColors.pinkDark,
+                      backgroundColor: AppColors.pinkLight,
+                      side: BorderSide.none,
+                      shape: const StadiumBorder(),
+                      labelStyle: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        color:
+                            _difficulty == difficulty
+                                ? Colors.white
+                                : AppColors.brown,
+                      ),
+                      onSelected: (_) {
+                        setState(() => _difficulty = difficulty);
+                        field.didChange(difficulty);
+                      },
+                    ),
+                ],
+              ),
+              if (field.hasError)
+                Padding(
+                  padding: const EdgeInsets.only(top: 6, left: 4),
+                  child: Text(
+                    field.errorText!,
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Theme.of(context).colorScheme.error,
+                    ),
+                  ),
+                ),
+            ],
+          ),
+    );
+  }
+
+  Widget _buildTagsField() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildFieldLabel('Tags'),
+        const SizedBox(height: 8),
+        TextField(
+          controller: _tagInputController,
+          enabled: _tags.length < _maxTags,
+          textCapitalization: TextCapitalization.none,
+          decoration: _inputDecoration(
+            _tags.length < _maxTags
+                ? 'Optional — type a tag and press enter'
+                : 'Up to $_maxTags tags',
+          ),
+          onChanged: (value) {
+            if (value.contains(',')) _addTagsFromInput();
+          },
+          // Keeps the keyboard up so several tags can be added in a row.
+          onEditingComplete: _addTagsFromInput,
+        ),
+        if (_tags.isNotEmpty) ...[
+          const SizedBox(height: 10),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              for (final tag in _tags)
+                InputChip(
+                  label: Text(tag),
+                  labelStyle: const TextStyle(
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.brown,
+                  ),
+                  backgroundColor: AppColors.pinkLight,
+                  side: BorderSide.none,
+                  shape: const StadiumBorder(),
+                  deleteIconColor: AppColors.brown,
+                  onDeleted: () => setState(() => _tags.remove(tag)),
+                ),
+            ],
+          ),
+        ],
+      ],
+    );
+  }
+
+  Widget _buildSwitchRow({
+    required String title,
+    required String subtitle,
+    required bool value,
+    required ValueChanged<bool> onChanged,
+  }) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      decoration: BoxDecoration(
+        color: Colors.grey[50],
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.grey[300]!),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.brown,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  subtitle,
+                  style: TextStyle(fontSize: 13, color: Colors.grey[600]),
+                ),
+              ],
+            ),
+          ),
+          PinkToggleSwitch(value: value, onChanged: onChanged),
+        ],
+      ),
+    );
+  }
+
   Widget _buildPublicToggle() {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
@@ -462,59 +826,68 @@ class _AddRecipeBottomSheetState extends ConsumerState<AddRecipeBottomSheet> {
     );
   }
 
+  Widget _buildFieldLabel(String label) {
+    return Text(
+      label,
+      style: const TextStyle(
+        fontSize: 16,
+        fontWeight: FontWeight.w600,
+        color: AppColors.brown,
+      ),
+    );
+  }
+
+  InputDecoration _inputDecoration(String hint) {
+    return InputDecoration(
+      hintText: hint,
+      hintStyle: TextStyle(color: Colors.grey[400], fontSize: 14),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide(color: Colors.grey[300]!, width: 1),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide(color: Colors.grey[300]!, width: 1),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: const BorderSide(color: AppColors.brown, width: 2),
+      ),
+      errorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: const BorderSide(color: Colors.red, width: 1),
+      ),
+      focusedErrorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: const BorderSide(color: Colors.red, width: 2),
+      ),
+      filled: true,
+      fillColor: Colors.grey[50],
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+    );
+  }
+
   Widget _buildTextField({
     required TextEditingController controller,
     required String label,
     required String hint,
     int maxLines = 1,
     String? Function(String?)? validator,
+    TextInputType? keyboardType,
+    List<TextInputFormatter>? inputFormatters,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          label,
-          style: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-            color: AppColors.brown,
-          ),
-        ),
+        _buildFieldLabel(label),
         const SizedBox(height: 8),
         TextFormField(
           controller: controller,
           maxLines: maxLines,
           validator: validator,
-          decoration: InputDecoration(
-            hintText: hint,
-            hintStyle: TextStyle(color: Colors.grey[400], fontSize: 14),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: Colors.grey[300]!, width: 1),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: Colors.grey[300]!, width: 1),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: AppColors.brown, width: 2),
-            ),
-            errorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: Colors.red, width: 1),
-            ),
-            focusedErrorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: Colors.red, width: 2),
-            ),
-            filled: true,
-            fillColor: Colors.grey[50],
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: 16,
-              vertical: 12,
-            ),
-          ),
+          keyboardType: keyboardType,
+          inputFormatters: inputFormatters,
+          decoration: _inputDecoration(hint),
         ),
       ],
     );

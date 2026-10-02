@@ -9,12 +9,15 @@ import 'package:recipe_app/features/recipe_ingredients/recipes_index.dart';
 class RecipeService {
   static const String table = 'recipes_sweettreats';
 
+  /// Every column the app reads, shared by all recipe queries.
+  static const String columns =
+      'id, name, ingredients, steps, category, image_url, user_id, is_public, created_at, '
+      'description, oven_temp, prep_minutes, bake_minutes, servings, difficulty, tags, is_no_bake';
+
   static Future<List<Recipe>> getAllRecipes() async {
     final rows = await Supabase.instance.client
         .from(table)
-        .select(
-          'id, name, ingredients, steps, category, image_url, user_id, is_public, created_at',
-        )
+        .select(columns)
         .eq('is_public', true);
 
     return (rows as List).map(fromRow).toList();
@@ -48,6 +51,7 @@ class RecipeService {
               : null,
       isPublic: row['is_public'] as bool? ?? true,
       userId: row['user_id'] as String?,
+      details: RecipeDetails.fromRow(row as Map<String, dynamic>),
     );
   }
 

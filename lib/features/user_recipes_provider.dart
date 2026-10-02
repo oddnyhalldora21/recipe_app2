@@ -26,9 +26,7 @@ class UserRecipesNotifier extends StateNotifier<List<Recipe>> {
   Future<List<Recipe>> _fetch(String userId) async {
     final rows = await _client
         .from(RecipeService.table)
-        .select(
-          'id, name, ingredients, steps, category, image_url, user_id, is_public, created_at',
-        )
+        .select(RecipeService.columns)
         .eq('user_id', userId)
         .order('created_at', ascending: false);
 
@@ -68,6 +66,7 @@ class UserRecipesNotifier extends StateNotifier<List<Recipe>> {
     required List<String> ingredients,
     required List<String> instructions,
     required String category,
+    required RecipeDetails details,
     bool isPublic = false,
   }) async {
     final userId = _client.auth.currentUser?.id;
@@ -85,6 +84,7 @@ class UserRecipesNotifier extends StateNotifier<List<Recipe>> {
                 'steps': RecipeService.toStepsText(instructions),
                 'category': category,
                 'is_public': isPublic,
+                ...details.toRow(),
               })
               .select()
               .single();
@@ -110,6 +110,7 @@ class UserRecipesNotifier extends StateNotifier<List<Recipe>> {
     required List<String> instructions,
     required String category,
     required bool isPublic,
+    required RecipeDetails details,
   }) async {
     final userId = _client.auth.currentUser?.id;
     if (userId == null) return null;
@@ -125,6 +126,7 @@ class UserRecipesNotifier extends StateNotifier<List<Recipe>> {
                 'steps': RecipeService.toStepsText(instructions),
                 'category': category,
                 'is_public': isPublic,
+                ...details.toRow(),
               })
               .eq('user_id', userId)
               .eq('id', recipeId)
