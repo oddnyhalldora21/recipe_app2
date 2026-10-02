@@ -6,7 +6,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 ///
 /// Kept separate from any picker UI so it can be reused as-is by both Add
 /// Recipe now and the upcoming Edit Recipe screen — see
-/// supabase_setup_recipe_images_storage.sql for the bucket/RLS setup this
+/// supabase/supabase_setup_recipe_images_storage.sql for the bucket/RLS setup this
 /// depends on.
 class RecipeImageUploadService {
   RecipeImageUploadService._();

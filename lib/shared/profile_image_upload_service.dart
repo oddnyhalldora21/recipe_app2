@@ -6,7 +6,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 ///
 /// Mirrors [RecipeImageUploadService] exactly, just pointed at a separate
 /// bucket so avatars and recipe photos don't mix — see
-/// supabase_setup_avatars_storage.sql for the bucket/RLS setup this depends
+/// supabase/supabase_setup_avatars_storage.sql for the bucket/RLS setup this depends
 /// on.
 class ProfileImageUploadService {
   ProfileImageUploadService._();
