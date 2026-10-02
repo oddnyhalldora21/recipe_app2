@@ -4,26 +4,30 @@ import 'package:recipe_app/shared/app_theme.dart';
 
 /// Meta pill row shown under the recipe title. Each pill only appears when
 /// its value exists, so older recipes without the newer details show just
-/// category + ingredient count, as before.
+/// the ingredient count. No category pill — the label above the title
+/// already shows it.
 class CookingTimeCard extends StatelessWidget {
   const CookingTimeCard({
     super.key,
     required this.cookingTime,
-    required this.category,
     required this.ingredientCount,
     this.details = const RecipeDetails(),
   });
 
   final String cookingTime;
-  final String category;
   final int ingredientCount;
   final RecipeDetails details;
+
+  /// The form stores oven temp as typed, so a bare number like "180" gets
+  /// °C added; anything already carrying a unit is shown unchanged.
+  static String _displayOvenTemp(String value) =>
+      RegExp(r'^\d+$').hasMatch(value) ? '$value°C' : value;
 
   @override
   Widget build(BuildContext context) {
     return Wrap(
-      spacing: 10,
-      runSpacing: 10,
+      spacing: 8,
+      runSpacing: 8,
       children: [
         if (cookingTime.isNotEmpty)
           _Pill(icon: Icons.timer_outlined, label: cookingTime),
@@ -40,13 +44,15 @@ class CookingTimeCard extends StatelessWidget {
             label: 'Bake ${formatMinutes(details.bakeMinutes!)}',
           ),
         if (!details.isNoBake && details.ovenTemp != null)
-          _Pill(icon: Icons.thermostat_outlined, label: details.ovenTemp!),
+          _Pill(
+            icon: Icons.thermostat_outlined,
+            label: _displayOvenTemp(details.ovenTemp!),
+          ),
         if (details.servings != null)
           _Pill(
             icon: Icons.people_outline,
             label: 'Serves ${details.servings}',
           ),
-        _Pill(icon: Icons.local_dining_outlined, label: category),
         _Pill(
           icon: Icons.shopping_basket_outlined,
           label: '$ingredientCount ingredients',
@@ -65,21 +71,20 @@ class _Pill extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       decoration: BoxDecoration(
         color: AppColors.pinkLight,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: AppShadows.soft,
+        borderRadius: BorderRadius.circular(14),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 18, color: AppColors.pinkDeep),
-          const SizedBox(width: 8),
+          Icon(icon, size: 14, color: AppColors.pinkDeep),
+          const SizedBox(width: 5),
           Text(
             label,
             style: const TextStyle(
-              fontSize: 14,
+              fontSize: 12,
               fontWeight: FontWeight.w600,
               color: AppColors.brown,
             ),

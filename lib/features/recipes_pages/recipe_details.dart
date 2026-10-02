@@ -87,7 +87,6 @@ class RecipeDetailsPage extends ConsumerWidget {
                   const SizedBox(height: 16),
                   CookingTimeCard(
                     cookingTime: recipe.cookingTime,
-                    category: recipe.category,
                     ingredientCount: recipe.ingredients.length,
                     details: recipe.details,
                   ),
