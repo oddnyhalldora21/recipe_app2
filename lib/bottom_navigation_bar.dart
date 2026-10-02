@@ -140,6 +140,10 @@ class _SweetTreatState extends State<SweetTreat> {
               ),
             ),
             child: NavigationBar(
+              // Material 3's default 80pt centers ~52pt of icon + label,
+              // leaving ~14pt of empty space above and below; 64 trims that.
+              height: 64,
+              labelPadding: const EdgeInsets.only(top: 2),
               backgroundColor: Colors.transparent,
               elevation: 0,
               indicatorColor: Colors.white.withOpacity(0.55),
