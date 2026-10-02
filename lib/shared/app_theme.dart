@@ -19,6 +19,10 @@ class AppColors {
   /// of the old brown fill.
   static const Color pinkDark = Color(0xFFC2477F);
 
+  /// A deep rose, darker still than [pinkDark], so white text keeps strong
+  /// contrast across the whole Profile card gradient.
+  static const Color pinkDeeper = Color(0xFF8F2A5B);
+
   static const Color cream = Color(0xFFFFF8E7);
 
   /// Near-opaque white (white at 95%) used for floating cards and every
@@ -70,12 +74,12 @@ class AppGradients {
     colors: [AppColors.pinkLight, AppColors.pink],
   );
 
-  /// Softer alternative to a flat AppColors.brown fill, used on Profile
-  /// banners so they read as warm rather than heavy.
-  static const LinearGradient brownSoft = LinearGradient(
+  /// Dark pink fill for the Profile card — deep enough that white text
+  /// stays readable everywhere on it.
+  static const LinearGradient profileCard = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [AppColors.brownSoft, AppColors.brown],
+    colors: [AppColors.pinkDark, AppColors.pinkDeeper],
   );
 
   /// The app's primary-button fill — a darker pink gradient, used instead
