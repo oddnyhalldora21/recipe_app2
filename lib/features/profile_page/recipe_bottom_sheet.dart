@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -37,6 +39,11 @@ class AddRecipeBottomSheet extends ConsumerStatefulWidget {
     return showModalBottomSheet<RecipeFormResult>(
       context: context,
       isScrollControlled: true,
+      // Over the whole app (app bar + nav bar) rather than inside the tab's
+      // own navigator, whose area shrinks to a sliver once the keyboard is
+      // up; the safe area keeps the top clear of the status bar.
+      useRootNavigator: true,
+      useSafeArea: true,
       backgroundColor: Colors.transparent,
       builder:
           (context) => AddRecipeBottomSheet(existingRecipe: existingRecipe),
@@ -367,8 +374,18 @@ class _AddRecipeBottomSheetState extends ConsumerState<AddRecipeBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
+    // Open over the root navigator, nothing else lifts the form above the
+    // keyboard — so pad by its height (or the home indicator when it's
+    // down), keeping the Save button just above it while the white sheet
+    // still runs behind it.
+    final bottomInset = math.max(
+      MediaQuery.viewInsetsOf(context).bottom,
+      MediaQuery.paddingOf(context).bottom,
+    );
+
     return Container(
-      height: MediaQuery.of(context).size.height * 0.9,
+      height: double.infinity,
+      padding: EdgeInsets.only(bottom: bottomInset),
       decoration: const BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.only(
@@ -408,6 +425,7 @@ class _AddRecipeBottomSheetState extends ConsumerState<AddRecipeBottomSheet> {
           Expanded(
             child: SingleChildScrollView(
               padding: const EdgeInsets.symmetric(horizontal: 20),
+              keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
               child: Form(
                 key: _formKey,
                 child: Column(
