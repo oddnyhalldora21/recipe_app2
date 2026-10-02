@@ -509,6 +509,29 @@ class _AddRecipeBottomSheetState extends ConsumerState<AddRecipeBottomSheet> {
 
                     _buildPublicToggle(),
 
+                    // At the end of the form rather than pinned below it,
+                    // so it doesn't eat space above the keyboard.
+                    const SizedBox(height: 28),
+                    Center(
+                      child: PrimaryButton(
+                        onPressed: _isLoading ? null : _saveRecipe,
+                        child:
+                            _isLoading
+                                ? const CircularProgressIndicator(
+                                  color: Colors.white,
+                                  strokeWidth: 2,
+                                )
+                                : Text(
+                                  _isEditing ? 'Save Changes' : 'Save Recipe',
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                      ),
+                    ),
+
                     if (_isEditing) ...[
                       const SizedBox(height: 20),
                       Center(
@@ -533,27 +556,6 @@ class _AddRecipeBottomSheetState extends ConsumerState<AddRecipeBottomSheet> {
                   ],
                 ),
               ),
-            ),
-          ),
-
-          Container(
-            padding: const EdgeInsets.all(20),
-            child: PrimaryButton(
-              onPressed: _isLoading ? null : _saveRecipe,
-              child:
-                  _isLoading
-                      ? const CircularProgressIndicator(
-                        color: Colors.white,
-                        strokeWidth: 2,
-                      )
-                      : Text(
-                        _isEditing ? 'Save Changes' : 'Save Recipe',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
             ),
           ),
         ],
