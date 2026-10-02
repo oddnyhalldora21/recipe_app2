@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:recipe_app/features/auth/display_name_provider.dart';
 import 'package:recipe_app/features/profile_page/profile_data_provider.dart';
-import 'package:recipe_app/shared/add_photo_placeholder.dart';
 import 'package:recipe_app/shared/app_theme.dart';
 import 'package:recipe_app/shared/photo_picker_field.dart';
 import 'package:recipe_app/shared/profile_image_upload_service.dart';
@@ -392,8 +391,6 @@ class _EditProfileDialogState extends ConsumerState<_EditProfileDialog> {
               enabled: !_busy,
               decoration: const InputDecoration(labelText: 'Bio (optional)'),
             ),
-            const SizedBox(height: 12),
-            const AddPhotoPlaceholder(height: 100),
           ],
         ),
       ),
