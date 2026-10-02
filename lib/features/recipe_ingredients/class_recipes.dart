@@ -16,6 +16,15 @@ enum RecipeDifficulty {
   }
 }
 
+/// "45 min", "1 h 15 min" or "2 h" for a stored whole-minute duration.
+String formatMinutes(int minutes) {
+  final hours = minutes ~/ 60;
+  final rest = minutes % 60;
+  if (hours == 0) return '$rest min';
+  if (rest == 0) return '$hours h';
+  return '$hours h $rest min';
+}
+
 /// The optional-on-older-recipes details added to the Add/Edit form. All
 /// nullable/empty by default since recipes created before these columns
 /// existed have none of them.
@@ -44,8 +53,8 @@ class RecipeDetails {
 
   factory RecipeDetails.fromRow(Map<String, dynamic> row) {
     return RecipeDetails(
-      description: row['description'] as String?,
-      ovenTemp: row['oven_temp'] as String?,
+      description: _blankToNull(row['description']),
+      ovenTemp: _blankToNull(row['oven_temp']),
       prepMinutes: row['prep_minutes'] as int?,
       bakeMinutes: row['bake_minutes'] as int?,
       servings: row['servings'] as int?,
@@ -53,6 +62,13 @@ class RecipeDetails {
       tags: List<String>.from(row['tags'] as List? ?? const []),
       isNoBake: row['is_no_bake'] as bool? ?? false,
     );
+  }
+
+  /// So a blank string stored in the database never renders as an empty
+  /// description or pill.
+  static String? _blankToNull(Object? value) {
+    final text = (value as String?)?.trim();
+    return text == null || text.isEmpty ? null : text;
   }
 
   Map<String, dynamic> toRow() {

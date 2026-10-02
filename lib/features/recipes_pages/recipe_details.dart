@@ -13,6 +13,7 @@ import 'package:recipe_app/features/widgets/instructions_section.dart';
 import 'package:recipe_app/features/widgets/recipe_image_frame.dart';
 import 'package:recipe_app/shared/app_back_button.dart';
 import 'package:recipe_app/shared/app_theme.dart';
+import 'package:recipe_app/shared/difficulty_badge.dart';
 import 'package:recipe_app/shared/fade_page_route.dart';
 
 class RecipeDetailsPage extends ConsumerWidget {
@@ -45,12 +46,23 @@ class RecipeDetailsPage extends ConsumerWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    recipe.category.toUpperCase(),
-                    style: AppText.label.copyWith(
-                      fontSize: 13,
-                      letterSpacing: 1.4,
-                    ),
+                  Row(
+                    children: [
+                      Flexible(
+                        child: Text(
+                          recipe.category.toUpperCase(),
+                          overflow: TextOverflow.ellipsis,
+                          style: AppText.label.copyWith(
+                            fontSize: 13,
+                            letterSpacing: 1.4,
+                          ),
+                        ),
+                      ),
+                      if (recipe.details.difficulty != null) ...[
+                        const SizedBox(width: 10),
+                        DifficultyBadge(difficulty: recipe.details.difficulty!),
+                      ],
+                    ],
                   ),
                   const SizedBox(height: 6),
                   Text(
@@ -61,12 +73,28 @@ class RecipeDetailsPage extends ConsumerWidget {
                       height: 1.15,
                     ),
                   ),
+                  if (recipe.details.description != null) ...[
+                    const SizedBox(height: 10),
+                    Text(
+                      recipe.details.description!,
+                      style: const TextStyle(
+                        fontSize: 15,
+                        height: 1.4,
+                        color: AppColors.brownSoft,
+                      ),
+                    ),
+                  ],
                   const SizedBox(height: 16),
                   CookingTimeCard(
                     cookingTime: recipe.cookingTime,
                     category: recipe.category,
                     ingredientCount: recipe.ingredients.length,
+                    details: recipe.details,
                   ),
+                  if (recipe.details.tags.isNotEmpty) ...[
+                    const SizedBox(height: 14),
+                    _TagsRow(tags: recipe.details.tags),
+                  ],
                 ],
               ),
             ),
@@ -83,6 +111,40 @@ class RecipeDetailsPage extends ConsumerWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+/// Recipe tags as small outlined pills, kept visually distinct from the
+/// filled info pills above them.
+class _TagsRow extends StatelessWidget {
+  const _TagsRow({required this.tags});
+
+  final List<String> tags;
+
+  @override
+  Widget build(BuildContext context) {
+    return Wrap(
+      spacing: 8,
+      runSpacing: 8,
+      children: [
+        for (final tag in tags)
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(color: AppColors.pinkDeep),
+            ),
+            child: Text(
+              '#$tag',
+              style: const TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                color: AppColors.pinkDark,
+              ),
+            ),
+          ),
+      ],
     );
   }
 }

@@ -5,6 +5,7 @@ import 'package:recipe_app/features/favorites/favorites_saves.dart';
 import 'package:recipe_app/features/recipe_ingredients/recipes_index.dart';
 import 'package:recipe_app/features/recipes_pages/recipe_details.dart';
 import 'package:recipe_app/shared/app_theme.dart';
+import 'package:recipe_app/shared/difficulty_badge.dart';
 import 'package:recipe_app/shared/fade_page_route.dart';
 
 /// Shared recipe card used across the home carousels, the favorites/profile/
@@ -117,13 +118,27 @@ class RecipeCard extends ConsumerWidget {
                           left: 8,
                           child: _VisibilityBadge(isPublic: recipe.isPublic),
                         ),
-                      if (recipe.cookingTime.isNotEmpty)
+                      if (recipe.cookingTime.isNotEmpty ||
+                          recipe.details.difficulty != null)
                         Positioned(
                           bottom: 8,
                           left: 8,
-                          child: _Pill(
-                            icon: Icons.access_time_rounded,
-                            label: recipe.cookingTime,
+                          right: 8,
+                          child: Wrap(
+                            spacing: 6,
+                            runSpacing: 4,
+                            children: [
+                              if (recipe.cookingTime.isNotEmpty)
+                                _Pill(
+                                  icon: Icons.access_time_rounded,
+                                  label: recipe.cookingTime,
+                                ),
+                              if (recipe.details.difficulty != null)
+                                DifficultyBadge(
+                                  difficulty: recipe.details.difficulty!,
+                                  onPhoto: true,
+                                ),
+                            ],
                           ),
                         ),
                       Positioned(
