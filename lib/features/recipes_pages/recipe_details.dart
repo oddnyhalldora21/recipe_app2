@@ -90,10 +90,6 @@ class RecipeDetailsPage extends ConsumerWidget {
                     ingredientCount: recipe.ingredients.length,
                     details: recipe.details,
                   ),
-                  if (recipe.details.tags.isNotEmpty) ...[
-                    const SizedBox(height: 14),
-                    _TagsRow(tags: recipe.details.tags),
-                  ],
                 ],
               ),
             ),
@@ -110,40 +106,6 @@ class RecipeDetailsPage extends ConsumerWidget {
           ],
         ),
       ),
-    );
-  }
-}
-
-/// Recipe tags as small outlined pills, kept visually distinct from the
-/// filled info pills above them.
-class _TagsRow extends StatelessWidget {
-  const _TagsRow({required this.tags});
-
-  final List<String> tags;
-
-  @override
-  Widget build(BuildContext context) {
-    return Wrap(
-      spacing: 8,
-      runSpacing: 8,
-      children: [
-        for (final tag in tags)
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: AppColors.pinkDeep),
-            ),
-            child: Text(
-              '#$tag',
-              style: const TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-                color: AppColors.pinkDark,
-              ),
-            ),
-          ),
-      ],
     );
   }
 }
