@@ -134,6 +134,9 @@ class _ProfileHeaderState extends ConsumerState<ProfileHeader> {
                     child: PhotoPickerField(
                       height: 96,
                       shape: BoxShape.circle,
+                      // Shown at 96pt (288px on a 3x screen) at most, so
+                      // 512px leaves headroom while keeping uploads small.
+                      maxDimension: 512,
                       initialImageUrl: profile!.avatarUrl,
                       placeholder: avatarPlaceholder,
                       onChanged: _onAvatarPicked,
@@ -187,7 +190,10 @@ class _ProfileHeaderState extends ConsumerState<ProfileHeader> {
           Text(
             email,
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 13, color: Colors.white.withOpacity(0.7)),
+            style: TextStyle(
+              fontSize: 13,
+              color: Colors.white.withOpacity(0.7),
+            ),
             overflow: TextOverflow.ellipsis,
           ),
           if (hasProfile) ...[
@@ -320,8 +326,7 @@ class _EditProfileDialog extends ConsumerStatefulWidget {
   final UserProfile profile;
 
   @override
-  ConsumerState<_EditProfileDialog> createState() =>
-      _EditProfileDialogState();
+  ConsumerState<_EditProfileDialog> createState() => _EditProfileDialogState();
 }
 
 class _EditProfileDialogState extends ConsumerState<_EditProfileDialog> {

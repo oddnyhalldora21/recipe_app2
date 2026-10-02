@@ -28,6 +28,7 @@ class PhotoPickerField extends StatefulWidget {
     this.initialImageUrl,
     this.shape = BoxShape.rectangle,
     this.placeholder,
+    this.maxDimension,
   });
 
   final ValueChanged<PickedPhoto?> onChanged;
@@ -46,6 +47,11 @@ class PhotoPickerField extends StatefulWidget {
   /// [AddPhotoPlaceholder], which is sized for the rectangle shape — pass
   /// your own for [BoxShape.circle] (e.g. an initials circle).
   final Widget? placeholder;
+
+  /// When set, the picked photo is scaled down so neither side exceeds this
+  /// many pixels before it's handed back — e.g. an avatar shown as a small
+  /// circle doesn't need a multi-megabyte full-resolution upload.
+  final double? maxDimension;
 
   @override
   State<PhotoPickerField> createState() => _PhotoPickerFieldState();
@@ -94,6 +100,8 @@ class _PhotoPickerFieldState extends State<PhotoPickerField> {
       final file = await ImagePicker().pickImage(
         source: source,
         imageQuality: 85,
+        maxWidth: widget.maxDimension,
+        maxHeight: widget.maxDimension,
       );
       if (file == null) return;
 
@@ -109,7 +117,9 @@ class _PhotoPickerFieldState extends State<PhotoPickerField> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Could not access the camera/photos — please try again.'),
+            content: Text(
+              'Could not access the camera/photos — please try again.',
+            ),
             backgroundColor: Colors.redAccent,
           ),
         );

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:recipe_app/features/auth/display_name_provider.dart';
+import 'package:recipe_app/features/profile_page/profile_data_provider.dart';
 import 'package:recipe_app/shared/app_theme.dart';
 import 'package:recipe_app/shared/app_wordmark.dart';
 
@@ -22,6 +23,18 @@ class MainAppBar extends ConsumerWidget implements PreferredSizeWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final displayName = ref.watch(displayNameProvider);
     final initial = displayName.isNotEmpty ? displayName[0].toUpperCase() : 'S';
+    final avatarUrl = ref.watch(
+      profileProvider.select((state) => state.profile?.avatarUrl),
+    );
+    final initialCircle = Center(
+      child: Text(
+        initial,
+        style: const TextStyle(
+          color: Colors.white,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    );
 
     return AppBar(
       backgroundColor: Colors.transparent,
@@ -52,15 +65,26 @@ class MainAppBar extends ConsumerWidget implements PreferredSizeWidget {
                 color: AppColors.pinkDeep,
                 shape: BoxShape.circle,
               ),
-              child: Center(
-                child: Text(
-                  initial,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
+              // The initial stays underneath, so it shows while the photo
+              // loads and if there's no photo (or it fails to load).
+              child:
+                  avatarUrl == null || avatarUrl.isEmpty
+                      ? initialCircle
+                      : ClipOval(
+                        child: Image.network(
+                          avatarUrl,
+                          fit: BoxFit.cover,
+                          width: 34,
+                          height: 34,
+                          cacheWidth:
+                              (34 * MediaQuery.devicePixelRatioOf(context))
+                                  .round(),
+                          frameBuilder:
+                              (context, child, frame, _) =>
+                                  frame == null ? initialCircle : child,
+                          errorBuilder: (_, _, _) => initialCircle,
+                        ),
+                      ),
             ),
           ),
         ),
