@@ -14,7 +14,7 @@ class HomeHero extends ConsumerWidget {
     final greeting = ref.watch(displayNameProvider);
 
     return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 20, 20, 12),
+      padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

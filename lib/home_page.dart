@@ -52,7 +52,9 @@ class RecipePage extends ConsumerWidget {
             const HomeHero(),
 
             Padding(
-              padding: const EdgeInsets.all(16),
+              // No top padding: the first SectionHeader's own top spacing
+              // is enough below the hero headline.
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
               child: Column(
                 children: [
                   // Categories Section
