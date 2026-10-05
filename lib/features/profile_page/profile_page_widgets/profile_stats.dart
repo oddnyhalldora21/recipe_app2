@@ -4,17 +4,17 @@ import 'package:recipe_app/features/favorites/favorites_saves.dart';
 import 'package:recipe_app/features/user_recipes_provider.dart';
 import 'package:recipe_app/shared/app_theme.dart';
 
-/// Real-data stat cards (favorites, the user's own recipe count) plus
-/// Followers/Following placeholders — always 0 until a follow feature
-/// exists, no invented metrics like "recipes cooked" since we don't track
-/// that.
+/// Real-data stat cards: favorites, the user's own recipe count, and how
+/// many of those are public vs. private — no invented metrics like "recipes
+/// cooked" since we don't track that.
 class ProfileStats extends ConsumerWidget {
   const ProfileStats({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final favoritesCount = ref.watch(favoritesProvider).length;
-    final myRecipesCount = ref.watch(userRecipesProvider).length;
+    final myRecipes = ref.watch(userRecipesProvider);
+    final publicCount = myRecipes.where((recipe) => recipe.isPublic).length;
 
     return Column(
       children: [
@@ -31,7 +31,7 @@ class ProfileStats extends ConsumerWidget {
             Expanded(
               child: _StatCard(
                 icon: Icons.menu_book_rounded,
-                value: myRecipesCount,
+                value: myRecipes.length,
                 label: 'My Recipes',
               ),
             ),
@@ -42,17 +42,17 @@ class ProfileStats extends ConsumerWidget {
           children: [
             Expanded(
               child: _StatCard(
-                icon: Icons.people_outline,
-                value: 0,
-                label: 'Followers',
+                icon: Icons.public,
+                value: publicCount,
+                label: 'Public',
               ),
             ),
             const SizedBox(width: 14),
             Expanded(
               child: _StatCard(
-                icon: Icons.person_add_alt_outlined,
-                value: 0,
-                label: 'Following',
+                icon: Icons.lock_outline,
+                value: myRecipes.length - publicCount,
+                label: 'Private',
               ),
             ),
           ],
