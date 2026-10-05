@@ -57,14 +57,14 @@ class RecipePage extends ConsumerWidget {
               padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
               child: Column(
                 children: [
-                  // Categories Section
-                  const CategoriesSection(),
+                  // Surprise Me Section
+                  const SurpriseMeSection(),
 
                   // Recently Added Section
                   const RecentlyAddedSection(),
 
-                  // Surprise Me Section
-                  const SurpriseMeSection(),
+                  // Categories Section
+                  const CategoriesSection(),
 
                   // My Recipes Section
                   MyRecipesSection(onSeeAllTap: onProfileTap),
