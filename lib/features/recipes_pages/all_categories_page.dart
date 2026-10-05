@@ -98,12 +98,15 @@ class _CategoryGridTile extends StatelessWidget {
             height: 72,
             padding: const EdgeInsets.all(3),
             decoration: const BoxDecoration(
-              shape: BoxShape.circle,
+              borderRadius: BorderRadius.all(Radius.circular(16)),
               border: Border.fromBorderSide(
                 BorderSide(color: AppColors.pink, width: 2),
               ),
             ),
-            child: ClipOval(
+            // 16 minus the 2px border and 3px padding, so the photo's corners
+            // run parallel to the border's.
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(11),
               child: Hero(
                 tag: category.slug,
                 child: Image.network(
