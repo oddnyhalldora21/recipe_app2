@@ -50,7 +50,6 @@ class RecipeCategoryPage extends ConsumerWidget {
                       allRecipes
                           .where((r) => r.category == categorySlug)
                           .toList();
-                  final shown = recipes.length > 10 ? 10 : recipes.length;
                   return GridView.builder(
                     gridDelegate:
                         const SliverGridDelegateWithMaxCrossAxisExtent(
@@ -59,7 +58,7 @@ class RecipeCategoryPage extends ConsumerWidget {
                           mainAxisSpacing: 20,
                           childAspectRatio: 0.68,
                         ),
-                    itemCount: shown,
+                    itemCount: recipes.length,
                     itemBuilder: (context, index) {
                       final recipe = recipes[index];
                       return RecipeCard(
