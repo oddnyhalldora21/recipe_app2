@@ -14,7 +14,7 @@ class MyRecipesWidget extends ConsumerWidget {
 
     if (myRecipes.isEmpty) {
       return Padding(
-        padding: const EdgeInsets.only(top: 10, bottom: 20),
+        padding: const EdgeInsets.only(top: 4),
         child: Container(
           height: 120,
           decoration: BoxDecoration(
@@ -48,7 +48,7 @@ class MyRecipesWidget extends ConsumerWidget {
     }
 
     return Padding(
-      padding: const EdgeInsets.only(top: 10, bottom: 20),
+      padding: const EdgeInsets.only(top: 4),
       child: SizedBox(
         height: 215,
         child: ListView.separated(

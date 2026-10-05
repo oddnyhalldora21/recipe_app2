@@ -7,18 +7,23 @@ class SectionHeader extends StatelessWidget {
   final VoidCallback? onButtonPressed;
   final Widget? customButton;
 
+  /// Space above the title. Home keeps its sections tight; Profile passes
+  /// a roomier value.
+  final double topPadding;
+
   const SectionHeader({
     super.key,
     required this.title,
     this.buttonText,
     this.onButtonPressed,
     this.customButton,
+    this.topPadding = 8,
   });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 20),
+      padding: EdgeInsets.only(top: topPadding),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

@@ -19,7 +19,7 @@ class CategoriesSection extends StatelessWidget {
             Navigator.push(context, fadeRoute(const AllCategoriesPage()));
           },
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: 4),
         const RecipesCategories(),
       ],
     );

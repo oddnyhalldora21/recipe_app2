@@ -14,7 +14,7 @@ class SurpriseMe extends ConsumerWidget {
     final catalog = ref.watch(recipesCatalogProvider);
 
     return Padding(
-      padding: const EdgeInsets.only(top: 10, bottom: 20),
+      padding: const EdgeInsets.only(top: 4),
       child: SizedBox(
         height: 215,
         child: catalog.when(

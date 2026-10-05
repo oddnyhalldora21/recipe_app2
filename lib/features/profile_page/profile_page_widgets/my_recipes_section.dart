@@ -9,6 +9,9 @@ class MyRecipesSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SectionHeader(title: 'My Recipes (${userRecipes.length})');
+    return SectionHeader(
+      title: 'My Recipes (${userRecipes.length})',
+      topPadding: 20,
+    );
   }
 }
