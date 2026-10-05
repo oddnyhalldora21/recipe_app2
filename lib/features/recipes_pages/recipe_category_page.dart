@@ -33,13 +33,10 @@ class RecipeCategoryPage extends ConsumerWidget {
               children: [
                 const AppBackButton(),
                 const SizedBox(width: 12),
-                Hero(
-                  tag: categorySlug,
-                  child: CircleAvatar(
-                    radius: 22,
-                    backgroundColor: Colors.transparent,
-                    backgroundImage: NetworkImage(categoryImageUrl),
-                  ),
+                CircleAvatar(
+                  radius: 22,
+                  backgroundColor: Colors.transparent,
+                  backgroundImage: NetworkImage(categoryImageUrl),
                 ),
                 const SizedBox(width: 14),
                 Text(categoryName, style: AppText.serif(fontSize: 24)),

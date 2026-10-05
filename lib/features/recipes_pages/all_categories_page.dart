@@ -107,50 +107,43 @@ class _CategoryGridTile extends StatelessWidget {
             // run parallel to the border's.
             child: ClipRRect(
               borderRadius: BorderRadius.circular(11),
-              child: Hero(
-                tag: category.slug,
-                child: Image.network(
-                  category.imageUrl,
-                  fit: BoxFit.cover,
-                  width: double.infinity,
-                  height: double.infinity,
-                  loadingBuilder: (context, child, loadingProgress) {
-                    if (loadingProgress == null) return child;
-                    return Container(
-                      decoration: const BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          colors: [AppColors.pinkLight, AppColors.pink],
-                        ),
+              child: Image.network(
+                category.imageUrl,
+                fit: BoxFit.cover,
+                width: double.infinity,
+                height: double.infinity,
+                loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress == null) return child;
+                  return Container(
+                    decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [AppColors.pinkLight, AppColors.pink],
                       ),
-                      child: const Center(
-                        child: CircularProgressIndicator(
-                          color: AppColors.brown,
-                          strokeWidth: 2,
-                        ),
+                    ),
+                    child: const Center(
+                      child: CircularProgressIndicator(
+                        color: AppColors.brown,
+                        strokeWidth: 2,
                       ),
-                    );
-                  },
-                  errorBuilder: (context, error, stackTrace) {
-                    return Container(
-                      decoration: const BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          colors: [AppColors.pinkLight, AppColors.pink],
-                        ),
+                    ),
+                  );
+                },
+                errorBuilder: (context, error, stackTrace) {
+                  return Container(
+                    decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [AppColors.pinkLight, AppColors.pink],
                       ),
-                      child: const Center(
-                        child: Icon(
-                          Icons.cake,
-                          size: 28,
-                          color: AppColors.brown,
-                        ),
-                      ),
-                    );
-                  },
-                ),
+                    ),
+                    child: const Center(
+                      child: Icon(Icons.cake, size: 28, color: AppColors.brown),
+                    ),
+                  );
+                },
               ),
             ),
           ),
