@@ -38,6 +38,7 @@ class RecipeDetails {
     this.difficulty,
     this.tags = const [],
     this.isNoBake = false,
+    this.notes,
   });
 
   final String? description;
@@ -51,6 +52,10 @@ class RecipeDetails {
   /// When true, [ovenTemp] and [bakeMinutes] don't apply and stay null.
   final bool isNoBake;
 
+  /// Free-text tips, substitutions, storage etc., shown under the
+  /// instructions. Line breaks are kept as typed.
+  final String? notes;
+
   factory RecipeDetails.fromRow(Map<String, dynamic> row) {
     return RecipeDetails(
       description: _blankToNull(row['description']),
@@ -61,6 +66,7 @@ class RecipeDetails {
       difficulty: RecipeDifficulty.fromDb(row['difficulty']),
       tags: List<String>.from(row['tags'] as List? ?? const []),
       isNoBake: row['is_no_bake'] as bool? ?? false,
+      notes: _blankToNull(row['notes']),
     );
   }
 
@@ -81,6 +87,7 @@ class RecipeDetails {
       'difficulty': difficulty?.name,
       'tags': tags,
       'is_no_bake': isNoBake,
+      'notes': notes,
     };
   }
 }

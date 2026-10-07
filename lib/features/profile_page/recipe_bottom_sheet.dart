@@ -66,6 +66,7 @@ class _AddRecipeBottomSheetState extends ConsumerState<AddRecipeBottomSheet> {
   final _bakeTimeController = TextEditingController();
   final _servingsController = TextEditingController();
   final _tagInputController = TextEditingController();
+  final _notesController = TextEditingController();
 
   bool _isLoading = false;
   bool _isPublic = false;
@@ -128,6 +129,7 @@ class _AddRecipeBottomSheetState extends ConsumerState<AddRecipeBottomSheet> {
       _prepTimeController.text = details.prepMinutes?.toString() ?? '';
       _bakeTimeController.text = details.bakeMinutes?.toString() ?? '';
       _servingsController.text = details.servings?.toString() ?? '';
+      _notesController.text = details.notes ?? '';
       _isNoBake = details.isNoBake;
       _difficulty = details.difficulty;
       _tags = List.of(details.tags);
@@ -145,6 +147,7 @@ class _AddRecipeBottomSheetState extends ConsumerState<AddRecipeBottomSheet> {
     _bakeTimeController.dispose();
     _servingsController.dispose();
     _tagInputController.dispose();
+    _notesController.dispose();
     super.dispose();
   }
 
@@ -164,6 +167,7 @@ class _AddRecipeBottomSheetState extends ConsumerState<AddRecipeBottomSheet> {
       difficulty: _difficulty,
       tags: _tags,
       isNoBake: _isNoBake,
+      notes: _trimmedOrNull(_notesController),
     );
   }
 
@@ -462,7 +466,8 @@ class _AddRecipeBottomSheetState extends ConsumerState<AddRecipeBottomSheet> {
                       controller: _descriptionController,
                       label: 'Description',
                       hint: 'Optional — a short intro to your recipe',
-                      maxLines: 3,
+                      minLines: 4,
+                      maxLines: 8,
                     ),
 
                     _buildSectionHeading('What you need'),
@@ -472,7 +477,8 @@ class _AddRecipeBottomSheetState extends ConsumerState<AddRecipeBottomSheet> {
                       label: 'Ingredients',
                       hint:
                           'Enter each ingredient on a new line\nExample:\n2 cups flour\n1 cup sugar\n3 eggs',
-                      maxLines: 6,
+                      minLines: 6,
+                      maxLines: 14,
                       validator: (value) {
                         if (value == null || value.trim().isEmpty) {
                           return 'Please enter ingredients';
@@ -492,13 +498,24 @@ class _AddRecipeBottomSheetState extends ConsumerState<AddRecipeBottomSheet> {
                       label: 'Instructions',
                       hint:
                           'Enter each step on a new line\nExample:\nPreheat oven to 350°F\nMix dry ingredients\nAdd wet ingredients',
-                      maxLines: 8,
+                      minLines: 8,
+                      maxLines: 20,
                       validator: (value) {
                         if (value == null || value.trim().isEmpty) {
                           return 'Please enter instructions';
                         }
                         return null;
                       },
+                    ),
+
+                    const SizedBox(height: 16),
+
+                    _buildTextField(
+                      controller: _notesController,
+                      label: 'Recipe notes',
+                      hint: 'Tips, substitutions, storage...',
+                      minLines: 3,
+                      maxLines: 10,
                     ),
 
                     _buildSectionHeading('Extras'),
@@ -891,6 +908,7 @@ class _AddRecipeBottomSheetState extends ConsumerState<AddRecipeBottomSheet> {
     required TextEditingController controller,
     required String label,
     required String hint,
+    int? minLines,
     int maxLines = 1,
     String? Function(String?)? validator,
     TextInputType? keyboardType,
@@ -903,6 +921,9 @@ class _AddRecipeBottomSheetState extends ConsumerState<AddRecipeBottomSheet> {
         const SizedBox(height: 8),
         TextFormField(
           controller: controller,
+          // With minLines set, the box starts at that height and grows
+          // with the text up to maxLines before scrolling inside.
+          minLines: minLines,
           maxLines: maxLines,
           validator: validator,
           keyboardType: keyboardType,

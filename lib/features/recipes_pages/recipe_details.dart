@@ -11,6 +11,7 @@ import 'package:recipe_app/features/widgets/cooking_time_card.dart';
 import 'package:recipe_app/features/widgets/ingredients_section.dart';
 import 'package:recipe_app/features/widgets/instructions_section.dart';
 import 'package:recipe_app/features/widgets/recipe_image_frame.dart';
+import 'package:recipe_app/features/widgets/recipe_notes_section.dart';
 import 'package:recipe_app/shared/app_back_button.dart';
 import 'package:recipe_app/shared/app_theme.dart';
 import 'package:recipe_app/shared/difficulty_badge.dart';
@@ -102,6 +103,10 @@ class RecipeDetailsPage extends ConsumerWidget {
 
             // Instructions section
             InstructionsSection(instructions: recipe.instructions),
+
+            // Recipe notes — nothing at all (no card, no gap) when empty
+            if (recipe.details.notes != null)
+              RecipeNotesSection(notes: recipe.details.notes!),
 
             const SizedBox(height: 40),
           ],
