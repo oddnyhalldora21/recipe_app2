@@ -4,6 +4,8 @@ import 'package:recipe_app/features/widgets/recipe_card.dart';
 import 'package:recipe_app/shared/app_theme.dart';
 import 'package:recipe_app/shared/responsive.dart';
 
+/// The Profile recipe grid as a sliver, so it builds cards lazily as they
+/// scroll into view; the empty state is a plain box adapter.
 class UserRecipesGrid extends StatelessWidget {
   final List<Recipe> userRecipes;
 
@@ -22,10 +24,10 @@ class UserRecipesGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (userRecipes.isEmpty) {
-      return _buildEmptyState();
+      return SliverToBoxAdapter(child: _buildEmptyState());
     }
 
-    return _buildRecipeGridView(context);
+    return _buildRecipeGrid(context);
   }
 
   Widget _buildEmptyState() {
@@ -70,26 +72,22 @@ class UserRecipesGrid extends StatelessWidget {
     );
   }
 
-  Widget _buildRecipeGridView(BuildContext context) {
-    return GridView.builder(
-      primary: false,
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
+  Widget _buildRecipeGrid(BuildContext context) {
+    return SliverGrid(
       gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
         maxCrossAxisExtent: kRecipeCardWidth,
         crossAxisSpacing: 16,
         mainAxisSpacing: 20,
         childAspectRatio: 0.68,
       ),
-      itemCount: userRecipes.length,
-      itemBuilder: (context, index) {
+      delegate: SliverChildBuilderDelegate((context, index) {
         final recipe = userRecipes[index];
         return RecipeCard(
           recipe: recipe,
           heroTag: 'profile_mine_${recipe.id}',
           showVisibilityBadge: true,
         );
-      },
+      }, childCount: userRecipes.length),
     );
   }
 }
