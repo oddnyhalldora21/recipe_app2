@@ -42,7 +42,10 @@ const _priorityOrder = [
   'sugar-free',
 ];
 
-String _displayNameForSlug(String slug) {
+/// The human-readable name for a category value, e.g. "hormonal-health" →
+/// "Hormonal Health". Shared by the category tiles and recipe labels so they
+/// always match.
+String categoryDisplayName(String slug) {
   final known = _knownDisplayNames[slug];
   if (known != null) return known;
 
@@ -66,14 +69,14 @@ List<RecipeCategoryInfo> categoriesFromRecipes(List<Recipe> recipes) {
         if (aIndex != -1 && bIndex != -1) return aIndex.compareTo(bIndex);
         if (aIndex != -1) return -1;
         if (bIndex != -1) return 1;
-        return _displayNameForSlug(a).compareTo(_displayNameForSlug(b));
+        return categoryDisplayName(a).compareTo(categoryDisplayName(b));
       });
 
   return [
     for (final slug in slugs)
       RecipeCategoryInfo(
         slug: slug,
-        displayName: _displayNameForSlug(slug),
+        displayName: categoryDisplayName(slug),
         imageUrl: imageBySlug[slug]!,
       ),
   ];

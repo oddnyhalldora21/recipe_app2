@@ -7,6 +7,7 @@ import 'package:recipe_app/features/recipes_pages/recipe_details.dart';
 import 'package:recipe_app/shared/app_theme.dart';
 import 'package:recipe_app/shared/difficulty_badge.dart';
 import 'package:recipe_app/shared/fade_page_route.dart';
+import 'package:recipe_app/features/recipes_pages/recipe_category_info.dart';
 
 /// Shared recipe card used across the home carousels, the favorites/profile/
 /// all-recipes grids: image with a time pill and favorite heart floating on
@@ -156,7 +157,14 @@ class RecipeCard extends ConsumerWidget {
             ),
           ),
           const SizedBox(height: 8),
-          Text(recipe.category.toUpperCase(), style: AppText.label),
+          // One line like the name below, so a long category can't wrap and
+          // shrink the photo above.
+          Text(
+            categoryDisplayName(recipe.category).toUpperCase(),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: AppText.label,
+          ),
           const SizedBox(height: 2),
           Text(
             recipe.name,

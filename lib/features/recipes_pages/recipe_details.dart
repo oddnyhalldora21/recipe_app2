@@ -15,6 +15,7 @@ import 'package:recipe_app/shared/app_back_button.dart';
 import 'package:recipe_app/shared/app_theme.dart';
 import 'package:recipe_app/shared/difficulty_badge.dart';
 import 'package:recipe_app/shared/fade_page_route.dart';
+import 'package:recipe_app/features/recipes_pages/recipe_category_info.dart';
 
 class RecipeDetailsPage extends ConsumerWidget {
   const RecipeDetailsPage({super.key, required this.recipe});
@@ -50,7 +51,7 @@ class RecipeDetailsPage extends ConsumerWidget {
                     children: [
                       Flexible(
                         child: Text(
-                          recipe.category.toUpperCase(),
+                          categoryDisplayName(recipe.category).toUpperCase(),
                           overflow: TextOverflow.ellipsis,
                           style: AppText.label.copyWith(
                             fontSize: 13,
