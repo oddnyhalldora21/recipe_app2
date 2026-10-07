@@ -27,15 +27,19 @@ class RecipeVisibilityTabs extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Equal thirds of the row, with 8px gaps between (not after) the pills.
     return Row(
       children: [
         for (final filter in RecipeVisibilityFilter.values) ...[
-          _TabPill(
-            label: filter.label,
-            selected: filter == selected,
-            onTap: () => onChanged(filter),
+          if (filter != RecipeVisibilityFilter.values.first)
+            const SizedBox(width: 8),
+          Expanded(
+            child: _TabPill(
+              label: filter.label,
+              selected: filter == selected,
+              onTap: () => onChanged(filter),
+            ),
           ),
-          const SizedBox(width: 8),
         ],
       ],
     );
@@ -76,6 +80,7 @@ class _TabPill extends StatelessWidget {
           ),
           child: Text(
             label,
+            textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.w700,
