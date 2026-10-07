@@ -75,6 +75,11 @@ class _AddRecipeBottomSheetState extends ConsumerState<AddRecipeBottomSheet> {
   List<String> _tags = [];
   PickedPhoto? _pickedPhoto;
 
+  /// The tags field is hidden from the form for now. Tags already on a
+  /// recipe are still loaded and saved back unchanged, so editing never
+  /// drops them; flip this to bring the field back.
+  static const _showTagsField = false;
+
   static const _maxTags = 10;
   static const _maxTagLength = 24;
 
@@ -520,9 +525,10 @@ class _AddRecipeBottomSheetState extends ConsumerState<AddRecipeBottomSheet> {
 
                     _buildSectionHeading('Extras'),
 
-                    _buildTagsField(),
-
-                    const SizedBox(height: 24),
+                    if (_showTagsField) ...[
+                      _buildTagsField(),
+                      const SizedBox(height: 24),
+                    ],
 
                     _buildPublicToggle(),
 
