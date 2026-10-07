@@ -6,6 +6,7 @@ import 'package:recipe_app/features/profile_page/profile_page_widgets/profile_he
 import 'package:recipe_app/features/profile_page/profile_page_widgets/profile_stats.dart';
 import 'package:recipe_app/features/profile_page/profile_page_widgets/my_recipes_section.dart';
 import 'package:recipe_app/features/profile_page/profile_page_widgets/add_recipe_button.dart';
+import 'package:recipe_app/features/profile_page/profile_page_widgets/recipe_visibility_tabs.dart';
 import 'package:recipe_app/features/profile_page/profile_page_widgets/user_recipe_grid.dart';
 import 'package:recipe_app/features/profile_page/profile_page_widgets/sign_out_button.dart';
 import 'package:recipe_app/features/profile_page/profile_page_widgets/username_setup_dialog.dart';
@@ -20,6 +21,7 @@ class ProfilePage extends ConsumerStatefulWidget {
 
 class _ProfilePageState extends ConsumerState<ProfilePage> {
   bool _promptShown = false;
+  RecipeVisibilityFilter _filter = RecipeVisibilityFilter.all;
 
   void _maybePromptForUsername(ProfileState profileState) {
     if (!kUsernameSetupEnabled) return;
@@ -40,6 +42,13 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     final userRecipes = ref.watch(userRecipesProvider);
+    final shownRecipes = switch (_filter) {
+      RecipeVisibilityFilter.public =>
+        userRecipes.where((recipe) => recipe.isPublic).toList(),
+      RecipeVisibilityFilter.private =>
+        userRecipes.where((recipe) => !recipe.isPublic).toList(),
+      RecipeVisibilityFilter.all => userRecipes,
+    };
     final profileState = ref.watch(profileProvider);
     _maybePromptForUsername(profileState);
 
@@ -61,16 +70,37 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
               const ProfileStats(),
               const SizedBox(height: 28),
 
-              // My Recipes Section Header
-              MyRecipesSection(userRecipes: userRecipes),
-              const SizedBox(height: 16),
-
               // Add New Recipe Button
               const AddRecipeButton(),
-              const SizedBox(height: 24),
+
+              // My Recipes Section Header
+              const MyRecipesSection(),
+              const SizedBox(height: 12),
+
+              // Public / Private / All filter
+              RecipeVisibilityTabs(
+                selected: _filter,
+                onChanged: (filter) => setState(() => _filter = filter),
+              ),
+              const SizedBox(height: 20),
 
               // User Recipes Grid
-              UserRecipesGrid(userRecipes: userRecipes),
+              UserRecipesGrid(
+                userRecipes: shownRecipes,
+                emptyTitle: switch (_filter) {
+                  RecipeVisibilityFilter.public => 'No public recipes yet',
+                  RecipeVisibilityFilter.private => 'No private recipes yet',
+                  RecipeVisibilityFilter.all => 'No recipes yet',
+                },
+                emptyMessage: switch (_filter) {
+                  RecipeVisibilityFilter.public =>
+                    'Recipes you share with everyone will show up here.',
+                  RecipeVisibilityFilter.private =>
+                    'Recipes only you can see will show up here.',
+                  RecipeVisibilityFilter.all =>
+                    'Add your first recipe to see it here.',
+                },
+              ),
               const SizedBox(height: 28),
 
               Text(

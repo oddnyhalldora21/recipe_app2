@@ -7,7 +7,17 @@ import 'package:recipe_app/shared/responsive.dart';
 class UserRecipesGrid extends StatelessWidget {
   final List<Recipe> userRecipes;
 
-  const UserRecipesGrid({super.key, required this.userRecipes});
+  /// Empty-state wording, so a filtered tab can say e.g. "No private
+  /// recipes yet" instead of the overall "No recipes yet".
+  final String emptyTitle;
+  final String emptyMessage;
+
+  const UserRecipesGrid({
+    super.key,
+    required this.userRecipes,
+    this.emptyTitle = 'No recipes yet',
+    this.emptyMessage = 'Add your first recipe to see it here.',
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -27,26 +37,30 @@ class UserRecipesGrid extends StatelessWidget {
         border: Border.all(color: AppColors.pink, width: 2),
         boxShadow: AppShadows.soft,
       ),
-      child: const Center(
+      child: Center(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 20),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.restaurant_menu, size: 60, color: AppColors.brown),
-              SizedBox(height: 16),
+              const Icon(
+                Icons.restaurant_menu,
+                size: 60,
+                color: AppColors.brown,
+              ),
+              const SizedBox(height: 16),
               Text(
-                'No recipes yet',
-                style: TextStyle(
+                emptyTitle,
+                style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w600,
                   color: AppColors.brown,
                 ),
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               Text(
-                'Add your first recipe to see it here.',
-                style: TextStyle(fontSize: 14, color: AppColors.brown),
+                emptyMessage,
+                style: const TextStyle(fontSize: 14, color: AppColors.brown),
                 textAlign: TextAlign.center,
               ),
             ],
