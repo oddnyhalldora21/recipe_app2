@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:recipe_app/features/recipe_ingredients/recipes_catalog_provider.dart';
@@ -5,6 +6,8 @@ import 'package:recipe_app/features/recipe_ingredients/recipes_index.dart';
 import 'package:recipe_app/features/widgets/recipe_card.dart';
 import 'package:recipe_app/shared/app_theme.dart';
 import 'package:recipe_app/shared/responsive.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 /// Dedicated search screen: a search field at the top, live results below
 /// as a scrollable grid of [RecipeCard]s — replaces the old floating
@@ -17,8 +20,63 @@ class SearchPage extends ConsumerStatefulWidget {
 }
 
 class _SearchPageState extends ConsumerState<SearchPage> {
+  static const _maxRecentSearches = 8;
+
   final _controller = TextEditingController();
   String _query = '';
+  List<String> _recentSearches = const [];
+
+  /// Recent searches live on the device, kept apart per signed-in account.
+  String get _recentSearchesKey =>
+      'recent_searches_${Supabase.instance.client.auth.currentUser?.id ?? 'guest'}';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadRecentSearches();
+  }
+
+  Future<void> _loadRecentSearches() async {
+    final prefs = await SharedPreferences.getInstance();
+    final saved = prefs.getStringList(_recentSearchesKey) ?? const [];
+    if (mounted) setState(() => _recentSearches = saved);
+  }
+
+  Future<void> _saveRecentSearches(List<String> searches) async {
+    setState(() => _recentSearches = searches);
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setStringList(_recentSearchesKey, searches);
+  }
+
+  /// Moves [query] to the top of the list (dropping any case-insensitive
+  /// duplicate) — called on submit or when a result is opened, so
+  /// half-typed live queries are never recorded.
+  void _rememberSearch(String query) {
+    final trimmed = query.trim();
+    if (trimmed.isEmpty) return;
+    final updated =
+        [
+          trimmed,
+          ..._recentSearches.where(
+            (s) => s.toLowerCase() != trimmed.toLowerCase(),
+          ),
+        ].take(_maxRecentSearches).toList();
+    _saveRecentSearches(updated);
+  }
+
+  void _removeRecentSearch(String query) {
+    _saveRecentSearches(_recentSearches.where((s) => s != query).toList());
+  }
+
+  void _applyRecentSearch(String query) {
+    _controller.value = TextEditingValue(
+      text: query,
+      selection: TextSelection.collapsed(offset: query.length),
+    );
+    setState(() => _query = query);
+    FocusScope.of(context).unfocus();
+    _rememberSearch(query);
+  }
 
   @override
   void dispose() {
@@ -75,6 +133,8 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                   controller: _controller,
                   autofocus: true,
                   onChanged: (value) => setState(() => _query = value),
+                  onSubmitted: _rememberSearch,
+                  textInputAction: TextInputAction.search,
                   // The keyboard covers the bottom nav bar, so tapping
                   // anywhere else has to put it away or the page traps you.
                   onTapOutside: (_) => FocusScope.of(context).unfocus(),
@@ -113,7 +173,9 @@ class _SearchPageState extends ConsumerState<SearchPage> {
               Expanded(
                 child:
                     !hasQuery
-                        ? _buildPrompt()
+                        ? _recentSearches.isEmpty
+                            ? _buildPrompt()
+                            : _buildRecentSearches()
                         : results.isEmpty
                         ? _buildNoResults()
                         : GridView.builder(
@@ -129,9 +191,24 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                           itemCount: results.length,
                           itemBuilder: (context, index) {
                             final recipe = results[index];
-                            return RecipeCard(
-                              recipe: recipe,
-                              heroTag: 'search_${recipe.id}',
+                            // RecipeCard handles its own tap, so record the
+                            // search from a raw pointer listener — only for
+                            // taps, not drags that end on a card.
+                            Offset? downAt;
+                            return Listener(
+                              onPointerDown: (e) => downAt = e.position,
+                              onPointerUp: (e) {
+                                final start = downAt;
+                                if (start != null &&
+                                    (e.position - start).distance <
+                                        kTouchSlop) {
+                                  _rememberSearch(_query);
+                                }
+                              },
+                              child: RecipeCard(
+                                recipe: recipe,
+                                heroTag: 'search_${recipe.id}',
+                              ),
                             );
                           },
                         ),
@@ -148,11 +225,7 @@ class _SearchPageState extends ConsumerState<SearchPage> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            Icons.search,
-            size: 48,
-            color: AppColors.brown.withOpacity(0.4),
-          ),
+          Icon(Icons.search, size: 48, color: AppColors.brown.withOpacity(0.4)),
           const SizedBox(height: 12),
           Text(
             'Search by name, ingredient, or category',
@@ -161,6 +234,59 @@ class _SearchPageState extends ConsumerState<SearchPage> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildRecentSearches() {
+    return ListView(
+      keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+      padding: EdgeInsets.zero,
+      children: [
+        Row(
+          children: [
+            const Expanded(
+              child: Text(
+                'Last searched',
+                style: TextStyle(
+                  color: AppColors.brown,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ),
+            TextButton(
+              onPressed: () => _saveRecentSearches(const []),
+              style: TextButton.styleFrom(foregroundColor: AppColors.pinkDark),
+              child: const Text('Clear'),
+            ),
+          ],
+        ),
+        for (final search in _recentSearches)
+          ListTile(
+            contentPadding: EdgeInsets.zero,
+            dense: true,
+            leading: Icon(
+              Icons.history,
+              color: AppColors.brown.withValues(alpha: 0.5),
+            ),
+            title: Text(
+              search,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(color: AppColors.brown, fontSize: 15),
+            ),
+            trailing: IconButton(
+              tooltip: 'Remove',
+              onPressed: () => _removeRecentSearch(search),
+              icon: Icon(
+                Icons.close_rounded,
+                size: 20,
+                color: AppColors.brown.withValues(alpha: 0.4),
+              ),
+            ),
+            onTap: () => _applyRecentSearch(search),
+          ),
+      ],
     );
   }
 
