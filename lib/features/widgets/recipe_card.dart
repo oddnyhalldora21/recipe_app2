@@ -19,6 +19,7 @@ class RecipeCard extends ConsumerWidget {
     required this.recipe,
     required this.heroTag,
     this.showVisibilityBadge = false,
+    this.onMorePressed,
   });
 
   final Recipe recipe;
@@ -28,6 +29,11 @@ class RecipeCard extends ConsumerWidget {
   /// list is already the current user's own, so what matters is whether
   /// others can see it.
   final bool showVisibilityBadge;
+
+  /// When set, shows a small round "⋮" button beside the heart (styled like
+  /// it) that calls this — e.g. the collection page's move/remove menu. Null
+  /// everywhere else, so other cards are unchanged.
+  final VoidCallback? onMorePressed;
 
   /// Decodes the photo near the card's on-screen size instead of at full
   /// resolution, which was costly enough to drop frames mid-transition. The
@@ -141,6 +147,15 @@ class RecipeCard extends ConsumerWidget {
                                 ),
                             ],
                           ),
+                        ),
+                      // Beside the heart in the top row, clear of the bottom
+                      // pills, which need the card's full width on narrow
+                      // cards (and the photo can be too short to stack).
+                      if (onMorePressed != null)
+                        Positioned(
+                          top: 8,
+                          right: 44,
+                          child: _MoreButton(onPressed: onMorePressed!),
                         ),
                       Positioned(
                         top: 8,
@@ -287,6 +302,36 @@ class _FavoriteButton extends ConsumerWidget {
           isFavorited ? Icons.favorite : Icons.favorite_border,
           size: 16,
           color: isFavorited ? AppColors.pinkDeep : AppColors.brown,
+        ),
+      ),
+    );
+  }
+}
+
+class _MoreButton extends StatelessWidget {
+  const _MoreButton({required this.onPressed});
+
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      button: true,
+      label: 'More options',
+      child: GestureDetector(
+        onTap: onPressed,
+        child: Container(
+          padding: const EdgeInsets.all(6),
+          decoration: BoxDecoration(
+            color: Colors.white.withOpacity(0.92),
+            shape: BoxShape.circle,
+            boxShadow: AppShadows.soft,
+          ),
+          child: const Icon(
+            Icons.more_vert_rounded,
+            size: 16,
+            color: AppColors.brown,
+          ),
         ),
       ),
     );

@@ -201,6 +201,45 @@ class SavedRecipesNotifier extends StateNotifier<SavedRecipesState> {
       return null;
     }
   }
+
+  /// Deletes a collection. Its recipes stay saved: the database un-files
+  /// them (collection_id ON DELETE SET NULL, see
+  /// supabase/supabase_collections_manage.sql), and they move back to plain
+  /// "All Saved" here too. Returns whether it succeeded.
+  Future<bool> deleteCollection(String collectionId) async {
+    final userId = _client.auth.currentUser?.id;
+    if (userId == null) return false;
+
+    try {
+      // Without a DELETE policy, row-level security silently matches no
+      // rows instead of erroring — so check something was actually deleted.
+      final deleted = await _client
+          .from(_collectionsTable)
+          .delete()
+          .eq('user_id', userId)
+          .eq('id', collectionId)
+          .select('id');
+      if ((deleted as List).isEmpty) return false;
+    } catch (e) {
+      print('Error deleting collection: $e');
+      return false;
+    }
+
+    state = SavedRecipesState(
+      entriesByRecipeId: {
+        for (final entry in state.entriesByRecipeId.entries)
+          entry.key:
+              entry.value.collectionId == collectionId
+                  ? SavedEntry(collectionId: null, savedAt: entry.value.savedAt)
+                  : entry.value,
+      },
+      collections: [
+        for (final collection in state.collections)
+          if (collection.id != collectionId) collection,
+      ],
+    );
+    return true;
+  }
 }
 
 final savedRecipesProvider =
