@@ -40,7 +40,8 @@ class RecipeFolderView extends StatelessWidget {
       children: [
         Row(
           children: [
-            const AppBackButton(),
+            // Flat like the folder icon beside it.
+            const AppBackButton(flat: true),
             const SizedBox(width: 12),
             Container(
               width: 56,
