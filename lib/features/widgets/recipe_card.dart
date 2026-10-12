@@ -78,7 +78,7 @@ class RecipeCard extends ConsumerWidget {
                           child: Icon(
                             Icons.image_outlined,
                             size: 40,
-                            color: AppColors.brown.withValues(alpha: 0.5),
+                            color: AppColors.pinkDeep,
                           ),
                         )
                       else

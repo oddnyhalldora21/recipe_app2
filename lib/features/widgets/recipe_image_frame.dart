@@ -103,15 +103,12 @@ class ImageFrame extends StatelessWidget {
     );
   }
 
+  /// Light pink like a recipe card without a photo.
   Widget _buildNoPhotoState() {
     return Container(
-      color: AppColors.cream,
-      child: Center(
-        child: Icon(
-          Icons.image_outlined,
-          size: 48,
-          color: AppColors.brown.withValues(alpha: 0.5),
-        ),
+      color: AppColors.pinkLight,
+      child: const Center(
+        child: Icon(Icons.image_outlined, size: 48, color: AppColors.pinkDeep),
       ),
     );
   }
