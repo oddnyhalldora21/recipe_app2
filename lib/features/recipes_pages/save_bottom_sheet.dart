@@ -37,13 +37,21 @@ class _SaveBottomSheetState extends ConsumerState<SaveBottomSheet> {
     super.dispose();
   }
 
-  Future<void> _run(Future<bool> Function() action) async {
+  /// [successMessage], when given, confirms the save once the sheet closes.
+  Future<void> _run(
+    Future<bool> Function() action, {
+    String? successMessage,
+  }) async {
     setState(() => _busy = true);
     final success = await action();
     if (!mounted) return;
     final messenger = ScaffoldMessenger.of(context);
     Navigator.of(context).pop();
-    if (!success) _showFailureSnackBar(messenger);
+    if (!success) {
+      _showFailureSnackBar(messenger);
+    } else if (successMessage != null) {
+      messenger.showSnackBar(SnackBar(content: Text(successMessage)));
+    }
   }
 
   Future<void> _createAndSave() async {
@@ -59,7 +67,11 @@ class _SaveBottomSheetState extends ConsumerState<SaveBottomSheet> {
     if (!mounted) return;
     final messenger = ScaffoldMessenger.of(context);
     Navigator.of(context).pop();
-    if (!success) _showFailureSnackBar(messenger);
+    if (success) {
+      messenger.showSnackBar(SnackBar(content: Text('Saved to $name')));
+    } else {
+      _showFailureSnackBar(messenger);
+    }
   }
 
   void _showFailureSnackBar(ScaffoldMessengerState messenger) {
@@ -156,6 +168,7 @@ class _SaveBottomSheetState extends ConsumerState<SaveBottomSheet> {
                   () => ref
                       .read(savedRecipesProvider.notifier)
                       .saveToCollection(widget.recipe, collection.id),
+                  successMessage: 'Saved to ${collection.name}',
                 ),
           ),
         _OptionTile(
