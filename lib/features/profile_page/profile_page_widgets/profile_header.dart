@@ -2,7 +2,6 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:recipe_app/features/auth/display_name_provider.dart';
 import 'package:recipe_app/features/profile_page/profile_data_provider.dart';
 import 'package:recipe_app/shared/app_theme.dart';
@@ -10,7 +9,8 @@ import 'package:recipe_app/shared/photo_picker_field.dart';
 import 'package:recipe_app/shared/primary_button.dart';
 import 'package:recipe_app/shared/profile_image_upload_service.dart';
 
-/// One card covering both the private (name/email, always shown) and public
+/// One card covering both the private (name, always shown; the email is
+/// deliberately not displayed) and public
 /// (username/bio, only once a profiles_sweettreats row exists) identity —
 /// previously two separate cards (ProfileHeader + PublicProfileSection),
 /// merged so the avatar/name/username/bio all read as one profile block.
@@ -80,8 +80,6 @@ class _ProfileHeaderState extends ConsumerState<ProfileHeader> {
   @override
   Widget build(BuildContext context) {
     final displayName = ref.watch(displayNameProvider);
-    final email =
-        Supabase.instance.client.auth.currentUser?.email ?? 'Sweet Treats fan';
     final initial = displayName.isNotEmpty ? displayName[0].toUpperCase() : 'S';
     final profileState = ref.watch(profileProvider);
     final hasProfile = profileState.hasProfile;
@@ -185,16 +183,6 @@ class _ProfileHeaderState extends ConsumerState<ProfileHeader> {
                   overflow: TextOverflow.ellipsis,
                 ),
               ],
-              const SizedBox(height: 4),
-              Text(
-                email,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 13,
-                  color: Colors.white.withOpacity(0.9),
-                ),
-                overflow: TextOverflow.ellipsis,
-              ),
               if (hasProfile) ...[
                 const SizedBox(height: 14),
                 Text(
