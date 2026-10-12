@@ -148,13 +148,14 @@ class RecipeCard extends ConsumerWidget {
                             ],
                           ),
                         ),
-                      // Beside the heart in the top row, clear of the bottom
-                      // pills, which need the card's full width on narrow
-                      // cards (and the photo can be too short to stack).
+                      // Top-left corner, clear of the bottom pills, which need
+                      // the card's full width on narrow cards. Collection
+                      // cards never show the visibility badge, so the corner
+                      // is free.
                       if (onMorePressed != null)
                         Positioned(
                           top: 8,
-                          right: 44,
+                          left: 8,
                           child: _MoreButton(onPressed: onMorePressed!),
                         ),
                       Positioned(
