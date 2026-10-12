@@ -202,6 +202,38 @@ class SavedRecipesNotifier extends StateNotifier<SavedRecipesState> {
     }
   }
 
+  /// Renames a collection, keeping the list in name order like the initial
+  /// load. Returns whether it succeeded.
+  Future<bool> renameCollection(String collectionId, String name) async {
+    final userId = _client.auth.currentUser?.id;
+    if (userId == null) return false;
+
+    try {
+      // Without an UPDATE policy, row-level security silently matches no
+      // rows instead of erroring (see supabase/supabase_collections_rename.sql).
+      final updated = await _client
+          .from(_collectionsTable)
+          .update({'name': name})
+          .eq('user_id', userId)
+          .eq('id', collectionId)
+          .select('id');
+      if ((updated as List).isEmpty) return false;
+    } catch (e) {
+      print('Error renaming collection: $e');
+      return false;
+    }
+
+    state = state.copyWith(
+      collections: [
+        for (final collection in state.collections)
+          collection.id == collectionId
+              ? RecipeCollection(id: collectionId, name: name)
+              : collection,
+      ]..sort((a, b) => a.name.compareTo(b.name)),
+    );
+    return true;
+  }
+
   /// Deletes a collection. Its recipes stay saved: the database un-files
   /// them (collection_id ON DELETE SET NULL, see
   /// supabase/supabase_collections_manage.sql), and they move back to plain

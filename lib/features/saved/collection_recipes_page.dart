@@ -17,6 +17,12 @@ class CollectionRecipesPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final saved = ref.watch(savedRecipesProvider);
     final catalog = ref.watch(recipesCatalogProvider);
+    // Read the live entry so a rename shows straight away; fall back to the
+    // one passed in while it's being deleted.
+    final current = saved.collections.firstWhere(
+      (c) => c.id == collection.id,
+      orElse: () => collection,
+    );
 
     return Scaffold(
       backgroundColor: Colors.transparent,
@@ -26,7 +32,7 @@ class CollectionRecipesPage extends ConsumerWidget {
           child: catalog.when(
             data:
                 (allRecipes) => _CollectionBody(
-                  collection: collection,
+                  collection: current,
                   recipes: recipesForLocation(saved, collection.id, allRecipes),
                 ),
             loading:
@@ -49,6 +55,8 @@ class CollectionRecipesPage extends ConsumerWidget {
 
 enum _RecipeAction { move, remove }
 
+enum _CollectionAction { rename, delete }
+
 class _CollectionBody extends ConsumerWidget {
   const _CollectionBody({required this.collection, required this.recipes});
 
@@ -65,6 +73,27 @@ class _CollectionBody extends ConsumerWidget {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(SnackBar(content: Text(message)));
+  }
+
+  Future<void> _rename(BuildContext context, WidgetRef ref) async {
+    final name = await showDialog<String>(
+      context: context,
+      builder: (_) => _RenameCollectionDialog(initialName: collection.name),
+    );
+    if (name == null || name == collection.name || !context.mounted) return;
+
+    final success = await ref
+        .read(savedRecipesProvider.notifier)
+        .renameCollection(collection.id, name);
+    if (!context.mounted) return;
+    if (success) {
+      _showDone(context, 'Renamed to $name');
+    } else {
+      _showError(
+        context,
+        'Could not rename this collection — please try again.',
+      );
+    }
   }
 
   /// Deletes only the collection — its recipes stay saved under All Saved.
@@ -217,20 +246,103 @@ class _CollectionBody extends ConsumerWidget {
       recipes: recipes,
       heroTagPrefix: 'collection_${collection.id}',
       emptyState: const FolderEmptyMessage('No recipes in this collection yet'),
-      headerAction: PopupMenuButton<String>(
+      headerAction: PopupMenuButton<_CollectionAction>(
         tooltip: 'Collection options',
         icon: const Icon(Icons.more_vert_rounded, color: AppColors.brown),
         color: Colors.white,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-        onSelected: (_) => _confirmAndDelete(context, ref),
+        onSelected:
+            (action) => switch (action) {
+              _CollectionAction.rename => _rename(context, ref),
+              _CollectionAction.delete => _confirmAndDelete(context, ref),
+            },
         itemBuilder:
             (context) => const [
-              PopupMenuItem(value: 'delete', child: Text('Delete collection')),
+              PopupMenuItem(
+                value: _CollectionAction.rename,
+                child: Text('Edit name'),
+              ),
+              PopupMenuItem(
+                value: _CollectionAction.delete,
+                child: Text('Delete collection'),
+              ),
             ],
       ),
       // The page's `context`, not the card's: the menu needs a context that
       // stays mounted after the card leaves the grid.
       onRecipeMorePressed: (recipe) => _openRecipeMenu(context, ref, recipe),
+    );
+  }
+}
+
+/// Name field prefilled with the current name, styled like
+/// [showConfirmDialog]. Pops the trimmed new name, or null on Cancel.
+class _RenameCollectionDialog extends StatefulWidget {
+  const _RenameCollectionDialog({required this.initialName});
+
+  final String initialName;
+
+  @override
+  State<_RenameCollectionDialog> createState() =>
+      _RenameCollectionDialogState();
+}
+
+class _RenameCollectionDialogState extends State<_RenameCollectionDialog> {
+  late final _controller = TextEditingController(text: widget.initialName);
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _save() {
+    final name = _controller.text.trim();
+    if (name.isEmpty) return;
+    Navigator.of(context).pop(name);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text('Edit name'),
+      content: TextField(
+        controller: _controller,
+        autofocus: true,
+        textCapitalization: TextCapitalization.words,
+        textInputAction: TextInputAction.done,
+        onSubmitted: (_) => _save(),
+        decoration: InputDecoration(
+          filled: true,
+          fillColor: AppColors.background,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide.none,
+          ),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 14,
+          ),
+        ),
+      ),
+      actions: [
+        TextButton(
+          style: TextButton.styleFrom(
+            backgroundColor: AppColors.pink,
+            foregroundColor: AppColors.brown,
+          ),
+          onPressed: () => Navigator.of(context).pop(),
+          child: const Text('Cancel'),
+        ),
+        TextButton(
+          style: TextButton.styleFrom(
+            backgroundColor: AppColors.pinkDark,
+            foregroundColor: Colors.white,
+          ),
+          onPressed: _save,
+          child: const Text('Save'),
+        ),
+      ],
     );
   }
 }
