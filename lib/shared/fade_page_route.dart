@@ -6,9 +6,15 @@ import 'package:recipe_app/shared/swipe_back_wrapper.dart';
 /// page also gets [SwipeBackWrapper] for free, so swiping right pops it.
 /// Pass [fullWidth]: false for a page with its own horizontal-scrolling
 /// content (see [SwipeBackWrapper]'s doc) — defaults to true everywhere
-/// else.
-Route<T> fadeRoute<T>(Widget page, {bool fullWidth = true}) {
+/// else. [settings] names the route when a caller needs to find it on the
+/// stack later.
+Route<T> fadeRoute<T>(
+  Widget page, {
+  bool fullWidth = true,
+  RouteSettings? settings,
+}) {
   return PageRouteBuilder<T>(
+    settings: settings,
     pageBuilder: (context, animation, secondaryAnimation) =>
         SwipeBackWrapper(fullWidth: fullWidth, child: page),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {

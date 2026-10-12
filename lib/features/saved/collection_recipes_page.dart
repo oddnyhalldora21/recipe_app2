@@ -3,11 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:recipe_app/features/recipe_ingredients/recipes_catalog_provider.dart';
 import 'package:recipe_app/features/recipe_ingredients/recipes_index.dart';
 import 'package:recipe_app/features/saved/saved_recipes_provider.dart';
-import 'package:recipe_app/features/widgets/recipe_card.dart';
-import 'package:recipe_app/shared/app_back_button.dart';
+import 'package:recipe_app/features/saved/recipe_folder_view.dart';
 import 'package:recipe_app/shared/app_theme.dart';
 import 'package:recipe_app/shared/confirm_dialog.dart';
-import 'package:recipe_app/shared/responsive.dart';
 
 /// Shows just the recipes filed under one named collection.
 class CollectionRecipesPage extends ConsumerWidget {
@@ -213,97 +211,26 @@ class _CollectionBody extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            const AppBackButton(),
-            const SizedBox(width: 12),
-            Container(
-              width: 56,
-              height: 56,
-              decoration: const BoxDecoration(
-                color: AppColors.pink,
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(
-                Icons.folder_rounded,
-                color: Colors.white,
-                size: 26,
-              ),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(collection.name, style: AppText.serif(fontSize: 26)),
-                  const SizedBox(height: 2),
-                  Text(
-                    '${recipes.length} recipe${recipes.length == 1 ? '' : 's'}',
-                    style: const TextStyle(
-                      fontSize: 14,
-                      color: AppColors.textMuted,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            PopupMenuButton<String>(
-              tooltip: 'Collection options',
-              icon: const Icon(Icons.more_vert_rounded, color: AppColors.brown),
-              color: Colors.white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(14),
-              ),
-              onSelected: (_) => _confirmAndDelete(context, ref),
-              itemBuilder:
-                  (context) => const [
-                    PopupMenuItem(
-                      value: 'delete',
-                      child: Text('Delete collection'),
-                    ),
-                  ],
-            ),
-          ],
-        ),
-        const SizedBox(height: 20),
-        Expanded(
-          child:
-              recipes.isEmpty
-                  ? Center(
-                    child: Text(
-                      'No recipes in this collection yet',
-                      style: TextStyle(
-                        fontSize: 15,
-                        color: AppColors.brown.withOpacity(0.7),
-                      ),
-                    ),
-                  )
-                  : GridView.builder(
-                    gridDelegate:
-                        const SliverGridDelegateWithMaxCrossAxisExtent(
-                          maxCrossAxisExtent: kRecipeCardWidth,
-                          crossAxisSpacing: 16,
-                          mainAxisSpacing: 20,
-                          childAspectRatio: 0.68,
-                        ),
-                    itemCount: recipes.length,
-                    // Not `context`: the menu needs the page's context,
-                    // which stays mounted after this card leaves the grid.
-                    itemBuilder: (itemContext, index) {
-                      final recipe = recipes[index];
-                      return RecipeCard(
-                        recipe: recipe,
-                        heroTag: 'collection_${collection.id}_${recipe.id}',
-                        onMorePressed:
-                            () => _openRecipeMenu(context, ref, recipe),
-                      );
-                    },
-                  ),
-        ),
-      ],
+    return RecipeFolderView(
+      icon: Icons.folder_rounded,
+      title: collection.name,
+      recipes: recipes,
+      heroTagPrefix: 'collection_${collection.id}',
+      emptyState: const FolderEmptyMessage('No recipes in this collection yet'),
+      headerAction: PopupMenuButton<String>(
+        tooltip: 'Collection options',
+        icon: const Icon(Icons.more_vert_rounded, color: AppColors.brown),
+        color: Colors.white,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+        onSelected: (_) => _confirmAndDelete(context, ref),
+        itemBuilder:
+            (context) => const [
+              PopupMenuItem(value: 'delete', child: Text('Delete collection')),
+            ],
+      ),
+      // The page's `context`, not the card's: the menu needs a context that
+      // stays mounted after the card leaves the grid.
+      onRecipeMorePressed: (recipe) => _openRecipeMenu(context, ref, recipe),
     );
   }
 }

@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:recipe_app/features/recipe_ingredients/recipes_catalog_provider.dart';
 import 'package:recipe_app/features/recipe_ingredients/recipes_index.dart';
+import 'package:recipe_app/features/favorites/favorites_saves.dart';
+import 'package:recipe_app/features/saved/all_saved_page.dart';
 import 'package:recipe_app/features/saved/collection_recipes_page.dart';
-import 'package:recipe_app/features/saved/saved_empty_state.dart';
+import 'package:recipe_app/features/saved/favorites_recipes_page.dart';
 import 'package:recipe_app/features/saved/saved_recipes_provider.dart';
-import 'package:recipe_app/features/widgets/recipe_card.dart';
 import 'package:recipe_app/shared/app_theme.dart';
 import 'package:recipe_app/shared/fade_page_route.dart';
-import 'package:recipe_app/shared/responsive.dart';
 
 class SavedPage extends ConsumerWidget {
   const SavedPage({super.key});
@@ -43,17 +43,17 @@ class SavedPage extends ConsumerWidget {
   }
 }
 
-class _SavedBody extends StatelessWidget {
+class _SavedBody extends ConsumerWidget {
   const _SavedBody({required this.saved, required this.catalog});
 
   final SavedRecipesState saved;
   final List<Recipe> catalog;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final favoritesCount = ref.watch(favoritesProvider).length;
     final allSaved = recipesForLocation(saved, null, catalog);
     final collections = saved.collections;
-    final isEmpty = allSaved.isEmpty && collections.isEmpty;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -63,66 +63,73 @@ class _SavedBody extends StatelessWidget {
           collectionCount: collections.length,
         ),
         const SizedBox(height: 20),
-        if (isEmpty)
-          const Expanded(child: SavedEmptyState())
-        else
-          Expanded(
-            child: ListView(
-              primary: true,
-              children: [
-                if (collections.isNotEmpty) ...[
-                  Text('Collections', style: AppText.serif(fontSize: 21)),
-                  const SizedBox(height: 12),
-                  ...collections.map(
-                    (collection) => _CollectionTile(
-                      collection: collection,
-                      recipeCount:
-                          recipesForLocation(
-                            saved,
-                            collection.id,
-                            catalog,
-                          ).length,
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-                ],
-                Text('All Saved', style: AppText.serif(fontSize: 21)),
-                const SizedBox(height: 12),
-                if (allSaved.isEmpty)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    child: Text(
-                      'Every recipe you save shows up here, collection or not.',
-                      style: TextStyle(
-                        fontSize: 13,
-                        color: AppColors.brown.withOpacity(0.7),
+        Expanded(
+          child: ListView(
+            primary: true,
+            children: [
+              // Favorites is pinned first and can't be renamed, moved or
+              // deleted, so it never gets a ⋮ menu.
+              _FolderTile(
+                icon: Icons.favorite_rounded,
+                name: 'Favorites',
+                recipeCount: favoritesCount,
+                onTap:
+                    () => Navigator.push(
+                      context,
+                      fadeRoute(
+                        const FavoritesRecipesPage(),
+                        settings: const RouteSettings(
+                          name: FavoritesRecipesPage.routeName,
+                        ),
                       ),
                     ),
-                  )
-                else
-                  GridView.builder(
-                    primary: false,
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    gridDelegate:
-                        const SliverGridDelegateWithMaxCrossAxisExtent(
-                          maxCrossAxisExtent: kRecipeCardWidth,
-                          crossAxisSpacing: 16,
-                          mainAxisSpacing: 20,
-                          childAspectRatio: 0.68,
-                        ),
-                    itemCount: allSaved.length,
-                    itemBuilder: (context, index) {
-                      final recipe = allSaved[index];
-                      return RecipeCard(
-                        recipe: recipe,
-                        heroTag: 'saved_${recipe.id}',
-                      );
-                    },
+              ),
+              _FolderTile(
+                icon: Icons.bookmark_rounded,
+                name: 'All Saved',
+                recipeCount: allSaved.length,
+                onTap:
+                    () => Navigator.push(
+                      context,
+                      fadeRoute(const AllSavedPage()),
+                    ),
+              ),
+              const SizedBox(height: 14),
+              Text('Collections', style: AppText.serif(fontSize: 21)),
+              const SizedBox(height: 12),
+              if (collections.isEmpty)
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 4),
+                  child: Text(
+                    'Create a collection from the save button on any recipe.',
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: AppColors.brown.withValues(alpha: 0.7),
+                    ),
                   ),
-              ],
-            ),
+                )
+              else
+                for (final collection in collections)
+                  _FolderTile(
+                    icon: Icons.folder_rounded,
+                    name: collection.name,
+                    recipeCount:
+                        recipesForLocation(
+                          saved,
+                          collection.id,
+                          catalog,
+                        ).length,
+                    onTap:
+                        () => Navigator.push(
+                          context,
+                          fadeRoute(
+                            CollectionRecipesPage(collection: collection),
+                          ),
+                        ),
+                  ),
+            ],
           ),
+        ),
       ],
     );
   }
@@ -168,11 +175,18 @@ class _SavedHeader extends StatelessWidget {
   }
 }
 
-class _CollectionTile extends StatelessWidget {
-  const _CollectionTile({required this.collection, required this.recipeCount});
+class _FolderTile extends StatelessWidget {
+  const _FolderTile({
+    required this.icon,
+    required this.name,
+    required this.recipeCount,
+    required this.onTap,
+  });
 
-  final RecipeCollection collection;
+  final IconData icon;
+  final String name;
   final int recipeCount;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -183,12 +197,7 @@ class _CollectionTile extends StatelessWidget {
         borderRadius: BorderRadius.circular(18),
         child: InkWell(
           borderRadius: BorderRadius.circular(18),
-          onTap: () {
-            Navigator.push(
-              context,
-              fadeRoute(CollectionRecipesPage(collection: collection)),
-            );
-          },
+          onTap: onTap,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
             child: Row(
@@ -200,16 +209,12 @@ class _CollectionTile extends StatelessWidget {
                     color: AppColors.pinkLight,
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(
-                    Icons.folder_rounded,
-                    color: AppColors.pinkDeep,
-                    size: 20,
-                  ),
+                  child: Icon(icon, color: AppColors.pinkDeep, size: 20),
                 ),
                 const SizedBox(width: 14),
                 Expanded(
                   child: Text(
-                    collection.name,
+                    name,
                     style: const TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w600,

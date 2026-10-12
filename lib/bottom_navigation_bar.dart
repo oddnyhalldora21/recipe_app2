@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
-import 'package:recipe_app/features/favorites/favorites_page.dart';
 import 'package:recipe_app/features/profile_page/my_profile_page.dart';
+import 'package:recipe_app/features/saved/favorites_recipes_page.dart';
 import 'package:recipe_app/features/saved/saved_page.dart';
 import 'package:recipe_app/features/search/search_page.dart';
 import 'package:recipe_app/features/widgets/main_app_bar.dart';
@@ -19,19 +19,24 @@ class SweetTreat extends StatefulWidget {
 class _SweetTreatState extends State<SweetTreat> {
   int currentIndex = 0;
 
+  // Tab order in the nav bar; every index lookup goes through these.
+  static const int _homeTabIndex = 0;
+  static const int _searchTabIndex = 1;
+  static const int _savedTabIndex = 2;
+  static const int _profileTabIndex = 3;
+  static const int _tabCount = 4;
+
   final List<GlobalKey<NavigatorState>> _navigatorKeys = List.generate(
-    5,
+    _tabCount,
     (_) => GlobalKey<NavigatorState>(),
   );
 
   /// One per tab, handed to the tab's root page as its
   /// [PrimaryScrollController] so a re-tap can scroll it back to the top.
   final List<ScrollController> _scrollControllers = List.generate(
-    5,
+    _tabCount,
     (_) => ScrollController(),
   );
-
-  static const int _searchTabIndex = 2;
 
   @override
   void dispose() {
@@ -58,16 +63,46 @@ class _SweetTreatState extends State<SweetTreat> {
     }
   }
 
-  void _goToProfileTab() => _onDestinationSelected(4);
-  void _goToFavoritesTab() => _onDestinationSelected(1);
+  void _goToProfileTab() => _onDestinationSelected(_profileTabIndex);
+
+  /// The app bar heart opens Saved → Favorites, reusing it when it's already
+  /// open and otherwise popping Saved back to its root before pushing it.
+  void _openFavorites() {
+    final navigator = _navigatorKeys[_savedTabIndex].currentState;
+    if (navigator != null) {
+      var favoritesOnTop = false;
+      navigator.popUntil((route) {
+        if (route.settings.name == FavoritesRecipesPage.routeName) {
+          favoritesOnTop = true;
+          return true;
+        }
+        return route.isFirst;
+      });
+      if (!favoritesOnTop) {
+        navigator.push(
+          fadeRoute(
+            const FavoritesRecipesPage(),
+            settings: const RouteSettings(name: FavoritesRecipesPage.routeName),
+          ),
+        );
+      }
+    }
+    if (currentIndex != _savedTabIndex) {
+      setState(() {
+        currentIndex = _savedTabIndex;
+      });
+    }
+  }
 
   /// The wordmark always lands cleanly on the Home tab's root, even if it
   /// already had a page pushed on top of it.
   void _goHome() {
-    _navigatorKeys[0].currentState?.popUntil((route) => route.isFirst);
-    if (currentIndex != 0) {
+    _navigatorKeys[_homeTabIndex].currentState?.popUntil(
+      (route) => route.isFirst,
+    );
+    if (currentIndex != _homeTabIndex) {
       setState(() {
-        currentIndex = 0;
+        currentIndex = _homeTabIndex;
       });
     }
   }
@@ -76,7 +111,7 @@ class _SweetTreatState extends State<SweetTreat> {
     if (index == _searchTabIndex) return;
     final controller = _scrollControllers[index];
     // No client when the tab's root currently has nothing to scroll (e.g.
-    // an empty Favorites or Saved).
+    // a Profile with nothing to scroll yet).
     if (!controller.hasClients) return;
     controller.animateTo(
       0,
@@ -121,16 +156,18 @@ class _SweetTreatState extends State<SweetTreat> {
           appBar: MainAppBar(
             onLogoTap: _goHome,
             onProfileTap: _goToProfileTab,
-            onFavoritesTap: _goToFavoritesTab,
+            onFavoritesTap: _openFavorites,
           ),
           body: IndexedStack(
             index: currentIndex,
             children: [
-              _buildTab(0, RecipePage(onProfileTap: _goToProfileTab)),
-              _buildTab(1, const FavoritesPage()),
-              _buildTab(2, const SearchPage()),
-              _buildTab(3, const SavedPage()),
-              _buildTab(4, const ProfilePage()),
+              _buildTab(
+                _homeTabIndex,
+                RecipePage(onProfileTap: _goToProfileTab),
+              ),
+              _buildTab(_searchTabIndex, const SearchPage()),
+              _buildTab(_savedTabIndex, const SavedPage()),
+              _buildTab(_profileTabIndex, const ProfilePage()),
             ],
           ),
           bottomNavigationBar: Container(
@@ -160,17 +197,6 @@ class _SweetTreatState extends State<SweetTreat> {
                     color: AppColors.brown,
                   ),
                   label: "Home",
-                ),
-                NavigationDestination(
-                  icon: Icon(
-                    IconsaxPlusLinear.heart,
-                    color: AppColors.brownSoft,
-                  ),
-                  selectedIcon: Icon(
-                    IconsaxPlusBold.heart,
-                    color: AppColors.brown,
-                  ),
-                  label: "Favorites",
                 ),
                 NavigationDestination(
                   icon: Icon(

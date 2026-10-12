@@ -6,7 +6,8 @@ import 'package:recipe_app/shared/app_theme.dart';
 import 'package:recipe_app/shared/app_wordmark.dart';
 
 /// Persistent top bar shown on every screen: the wordmark always jumps back
-/// to Home, alongside a favorites shortcut and the profile avatar.
+/// to Home, alongside a favorites shortcut (opens Saved → Favorites, until
+/// it's replaced by notifications) and the profile avatar.
 class MainAppBar extends ConsumerWidget implements PreferredSizeWidget {
   const MainAppBar({
     super.key,
