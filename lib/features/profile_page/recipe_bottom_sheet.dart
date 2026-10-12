@@ -92,8 +92,7 @@ class _AddRecipeBottomSheetState extends ConsumerState<AddRecipeBottomSheet> {
   bool get _hasExistingUsablePhoto {
     final existing = widget.existingRecipe;
     if (existing == null) return false;
-    return existing.imageUrl.isNotEmpty &&
-        !existing.imageUrl.contains('via.placeholder.com');
+    return existing.hasPhoto;
   }
 
   /// Oven temp, bake time and difficulty are required for new recipes, but

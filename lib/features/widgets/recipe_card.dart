@@ -73,52 +73,61 @@ class RecipeCard extends ConsumerWidget {
                     fit: StackFit.expand,
                     children: [
                       const ColoredBox(color: AppColors.pinkLight),
-                      LayoutBuilder(
-                        builder:
-                            (context, constraints) => Image.network(
-                              recipe.imageUrl,
-                              fit: BoxFit.cover,
-                              cacheWidth: _decodeWidth(context, constraints),
-                              // Fades in over the pink background instead of
-                              // swapping a spinner for the photo, so photos
-                              // that arrive mid-transition don't pop in.
-                              frameBuilder: (
-                                context,
-                                child,
-                                frame,
-                                wasSynchronouslyLoaded,
-                              ) {
-                                if (wasSynchronouslyLoaded) return child;
-                                return AnimatedOpacity(
-                                  opacity: frame == null ? 0 : 1,
-                                  duration: const Duration(milliseconds: 200),
-                                  curve: Curves.easeOut,
-                                  child: child,
-                                );
-                              },
-                              errorBuilder: (context, error, stackTrace) {
-                                return Container(
-                                  decoration: const BoxDecoration(
-                                    gradient: LinearGradient(
-                                      begin: Alignment.topLeft,
-                                      end: Alignment.bottomRight,
-                                      colors: [
-                                        AppColors.pink,
-                                        AppColors.pinkDeep,
-                                      ],
+                      if (!recipe.hasPhoto)
+                        Center(
+                          child: Icon(
+                            Icons.image_outlined,
+                            size: 40,
+                            color: AppColors.brown.withValues(alpha: 0.5),
+                          ),
+                        )
+                      else
+                        LayoutBuilder(
+                          builder:
+                              (context, constraints) => Image.network(
+                                recipe.imageUrl,
+                                fit: BoxFit.cover,
+                                cacheWidth: _decodeWidth(context, constraints),
+                                // Fades in over the pink background instead of
+                                // swapping a spinner for the photo, so photos
+                                // that arrive mid-transition don't pop in.
+                                frameBuilder: (
+                                  context,
+                                  child,
+                                  frame,
+                                  wasSynchronouslyLoaded,
+                                ) {
+                                  if (wasSynchronouslyLoaded) return child;
+                                  return AnimatedOpacity(
+                                    opacity: frame == null ? 0 : 1,
+                                    duration: const Duration(milliseconds: 200),
+                                    curve: Curves.easeOut,
+                                    child: child,
+                                  );
+                                },
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Container(
+                                    decoration: const BoxDecoration(
+                                      gradient: LinearGradient(
+                                        begin: Alignment.topLeft,
+                                        end: Alignment.bottomRight,
+                                        colors: [
+                                          AppColors.pink,
+                                          AppColors.pinkDeep,
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                  child: const Center(
-                                    child: Icon(
-                                      Icons.cake,
-                                      size: 40,
-                                      color: AppColors.brown,
+                                    child: const Center(
+                                      child: Icon(
+                                        Icons.cake,
+                                        size: 40,
+                                        color: AppColors.brown,
+                                      ),
                                     ),
-                                  ),
-                                );
-                              },
-                            ),
-                      ),
+                                  );
+                                },
+                              ),
+                        ),
                       if (showVisibilityBadge)
                         Positioned(
                           top: 8,

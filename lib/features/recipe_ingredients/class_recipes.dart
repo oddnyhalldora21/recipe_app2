@@ -92,6 +92,11 @@ class RecipeDetails {
   }
 }
 
+/// Recipes saved without a photo get this placeholder image URL (see
+/// RecipeBottomSheet), so it doesn't count as a real photo.
+bool isRealPhotoUrl(String url) =>
+    url.isNotEmpty && !url.contains('via.placeholder.com');
+
 class Recipe {
   final String id;
   final String name;
@@ -118,6 +123,10 @@ class Recipe {
     this.userId,
     this.details = const RecipeDetails(),
   });
+
+  /// False for recipes saved without a photo, which store an empty URL or
+  /// the "My Recipe" placeholder image instead — show an icon for those.
+  bool get hasPhoto => isRealPhotoUrl(imageUrl);
 
   factory Recipe.fromMap(Map<String, dynamic> map) {
     final stepsText = map['steps'] as String? ?? '';

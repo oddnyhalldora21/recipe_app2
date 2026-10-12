@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:recipe_app/features/recipe_ingredients/class_recipes.dart';
 import 'package:recipe_app/shared/app_theme.dart';
 
 /// Recipe detail photo: a smaller, fully-rounded card (rather than a
@@ -38,17 +39,20 @@ class ImageFrame extends StatelessWidget {
             SizedBox(
               height: 200,
               width: double.infinity,
-              child: Image.network(
-                imageUrl,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
-                  return _buildErrorState();
-                },
-                loadingBuilder: (context, child, loadingProgress) {
-                  if (loadingProgress == null) return child;
-                  return _buildLoadingState();
-                },
-              ),
+              child:
+                  isRealPhotoUrl(imageUrl)
+                      ? Image.network(
+                        imageUrl,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return _buildErrorState();
+                        },
+                        loadingBuilder: (context, child, loadingProgress) {
+                          if (loadingProgress == null) return child;
+                          return _buildLoadingState();
+                        },
+                      )
+                      : _buildNoPhotoState(),
             ),
             // Scrim so the floating buttons stay legible over any image.
             Positioned(
@@ -95,6 +99,19 @@ class ImageFrame extends StatelessWidget {
       color: AppColors.cream,
       child: const Center(
         child: Icon(Icons.cake, size: 48, color: AppColors.brown),
+      ),
+    );
+  }
+
+  Widget _buildNoPhotoState() {
+    return Container(
+      color: AppColors.cream,
+      child: Center(
+        child: Icon(
+          Icons.image_outlined,
+          size: 48,
+          color: AppColors.brown.withValues(alpha: 0.5),
+        ),
       ),
     );
   }
