@@ -4,6 +4,7 @@ import 'package:recipe_app/features/recipe_ingredients/recipes_catalog_provider.
 import 'package:recipe_app/features/recipe_ingredients/recipes_index.dart';
 import 'package:recipe_app/features/saved/saved_recipes_provider.dart';
 import 'package:recipe_app/features/widgets/recipe_card.dart';
+import 'package:recipe_app/shared/app_back_button.dart';
 import 'package:recipe_app/shared/app_theme.dart';
 import 'package:recipe_app/shared/confirm_dialog.dart';
 import 'package:recipe_app/shared/responsive.dart';
@@ -217,6 +218,8 @@ class _CollectionBody extends ConsumerWidget {
       children: [
         Row(
           children: [
+            const AppBackButton(),
+            const SizedBox(width: 12),
             Container(
               width: 56,
               height: 56,
