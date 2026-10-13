@@ -135,6 +135,11 @@ class _SavedBody extends ConsumerWidget {
   }
 }
 
+/// Hidden for now while the user decides whether to keep the
+/// "N saved · N collections" line under the Saved title; flip to true to
+/// bring it back.
+const bool _showSavedCounts = false;
+
 class _SavedHeader extends StatelessWidget {
   const _SavedHeader({required this.savedCount, required this.collectionCount});
 
@@ -163,11 +168,16 @@ class _SavedHeader extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('Saved', style: AppText.serif(fontSize: 26)),
-            const SizedBox(height: 2),
-            Text(
-              '$savedCount saved · $collectionCount collection${collectionCount == 1 ? '' : 's'}',
-              style: const TextStyle(fontSize: 14, color: AppColors.textMuted),
-            ),
+            if (_showSavedCounts) ...[
+              const SizedBox(height: 2),
+              Text(
+                '$savedCount saved · $collectionCount collection${collectionCount == 1 ? '' : 's'}',
+                style: const TextStyle(
+                  fontSize: 14,
+                  color: AppColors.textMuted,
+                ),
+              ),
+            ],
           ],
         ),
       ],
