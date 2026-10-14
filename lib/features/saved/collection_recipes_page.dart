@@ -87,12 +87,11 @@ class _CollectionBody extends ConsumerWidget {
         .renameCollection(collection.id, name);
     if (!context.mounted) return;
     if (success) {
-      _showDone(context, 'Renamed to $name');
+      _showDone(context, 'Collection renamed');
     } else {
-      _showError(
-        context,
-        'Could not rename this collection — please try again.',
-      );
+      // Includes the update matching zero rows, as a missing UPDATE policy
+      // does silently; the old name stays since state only changes on success.
+      _showError(context, "Couldn't rename collection");
     }
   }
 
@@ -260,7 +259,7 @@ class _CollectionBody extends ConsumerWidget {
             (context) => const [
               PopupMenuItem(
                 value: _CollectionAction.rename,
-                child: Text('Edit name'),
+                child: Text('Edit collection'),
               ),
               PopupMenuItem(
                 value: _CollectionAction.delete,
@@ -305,7 +304,7 @@ class _RenameCollectionDialogState extends State<_RenameCollectionDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Edit name'),
+      title: const Text('Edit collection'),
       content: TextField(
         controller: _controller,
         autofocus: true,
