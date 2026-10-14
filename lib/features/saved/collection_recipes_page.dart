@@ -162,12 +162,20 @@ class _CollectionBody extends ConsumerWidget {
     }
   }
 
-  /// Un-files the recipe; it stays saved under All Saved.
+  /// Un-files the recipe after a confirm; it stays saved under All Saved.
   Future<void> _remove(
     BuildContext context,
     WidgetRef ref,
     Recipe recipe,
   ) async {
+    final confirmed = await showConfirmDialog(
+      context,
+      title: 'Remove from collection?',
+      message: 'The recipe stays in All Saved.',
+      confirmLabel: 'Yes, remove',
+    );
+    if (!confirmed || !context.mounted) return;
+
     final success = await ref
         .read(savedRecipesProvider.notifier)
         .saveToAllSaved(recipe);
