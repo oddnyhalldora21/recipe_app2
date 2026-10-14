@@ -30,19 +30,23 @@ class FavoritesSaves extends StateNotifier<List<Recipe>> {
     }
 
     try {
+      // Most recently favorited first, matching Saved and collections.
       final rows = await _client
           .from(_table)
-          .select('recipe_id')
-          .eq('user_id', userId);
+          .select('recipe_id, created_at')
+          .eq('user_id', userId)
+          .order('created_at', ascending: false);
 
-      final favoriteIds =
-          (rows as List).map((row) => row['recipe_id'] as String).toSet();
+      final favoriteIds = [
+        for (final row in rows as List) row['recipe_id'] as String,
+      ];
 
       final allRecipes = await RecipeService.getAllRecipes();
-      state =
-          allRecipes
-              .where((recipe) => favoriteIds.contains(recipe.id))
-              .toList();
+      final byId = {for (final recipe in allRecipes) recipe.id: recipe};
+      state = [
+        for (final id in favoriteIds)
+          if (byId[id] != null) byId[id]!,
+      ];
     } catch (e) {
       print('Error loading favorites: $e');
       state = [];
@@ -54,7 +58,7 @@ class FavoritesSaves extends StateNotifier<List<Recipe>> {
     if (userId == null || isFavorited(recipe.id)) return;
 
     try {
-      state = [...state, recipe];
+      state = [recipe, ...state];
       await _client.from(_table).insert({
         'user_id': userId,
         'recipe_id': recipe.id,
