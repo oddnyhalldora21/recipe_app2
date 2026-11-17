@@ -12,7 +12,8 @@ class RecipeService {
   /// Every column the app reads, shared by all recipe queries.
   static const String columns =
       'id, name, ingredients, steps, category, image_url, user_id, is_public, created_at, '
-      'description, oven_temp, prep_minutes, bake_minutes, servings, difficulty, tags, is_no_bake, notes';
+      'description, oven_temp, prep_minutes, bake_minutes, servings, difficulty, tags, is_no_bake, notes, '
+      'prep_minutes_max, bake_minutes_max, servings_max';
 
   static Future<List<Recipe>> getAllRecipes() async {
     final rows = await Supabase.instance.client

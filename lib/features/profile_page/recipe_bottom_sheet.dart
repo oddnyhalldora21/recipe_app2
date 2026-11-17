@@ -65,8 +65,54 @@ class _AddRecipeBottomSheetState extends ConsumerState<AddRecipeBottomSheet> {
   final _prepTimeController = TextEditingController();
   final _bakeTimeController = TextEditingController();
   final _servingsController = TextEditingController();
+  final _prepTimeMaxController = TextEditingController();
+  final _bakeTimeMaxController = TextEditingController();
+  final _servingsMaxController = TextEditingController();
   final _tagInputController = TextEditingController();
   final _notesController = TextEditingController();
+
+  final _nameFocus = FocusNode();
+  final _descriptionFocus = FocusNode();
+  final _ingredientsFocus = FocusNode();
+  final _ovenTempFocus = FocusNode();
+  final _bakeTimeFocus = FocusNode();
+  final _bakeTimeMaxFocus = FocusNode();
+  final _prepTimeFocus = FocusNode();
+  final _prepTimeMaxFocus = FocusNode();
+  final _servingsFocus = FocusNode();
+  final _servingsMaxFocus = FocusNode();
+  final _instructionsFocus = FocusNode();
+  final _notesFocus = FocusNode();
+
+  List<FocusNode> get _allFocusNodes => [
+    _nameFocus,
+    _descriptionFocus,
+    _ingredientsFocus,
+    _ovenTempFocus,
+    _bakeTimeFocus,
+    _bakeTimeMaxFocus,
+    _prepTimeFocus,
+    _prepTimeMaxFocus,
+    _servingsFocus,
+    _servingsMaxFocus,
+    _instructionsFocus,
+    _notesFocus,
+  ];
+
+  /// The text fields in on-screen order, for Next — the baking fields drop
+  /// out while they're hidden for a no-bake recipe.
+  List<FocusNode> get _fieldOrder => [
+    _nameFocus,
+    _descriptionFocus,
+    _ingredientsFocus,
+    if (!_isNoBake) ...[_ovenTempFocus, _bakeTimeFocus, _bakeTimeMaxFocus],
+    _prepTimeFocus,
+    _prepTimeMaxFocus,
+    _servingsFocus,
+    _servingsMaxFocus,
+    _instructionsFocus,
+    _notesFocus,
+  ];
 
   bool _isLoading = false;
   bool _isPublic = false;
@@ -121,6 +167,11 @@ class _AddRecipeBottomSheetState extends ConsumerState<AddRecipeBottomSheet> {
   @override
   void initState() {
     super.initState();
+    // Rebuild on every focus change so the keyboard bar appears, hides and
+    // knows whether there's a next field.
+    for (final node in _allFocusNodes) {
+      node.addListener(_onFocusChanged);
+    }
     final existing = widget.existingRecipe;
     if (existing != null) {
       _nameController.text = existing.name;
@@ -133,6 +184,9 @@ class _AddRecipeBottomSheetState extends ConsumerState<AddRecipeBottomSheet> {
       _prepTimeController.text = details.prepMinutes?.toString() ?? '';
       _bakeTimeController.text = details.bakeMinutes?.toString() ?? '';
       _servingsController.text = details.servings?.toString() ?? '';
+      _prepTimeMaxController.text = details.prepMinutesMax?.toString() ?? '';
+      _bakeTimeMaxController.text = details.bakeMinutesMax?.toString() ?? '';
+      _servingsMaxController.text = details.servingsMax?.toString() ?? '';
       _notesController.text = details.notes ?? '';
       _isNoBake = details.isNoBake;
       _difficulty = details.difficulty;
@@ -150,9 +204,37 @@ class _AddRecipeBottomSheetState extends ConsumerState<AddRecipeBottomSheet> {
     _prepTimeController.dispose();
     _bakeTimeController.dispose();
     _servingsController.dispose();
+    _prepTimeMaxController.dispose();
+    _bakeTimeMaxController.dispose();
+    _servingsMaxController.dispose();
     _tagInputController.dispose();
     _notesController.dispose();
+    for (final node in _allFocusNodes) {
+      node.dispose();
+    }
     super.dispose();
+  }
+
+  void _onFocusChanged() {
+    if (mounted) setState(() {});
+  }
+
+  bool get _anyFieldFocused => _allFocusNodes.any((node) => node.hasFocus);
+
+  FocusNode? get _nextField {
+    final order = _fieldOrder;
+    final index = order.indexWhere((node) => node.hasFocus);
+    if (index < 0 || index == order.length - 1) return null;
+    return order[index + 1];
+  }
+
+  void _focusNextField() {
+    final next = _nextField;
+    if (next != null) {
+      next.requestFocus();
+    } else {
+      FocusManager.instance.primaryFocus?.unfocus();
+    }
   }
 
   String? _trimmedOrNull(TextEditingController controller) {
@@ -168,6 +250,12 @@ class _AddRecipeBottomSheetState extends ConsumerState<AddRecipeBottomSheet> {
       bakeMinutes:
           _isNoBake ? null : int.tryParse(_bakeTimeController.text.trim()),
       servings: int.tryParse(_servingsController.text.trim()),
+      prepMinutesMax: _rangeMax(_prepTimeController, _prepTimeMaxController),
+      bakeMinutesMax:
+          _isNoBake
+              ? null
+              : _rangeMax(_bakeTimeController, _bakeTimeMaxController),
+      servingsMax: _rangeMax(_servingsController, _servingsMaxController),
       difficulty: _difficulty,
       tags: _tags,
       isNoBake: _isNoBake,
@@ -204,6 +292,28 @@ class _AddRecipeBottomSheetState extends ConsumerState<AddRecipeBottomSheet> {
     final number = int.tryParse(text);
     if (number == null || number <= 0) return 'Enter a whole number';
     return null;
+  }
+
+  /// The "to" field of a range: optional, but when filled it can't be
+  /// below the first field, and needs the first field filled too.
+  String? _validateRangeMax(String? value, TextEditingController first) {
+    final text = value?.trim() ?? '';
+    if (text.isEmpty) return null;
+    final numberError = _validateOptionalNumber(text);
+    if (numberError != null) return numberError;
+    final min = int.tryParse(first.text.trim());
+    if (min == null) return 'Fill in the first number too';
+    if (int.parse(text) < min) return 'Must be more than $min';
+    return null;
+  }
+
+  /// The stored upper end of a range — null when empty or equal to the
+  /// first value, so it shows as a single number.
+  int? _rangeMax(TextEditingController first, TextEditingController second) {
+    final min = int.tryParse(first.text.trim());
+    final max = int.tryParse(second.text.trim());
+    if (min == null || max == null || max <= min) return null;
+    return max;
   }
 
   Future<void> _saveRecipe() async {
@@ -443,6 +553,7 @@ class _AddRecipeBottomSheetState extends ConsumerState<AddRecipeBottomSheet> {
 
                     _buildTextField(
                       controller: _nameController,
+                      focusNode: _nameFocus,
                       label: 'Recipe Name',
                       hint: 'Enter your recipe name',
                       validator: (value) {
@@ -468,6 +579,7 @@ class _AddRecipeBottomSheetState extends ConsumerState<AddRecipeBottomSheet> {
 
                     _buildTextField(
                       controller: _descriptionController,
+                      focusNode: _descriptionFocus,
                       label: 'Description',
                       hint: 'Optional — a short intro to your recipe',
                       minLines: 4,
@@ -478,6 +590,7 @@ class _AddRecipeBottomSheetState extends ConsumerState<AddRecipeBottomSheet> {
 
                     _buildTextField(
                       controller: _ingredientsController,
+                      focusNode: _ingredientsFocus,
                       label: 'Ingredients',
                       hint:
                           'Enter each ingredient on a new line\nExample:\n2 cups flour\n1 cup sugar\n3 eggs',
@@ -499,6 +612,7 @@ class _AddRecipeBottomSheetState extends ConsumerState<AddRecipeBottomSheet> {
 
                     _buildTextField(
                       controller: _instructionsController,
+                      focusNode: _instructionsFocus,
                       label: 'Instructions',
                       hint:
                           'Enter each step on a new line\nExample:\nPreheat oven to 350°F\nMix dry ingredients\nAdd wet ingredients',
@@ -516,6 +630,7 @@ class _AddRecipeBottomSheetState extends ConsumerState<AddRecipeBottomSheet> {
 
                     _buildTextField(
                       controller: _notesController,
+                      focusNode: _notesFocus,
                       label: 'Recipe notes',
                       hint: 'Tips, substitutions, storage...',
                       minLines: 3,
@@ -580,6 +695,48 @@ class _AddRecipeBottomSheetState extends ConsumerState<AddRecipeBottomSheet> {
               ),
             ),
           ),
+          // Last in the column, so it sits directly on top of the keyboard.
+          if (_anyFieldFocused && MediaQuery.viewInsetsOf(context).bottom > 0)
+            _buildKeyboardBar(),
+        ],
+      ),
+    );
+  }
+
+  /// iOS number pads have no Return key and multi-line fields only close
+  /// the keyboard by dragging, so every field gets Next / Done here.
+  Widget _buildKeyboardBar() {
+    const buttonStyle = TextStyle(
+      color: AppColors.pinkDark,
+      fontSize: 16,
+      fontWeight: FontWeight.w600,
+    );
+    return Container(
+      height: 44,
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border(top: BorderSide(color: Colors.grey[300]!)),
+      ),
+      child: Row(
+        children: [
+          const Spacer(),
+          if (_nextField != null)
+            TextButton(
+              onPressed: _focusNextField,
+              child: const Text('Next', style: buttonStyle),
+            ),
+          TextButton(
+            onPressed: () => FocusManager.instance.primaryFocus?.unfocus(),
+            child: const Text(
+              'Done',
+              style: TextStyle(
+                color: AppColors.pinkDark,
+                fontSize: 16,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -614,68 +771,54 @@ class _AddRecipeBottomSheetState extends ConsumerState<AddRecipeBottomSheet> {
         ),
         if (!_isNoBake) ...[
           const SizedBox(height: 16),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: _buildTextField(
-                  controller: _ovenTempController,
-                  label: 'Oven temp',
-                  hint: 'e.g. 180°C',
-                  validator: (value) {
-                    if (_requireOvenTemp &&
-                        (value == null || value.trim().isEmpty)) {
-                      return 'Required';
-                    }
-                    return null;
-                  },
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: _buildTextField(
-                  controller: _bakeTimeController,
-                  label: 'Bake time',
-                  hint: 'Minutes, e.g. 35',
-                  keyboardType: TextInputType.number,
-                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                  validator: (value) {
-                    final text = value?.trim() ?? '';
-                    if (text.isEmpty)
-                      return _requireBakeTime ? 'Required' : null;
-                    return _validateOptionalNumber(text);
-                  },
-                ),
-              ),
-            ],
+          _buildTextField(
+            controller: _ovenTempController,
+            focusNode: _ovenTempFocus,
+            label: 'Oven temp',
+            hint: 'e.g. 180°C',
+            validator: (value) {
+              if (_requireOvenTemp && (value == null || value.trim().isEmpty)) {
+                return 'Required';
+              }
+              return null;
+            },
+          ),
+          const SizedBox(height: 16),
+          _buildRangeField(
+            label: 'Bake time',
+            firstController: _bakeTimeController,
+            secondController: _bakeTimeMaxController,
+            firstFocus: _bakeTimeFocus,
+            secondFocus: _bakeTimeMaxFocus,
+            firstHint: 'e.g. 35',
+            suffixText: 'min',
+            firstValidator: (value) {
+              final text = value?.trim() ?? '';
+              if (text.isEmpty) return _requireBakeTime ? 'Required' : null;
+              return _validateOptionalNumber(text);
+            },
           ),
         ],
         const SizedBox(height: 16),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: _buildTextField(
-                controller: _prepTimeController,
-                label: 'Prep time',
-                hint: 'Optional, minutes',
-                keyboardType: TextInputType.number,
-                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                validator: _validateOptionalNumber,
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: _buildTextField(
-                controller: _servingsController,
-                label: 'Servings',
-                hint: 'Optional, e.g. 12',
-                keyboardType: TextInputType.number,
-                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                validator: _validateOptionalNumber,
-              ),
-            ),
-          ],
+        _buildRangeField(
+          label: 'Prep time',
+          firstController: _prepTimeController,
+          secondController: _prepTimeMaxController,
+          firstFocus: _prepTimeFocus,
+          secondFocus: _prepTimeMaxFocus,
+          firstHint: 'Optional',
+          suffixText: 'min',
+          firstValidator: _validateOptionalNumber,
+        ),
+        const SizedBox(height: 16),
+        _buildRangeField(
+          label: 'Servings',
+          firstController: _servingsController,
+          secondController: _servingsMaxController,
+          firstFocus: _servingsFocus,
+          secondFocus: _servingsMaxFocus,
+          firstHint: 'Optional, e.g. 12',
+          firstValidator: _validateOptionalNumber,
         ),
         const SizedBox(height: 16),
         _buildDifficultyPicker(),
@@ -879,10 +1022,12 @@ class _AddRecipeBottomSheetState extends ConsumerState<AddRecipeBottomSheet> {
     );
   }
 
-  InputDecoration _inputDecoration(String hint) {
+  InputDecoration _inputDecoration(String hint, {String? suffixText}) {
     return InputDecoration(
       hintText: hint,
       hintStyle: TextStyle(color: Colors.grey[400], fontSize: 14),
+      suffixText: suffixText,
+      suffixStyle: TextStyle(color: Colors.grey[600], fontSize: 14),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
         borderSide: BorderSide(color: Colors.grey[300]!, width: 1),
@@ -911,6 +1056,7 @@ class _AddRecipeBottomSheetState extends ConsumerState<AddRecipeBottomSheet> {
 
   Widget _buildTextField({
     required TextEditingController controller,
+    required FocusNode focusNode,
     required String label,
     required String hint,
     int? minLines,
@@ -924,18 +1070,103 @@ class _AddRecipeBottomSheetState extends ConsumerState<AddRecipeBottomSheet> {
       children: [
         _buildFieldLabel(label),
         const SizedBox(height: 8),
-        TextFormField(
+        _buildInput(
           controller: controller,
-          // With minLines set, the box starts at that height and grows
-          // with the text up to maxLines before scrolling inside.
+          focusNode: focusNode,
+          hint: hint,
           minLines: minLines,
           maxLines: maxLines,
           validator: validator,
           keyboardType: keyboardType,
           inputFormatters: inputFormatters,
-          decoration: _inputDecoration(hint),
         ),
       ],
+    );
+  }
+
+  /// Two whole-number fields shown as [ 20 ] – [ 25 ]: the first follows
+  /// [firstValidator], the second "to" field is always optional.
+  Widget _buildRangeField({
+    required String label,
+    required TextEditingController firstController,
+    required TextEditingController secondController,
+    required FocusNode firstFocus,
+    required FocusNode secondFocus,
+    required String firstHint,
+    required String? Function(String?) firstValidator,
+    String? suffixText,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildFieldLabel(label),
+        const SizedBox(height: 8),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: _buildInput(
+                controller: firstController,
+                focusNode: firstFocus,
+                hint: firstHint,
+                suffixText: suffixText,
+                validator: firstValidator,
+                keyboardType: TextInputType.number,
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+              ),
+            ),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+              child: Text(
+                '–',
+                style: TextStyle(fontSize: 18, color: AppColors.brown),
+              ),
+            ),
+            Expanded(
+              child: _buildInput(
+                controller: secondController,
+                focusNode: secondFocus,
+                hint: 'to (optional)',
+                suffixText: suffixText,
+                validator: (value) => _validateRangeMax(value, firstController),
+                keyboardType: TextInputType.number,
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildInput({
+    required TextEditingController controller,
+    required FocusNode focusNode,
+    required String hint,
+    String? suffixText,
+    int? minLines,
+    int maxLines = 1,
+    String? Function(String?)? validator,
+    TextInputType? keyboardType,
+    List<TextInputFormatter>? inputFormatters,
+  }) {
+    final singleLine = maxLines == 1;
+    return TextFormField(
+      controller: controller,
+      focusNode: focusNode,
+      // With minLines set, the box starts at that height and grows
+      // with the text up to maxLines before scrolling inside.
+      minLines: minLines,
+      maxLines: maxLines,
+      validator: validator,
+      keyboardType: keyboardType,
+      inputFormatters: inputFormatters,
+      // Return on a single-line field moves on in on-screen order rather
+      // than Flutter's default traversal, which would stop on the chips
+      // and switches; multi-line fields keep Return for new lines.
+      textInputAction: singleLine ? TextInputAction.next : null,
+      onEditingComplete: singleLine ? _focusNextField : null,
+      decoration: _inputDecoration(hint, suffixText: suffixText),
     );
   }
 }

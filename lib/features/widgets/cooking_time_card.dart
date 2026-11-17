@@ -34,14 +34,16 @@ class CookingTimeCard extends StatelessWidget {
         if (details.prepMinutes != null)
           _Pill(
             icon: Icons.timer_outlined,
-            label: 'Prep ${formatMinutes(details.prepMinutes!)}',
+            label:
+                'Prep ${formatMinutesRange(details.prepMinutes!, details.prepMinutesMax)}',
           ),
         // No-bake recipes never show bake time or oven temp, even if a
         // stale value were somehow stored.
         if (!details.isNoBake && details.bakeMinutes != null)
           _Pill(
             icon: Icons.local_fire_department_outlined,
-            label: 'Bake ${formatMinutes(details.bakeMinutes!)}',
+            label:
+                'Bake ${formatMinutesRange(details.bakeMinutes!, details.bakeMinutesMax)}',
           ),
         if (!details.isNoBake && details.ovenTemp != null)
           _Pill(
@@ -51,7 +53,10 @@ class CookingTimeCard extends StatelessWidget {
         if (details.servings != null)
           _Pill(
             icon: Icons.people_outline,
-            label: 'Serves ${details.servings}',
+            label:
+                details.servingsMax == null
+                    ? 'Serves ${details.servings}'
+                    : 'Serves ${details.servings}-${details.servingsMax}',
           ),
         _Pill(
           icon: Icons.shopping_basket_outlined,

@@ -25,6 +25,15 @@ String formatMinutes(int minutes) {
   return '$hours h $rest min';
 }
 
+/// [formatMinutes] for a duration with an optional upper bound: "20-25 min"
+/// when both fit in minutes, otherwise each end in full, e.g.
+/// "45 min-1 h 15 min". No [max] gives the single value as before.
+String formatMinutesRange(int minutes, int? max) {
+  if (max == null) return formatMinutes(minutes);
+  if (max < 60) return '$minutes-$max min';
+  return '${formatMinutes(minutes)}-${formatMinutes(max)}';
+}
+
 /// The optional-on-older-recipes details added to the Add/Edit form. All
 /// nullable/empty by default since recipes created before these columns
 /// existed have none of them.
@@ -35,6 +44,9 @@ class RecipeDetails {
     this.prepMinutes,
     this.bakeMinutes,
     this.servings,
+    this.prepMinutesMax,
+    this.bakeMinutesMax,
+    this.servingsMax,
     this.difficulty,
     this.tags = const [],
     this.isNoBake = false,
@@ -46,6 +58,12 @@ class RecipeDetails {
   final int? prepMinutes;
   final int? bakeMinutes;
   final int? servings;
+
+  /// Optional upper ends of a range ("20-25 min", "Serves 16-18"); null
+  /// when the value is a single number.
+  final int? prepMinutesMax;
+  final int? bakeMinutesMax;
+  final int? servingsMax;
   final RecipeDifficulty? difficulty;
   final List<String> tags;
 
@@ -63,6 +81,9 @@ class RecipeDetails {
       prepMinutes: row['prep_minutes'] as int?,
       bakeMinutes: row['bake_minutes'] as int?,
       servings: row['servings'] as int?,
+      prepMinutesMax: row['prep_minutes_max'] as int?,
+      bakeMinutesMax: row['bake_minutes_max'] as int?,
+      servingsMax: row['servings_max'] as int?,
       difficulty: RecipeDifficulty.fromDb(row['difficulty']),
       tags: List<String>.from(row['tags'] as List? ?? const []),
       isNoBake: row['is_no_bake'] as bool? ?? false,
@@ -84,6 +105,9 @@ class RecipeDetails {
       'prep_minutes': prepMinutes,
       'bake_minutes': bakeMinutes,
       'servings': servings,
+      'prep_minutes_max': prepMinutesMax,
+      'bake_minutes_max': bakeMinutesMax,
+      'servings_max': servingsMax,
       'difficulty': difficulty?.name,
       'tags': tags,
       'is_no_bake': isNoBake,
