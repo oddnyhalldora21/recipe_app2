@@ -1,6 +1,6 @@
 {
-    "name": "recipe_app",
-    "short_name": "recipe_app",
+    "name": "SweetTreats",
+    "short_name": "SweetTreats",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
