@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:recipe_app/features/recipe_ingredients/recipes_index.dart';
 import 'package:recipe_app/features/widgets/recipe_card.dart';
-import 'package:recipe_app/shared/app_back_button.dart';
 import 'package:recipe_app/shared/app_theme.dart';
 import 'package:recipe_app/shared/responsive.dart';
 
@@ -38,11 +37,23 @@ class RecipeFolderView extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        // A small plain arrow on its own line above the folder icon, so the
+        // header row only holds the icon, title and menu.
+        IconButton(
+          tooltip: 'Back',
+          onPressed: () => Navigator.of(context).maybePop(),
+          padding: EdgeInsets.zero,
+          alignment: Alignment.centerLeft,
+          constraints: const BoxConstraints(minWidth: 40, minHeight: 40),
+          icon: const Icon(
+            Icons.arrow_back_ios_new_rounded,
+            size: 20,
+            color: AppColors.brown,
+          ),
+        ),
+        const SizedBox(height: 4),
         Row(
           children: [
-            // Flat like the folder icon beside it.
-            const AppBackButton(flat: true),
-            const SizedBox(width: 12),
             Container(
               width: 56,
               height: 56,
