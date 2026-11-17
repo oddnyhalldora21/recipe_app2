@@ -19,7 +19,9 @@ class AllSavedPage extends ConsumerWidget {
       backgroundColor: Colors.transparent,
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding:
+          // No top padding, so the back arrow sits right under the app bar.
+          const EdgeInsets.fromLTRB(16, 0, 16, 16),
           child: catalog.when(
             data:
                 (allRecipes) => RecipeFolderView(

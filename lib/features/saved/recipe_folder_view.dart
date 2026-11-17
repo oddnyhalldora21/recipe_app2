@@ -44,7 +44,7 @@ class RecipeFolderView extends StatelessWidget {
           onPressed: () => Navigator.of(context).maybePop(),
           padding: EdgeInsets.zero,
           alignment: Alignment.centerLeft,
-          constraints: const BoxConstraints(minWidth: 40, minHeight: 40),
+          constraints: const BoxConstraints(minWidth: 40, minHeight: 24),
           icon: const Icon(
             Icons.arrow_back_ios_new_rounded,
             size: 20,
