@@ -37,43 +37,46 @@ class RecipeFolderView extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // A small plain arrow on its own line above the folder icon, so the
-        // header row only holds the icon, title and menu.
-        IconButton(
-          tooltip: 'Back',
-          onPressed: () => Navigator.of(context).maybePop(),
-          padding: EdgeInsets.zero,
-          alignment: Alignment.centerLeft,
-          constraints: const BoxConstraints(minWidth: 40, minHeight: 24),
-          icon: const Icon(
-            Icons.arrow_back_ios_new_rounded,
-            size: 20,
-            color: AppColors.brown,
-          ),
-        ),
-        const SizedBox(height: 4),
+        // One compact row: back arrow, small folder icon, name and count,
+        // then the folder menu.
         Row(
           children: [
+            IconButton(
+              tooltip: 'Back',
+              onPressed: () => Navigator.of(context).maybePop(),
+              padding: EdgeInsets.zero,
+              alignment: Alignment.centerLeft,
+              constraints: const BoxConstraints(minWidth: 32, minHeight: 40),
+              icon: const Icon(
+                Icons.arrow_back_ios_new_rounded,
+                size: 20,
+                color: AppColors.brown,
+              ),
+            ),
             Container(
-              width: 56,
-              height: 56,
+              width: 36,
+              height: 36,
               decoration: const BoxDecoration(
                 color: AppColors.pink,
                 shape: BoxShape.circle,
               ),
-              child: Icon(icon, color: Colors.white, size: 26),
+              child: Icon(icon, color: Colors.white, size: 18),
             ),
-            const SizedBox(width: 16),
+            const SizedBox(width: 10),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(title, style: AppText.serif(fontSize: 26)),
-                  const SizedBox(height: 2),
+                  Text(
+                    title,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppText.serif(fontSize: 20, height: 1.15),
+                  ),
                   Text(
                     '${recipes.length} recipe${recipes.length == 1 ? '' : 's'}',
                     style: const TextStyle(
-                      fontSize: 14,
+                      fontSize: 12,
                       color: AppColors.textMuted,
                     ),
                   ),
@@ -83,7 +86,7 @@ class RecipeFolderView extends StatelessWidget {
             if (headerAction != null) headerAction!,
           ],
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: 16),
         Expanded(
           child:
               recipes.isEmpty
