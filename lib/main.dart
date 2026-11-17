@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:recipe_app/features/auth/auth_gate.dart';
+import 'package:recipe_app/features/splash/splash_overlay.dart';
 import 'package:recipe_app/shared/app_theme.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -52,7 +53,7 @@ class MyApp extends StatelessWidget {
           surfaceTintColor: Colors.transparent,
         ),
       ),
-      home: const AuthGate(),
+      home: const SplashOverlay(child: AuthGate()),
     );
   }
 }
